@@ -65,7 +65,7 @@ const request = (options, success, error) => {
   });
   
   if (!!options.data) {
-    req.send(JSON.stringify(options.data));
+    req.write(JSON.stringify(options.data));
   }
 
   req.end();
