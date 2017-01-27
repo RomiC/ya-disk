@@ -14,6 +14,4 @@ const info = (token, success, error) => {
   }, success, error);
 };
 
-module.exports = {
-  info
-};
+module.exports = info;

@@ -40,21 +40,15 @@ const request = (options, success, error) => {
       
       res.on('data', (chunk) => data += chunk);
       res.on('end', () => {
-        try {
-          const parsed = JSON.parse(data);
-          if (statusCode === 200 && typeof success === 'function') {
-            success(parsed)
-          } else if (typeof error === 'function') {
-            const e = new Error(parsed.description);
-            e.name = parsed.error;
-            error(e);
-          }
-        } catch (e) {
-          if (typeof error === 'function') {
-            error(e);
-          }
+        const parsed = JSON.parse(data);
+        if (statusCode === 200 && typeof success === 'function') {
+          success(parsed);
+        } else if (typeof error === 'function') {
+          const e = new Error(parsed.description);
+          e.name = parsed.error;
+          error(e);
         }
-      })
+      });
     }
   );
   
