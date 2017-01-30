@@ -65,4 +65,4 @@ const request = (options, success, error) => {
   req.end();
 };
 
-module.exports = request;
+module.exports = {do: request};

@@ -34,7 +34,7 @@ describe('request', () => {
       expectAuthHeader = `OAuth ${token}`
     } = urlParsed;
   
-    request({
+    request.do({
       url,
       token
     });
@@ -58,7 +58,7 @@ describe('request', () => {
       expectQuery = queryStringfy(query)
     } = urlParsed;
     
-    request({
+    request.do({
       url,
       token,
       method,
@@ -96,7 +96,7 @@ describe('request', () => {
     httpsRequest.callsArgWith(1, res)
       .returns(req);
     
-    request(
+    request.do(
       {
         url,
         token
@@ -126,7 +126,7 @@ describe('request', () => {
     httpsRequest.callsArgWith(1, res)
       .returns(req);
     
-    request(
+    request.do(
       {
         url,
         token
@@ -148,7 +148,7 @@ describe('request', () => {
     
     httpsRequest.returns(req);
 
-    request({
+    request.do({
       url,
       method,
       token,
