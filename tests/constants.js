@@ -1,5 +1,4 @@
-const APP_NAME = 'ya-disk-api';
-const API_TOKEN = 'AQAAAAAbX24dAAQB-z80p6HY-02ts2aztofaFeQ';
+const {APP_NAME, API_TOKEN} = process.env;
 
 module.exports = {
   APP_NAME,
