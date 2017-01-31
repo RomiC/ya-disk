@@ -140,7 +140,7 @@ describe('request', () => {
     );
   });
   
-  it('should call send correct data', () => {
+  it('should send correct data to the server', () => {
     const httpsRequest = sinon.stub(https, 'request');
 
     const req = new PassThrough;
