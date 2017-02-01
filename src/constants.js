@@ -28,7 +28,7 @@ const API_FILES_URL = `${API_RESOURCES_URL}/files`;
  * @see https://tech.yandex.ru/disk/api/reference/recent-upload-docpage/
  * @type {string}
  */
-const API_LAST_FILES_URL = `${API_RESOURCES_URL}/last-uploaded`;
+const API_RECENT_FILES_URL = `${API_RESOURCES_URL}/last-uploaded`;
 
 /**
  * URL for requesting upload link for the file
@@ -70,7 +70,7 @@ const API_UNPUBLISH_URL = `${API_RESOURCES_URL}/unpublish`;
  * @see https://tech.yandex.ru/disk/api/reference/public-docpage/#save
  * @type {string}
  */
-const API_SAVE_TO_DISK_URL = `${API_RESOURCES_URL}/save-to-disk`
+const API_SAVE_TO_DISK_URL = `${API_RESOURCES_URL}/save-to-disk`;
 
 /**
  * URL for getting list of published resources
@@ -101,7 +101,7 @@ module.exports = {
   API_DISK_URL,
   API_RESOURCES_URL,
   API_FILES_URL,
-  API_LAST_FILES_URL,
+  API_RECENT_FILES_URL,
   API_UPLOAD_LINK_URL,
   API_DOWNLOAD_LINK_URL,
   API_COPY_URL,
