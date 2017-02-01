@@ -14,10 +14,10 @@ const {API_UPLOAD_LINK_URL} = require('./constants');
 const link = (token, path, overwrite = false, success, error) => {
   request.do({
     url: API_UPLOAD_LINK_URL,
-    token,
+    token: token,
     query: {
-      path,
-      overwrite
+      path: path,
+      overwrite: overwrite
     }
   }, success, error);
 };

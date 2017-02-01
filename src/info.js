@@ -11,7 +11,7 @@ const {API_DISK_URL} = require('./constants');
 const info = (token, success, error) => {
   request.do({
     url: API_DISK_URL,
-    token
+    token: token
   }, success, error);
 };
 

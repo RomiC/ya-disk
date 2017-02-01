@@ -61,7 +61,7 @@
     "wrappy": "^1.0.2"
   },
   "scripts": {
-    "test": "mocha -c \"tests/*.spec.js\""
+    "test": "mocha -t 5000 -c \"tests/*.spec.js\""
   },
   "keywords": [
     "yandex",
