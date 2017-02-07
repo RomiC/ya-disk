@@ -10,7 +10,7 @@ const {API_DOWNLOAD_LINK_URL} = require('./constants');
  * @param {function} [error] Error callback
  */
 const link = (token, path, success, error) => {
-  request.do({
+  request.get({
     url: API_DOWNLOAD_LINK_URL,
     token: token,
     query: {

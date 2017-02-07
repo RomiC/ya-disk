@@ -11,7 +11,6 @@
   "license": "MIT",
   "devDependencies": {
     "ava": "^0.18.0",
-    "mocha": "^3.2.0",
     "sinon": "^1.17.7"
   },
   "bugs": {
@@ -62,8 +61,8 @@
     "wrappy": "^1.0.2"
   },
   "scripts": {
-    "test": "mocha -t 5000 -c \"tests/*.spec.js\"",
-    "test-ava": "ava --watch \"tests/download.spec.js\""
+    "test": "ava tests/*.test.js",
+    "test-dev": "ava --watch tests/*.test.js"
   },
   "keywords": [
     "yandex",

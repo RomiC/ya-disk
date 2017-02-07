@@ -65,4 +65,8 @@ const request = (options, success, error) => {
   req.end();
 };
 
-module.exports = {do: request};
+module.exports = {
+  get: (options, ...callbacks) => request(Object.assign(options, {method: 'GET'}), ...callbacks),
+  post: (options, ...callbacks) => request(Object.assign(options, {method: 'POST'}), ...callbacks),
+  put: (options, ...callbacks) => request(Object.assign(options, {method: 'PUT'}), ...callbacks)
+};
