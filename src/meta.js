@@ -17,7 +17,7 @@ const {API_RESOURCES_URL} = require('./constants');
  * @param {function} [error] Error callback
  */
 const get = (token, path, options = {}, success, error) => {
-  request.do({
+  request.get({
     url: API_RESOURCES_URL,
     token: token,
     query: Object.assign({path}, options)
@@ -34,10 +34,9 @@ const get = (token, path, options = {}, success, error) => {
  * @param {function} [error] Error callback
  */
 const add = (token, path, props, success, error) => {
-  request.do({
+  request.put({
     url: API_RESOURCES_URL,
     token: token,
-    method: 'PUT',
     data: props
   }, success, error);
 };

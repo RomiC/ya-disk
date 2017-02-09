@@ -1,0 +1,35 @@
+{
+  "plugins": [],
+  "extends": [
+    "eslint:recommended"
+  ],
+  "rules": {
+    "comma-spacing": ["warn"],
+    "indent": ["warn", 2, {"SwitchCase": 1}],
+    "key-spacing": ["warn", {
+      "beforeColon": false,
+      "afterColon": true
+    }],
+    "keyword-spacing": ["warn", {"after": true}],
+    "no-extra-boolean-cast": "off",
+    "no-multi-spaces": "warn",
+    "no-spaced-func": "warn",
+    "no-unused-vars": "warn",
+    "object-curly-spacing": ["warn", "never"],
+    "semi": ["warn", "always"],
+    "space-before-blocks": ["warn", "always"],
+    "space-before-function-paren": ["warn", "never"],
+    "spaced-comment": ["warn", "always"],
+    "space-infix-ops": "warn",
+    "space-in-parens": ["warn", "never"],
+    "space-unary-ops": ["warn", {
+      "words": true,
+      "nonwords": false
+    }]
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "node": true
+  }
+}

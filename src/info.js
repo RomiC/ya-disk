@@ -9,7 +9,7 @@ const {API_DISK_URL} = require('./constants');
  * @param {function} [error] Error callback
  */
 const info = (token, success, error) => {
-  request.do({
+  request.get({
     url: API_DISK_URL,
     token: token
   }, success, error);

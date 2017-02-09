@@ -22,7 +22,7 @@ const defaultRequestParams = {
 const request = (options, success, error) => {
   const params = Object.assign({}, defaultRequestParams, options);
   const parsedUrl = urlParse(options.url);
-  
+
   const req = https.request(
     Object.assign(
       parsedUrl,
@@ -37,7 +37,7 @@ const request = (options, success, error) => {
     (res) => {
       let data = '';
       const {statusCode} = res;
-      
+
       res.on('data', (chunk) => data += chunk);
       res.on('end', () => {
         const parsed = JSON.parse(data);
@@ -51,13 +51,13 @@ const request = (options, success, error) => {
       });
     }
   );
-  
+
   req.on('error', (err) => {
     if (typeof error === 'function') {
       error(err);
     }
   });
-  
+
   if (!!options.data) {
     req.write(JSON.stringify(options.data));
   }
@@ -65,4 +65,15 @@ const request = (options, success, error) => {
   req.end();
 };
 
-module.exports = {do: request};
+module.exports = {
+  request: request,
+  get: function(options, ...callbacks) {
+    this.request(Object.assign(options, {method: 'GET'}), ...callbacks);
+  },
+  post: function(options, ...callbacks) {
+    this.request(Object.assign(options, {method: 'POST'}), ...callbacks);
+  },
+  put: function(options, ...callbacks) {
+    this.request(Object.assign(options, {method: 'PUT'}), ...callbacks);
+  }
+};

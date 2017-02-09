@@ -12,7 +12,7 @@ const {API_UPLOAD_LINK_URL} = require('./constants');
  * @param {function} [error] Error callback
  */
 const link = (token, path, overwrite = false, success, error) => {
-  request.do({
+  request.get({
     url: API_UPLOAD_LINK_URL,
     token: token,
     query: {

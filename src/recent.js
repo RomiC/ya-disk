@@ -15,7 +15,7 @@ const {API_RECENT_FILES_URL} = require('./constants');
  * @param {function} [error] Error callback
  */
 const recent = (token, options, success, error) => {
-  request.do({
+  request.get({
     url: API_RECENT_FILES_URL,
     token: token,
     query: options
