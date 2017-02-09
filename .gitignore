@@ -39,3 +39,4 @@ jspm_packages
 # IDE's
 .idea
 settings.json
+.vscode
