@@ -16,7 +16,7 @@ const {API_FILES_URL} = require('./constants');
  * @param {function} [error] Error callback
  */
 const list = (token, options, success, error) => {
-  request.do({
+  request.get({
     url: API_FILES_URL,
     token: token,
     query: options
