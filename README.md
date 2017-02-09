@@ -35,7 +35,7 @@ Each method requires an OAuth token. You can receive one mannually or use one of
 
 ### download
 
-Downloading file from the user drive. Actually, it has only one method `dowload.link` which gives an opportunity to get the download link. See detail. Example:
+Downloading file from the user drive. Actually, it has only one method `dowload.link` which gives an opportunity to get the download link. See [details](https://tech.yandex.ru/disk/api/reference/content-docpage/#url-request). Example:
 
 ```javascript
 import {createWriteStream} from 'fs';
@@ -85,4 +85,30 @@ import list from 'ya-disk';
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
 list(API_TOKEN, {limit: 20}, ({items}) => items.forEach((f) => console.log(`${f.name} (${f.mime_type})`)));
+```
+
+### meta
+
+#### get
+
+Getting meta-information about resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-docpage/). Example:
+
+```javascript
+import meta from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+meta.get(API_TOKEN, 'disk:/path/to/the/file.txt', {}, console.log);
+```
+
+#### add
+
+Append meta information to the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-add-docpage/). Example:
+
+```javascript
+import meta from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', {my_field: 'my_value'});
 ```
