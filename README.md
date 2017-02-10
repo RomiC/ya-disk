@@ -29,13 +29,17 @@ export default infoPromise;
 
 ## Authorization
 
-Each method requires an OAuth token. You can receive one mannually or use one of OAuth library, i.e. [passport-yandex-token](https://github.com/ghaiklor/passport-yandex-token).
+Each method requires an OAuth token. You can receive one manually or use one of OAuth library, i.e. [passport-yandex-token](https://github.com/ghaiklor/passport-yandex-token).
 
 ## List of available methods
 
 ### download
 
-Downloading file from the user drive. Actually, it has only one method `dowload.link` which gives an opportunity to get the download link. See [details](https://tech.yandex.ru/disk/api/reference/content-docpage/#url-request). Example:
+Downloading a file from the user drive.
+
+#### link(token, path, [success], [error])
+
+Method for getting the download link. See [details](https://tech.yandex.ru/disk/api/reference/content-docpage/#url-request). Example:
 
 ```javascript
 import {createWriteStream} from 'fs';
@@ -56,7 +60,7 @@ download.link(API_TOKEN, file, ({method, href}) => {
 })
 ```
 
-### info
+### info(token, [succes], [error])
 
 Getting common info about user drive. See [details](https://tech.yandex.ru/disk/api/reference/capacity-docpage/). Example:
 
@@ -74,9 +78,9 @@ info(API_TOKEN, ({total_space, used_space}) => {
 
 ```
 
-### list
+### list(token, [options={}], [success], [error])
 
-Getting flat list of the user files on the drive. See [details](https://tech.yandex.ru/disk/api/reference/all-files-docpage/).
+Getting a flat list of the user files on the drive. See [details](https://tech.yandex.ru/disk/api/reference/all-files-docpage/).
 
 ```javascript
 
@@ -89,9 +93,9 @@ list(API_TOKEN, {limit: 20}, ({items}) => items.forEach((f) => console.log(`${f.
 
 ### meta
 
-#### get
+#### get(token, path, [options={}], [success], [error])
 
-Getting meta-information about resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-docpage/). Example:
+Getting meta-information about the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-docpage/). Example:
 
 ```javascript
 import meta from 'ya-disk';
@@ -101,7 +105,7 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 meta.get(API_TOKEN, 'disk:/path/to/the/file.txt', {}, console.log);
 ```
 
-#### add
+#### add(token, path, properties, [success], [error])
 
 Append meta information to the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-add-docpage/). Example:
 
@@ -111,4 +115,44 @@ import meta from 'ya-disk';
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
 meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', {my_field: 'my_value'});
+```
+
+
+### recent(token, [options={}], [success], [error])
+
+Getting a flat list of recently changed files. See [details](https://tech.yandex.ru/disk/api/reference/recent-upload-docpage/).
+
+```javascript
+import recent from 'ya-disk';
+
+const API_TOKEN = '';
+
+recent(API_TOKEN, {media_type: 'image'}, ({items}) => items.forEach((f) => console.log(`${f.name} (${f.size}B)`)))
+```
+
+### upload
+
+Tool for uploading a file to the user drive. See details.
+
+#### link(token, path, [overwrite = false], [success], [error])
+
+Getting link for uploaded file. See [details](https://tech.yandex.ru/disk/api/reference/upload-docpage/#url-request). Example:
+
+```javascript
+import {createReadStream} from 'fs';
+import {request} from 'https';
+import {parse} from 'url';
+import upload from 'ya-disk';
+
+const API_TOKEN = '';
+
+upload.link(API_TOKEN, 'disk:/path/to/the/file.txt', true, ({href, method}) => {
+  const fileStream = createReadStream('file.txt');
+
+  const uploadStream = request(Object.assign(parse(href), {method}));
+
+  fileStream.pipe(uploadStream);
+
+  fileStream.on('end', () => uploadStream.end());
+});
 ```
