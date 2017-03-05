@@ -125,9 +125,11 @@ Getting a flat list of recently changed files. See [details](https://tech.yandex
 ```javascript
 import recent from 'ya-disk';
 
-const API_TOKEN = '';
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-recent(API_TOKEN, {media_type: 'image'}, ({items}) => items.forEach((f) => console.log(`${f.name} (${f.size}B)`)))
+recent(API_TOKEN, {media_type: 'image'}, ({items}) =>
+  items.forEach((f) =>
+    console.log(`${f.name} (${f.size}B)`)));
 ```
 
 ### upload
@@ -144,7 +146,7 @@ import {request} from 'https';
 import {parse} from 'url';
 import upload from 'ya-disk';
 
-const API_TOKEN = '';
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
 upload.link(API_TOKEN, 'disk:/path/to/the/file.txt', true, ({href, method}) => {
   const fileStream = createReadStream('file.txt');
