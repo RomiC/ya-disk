@@ -42,22 +42,29 @@ Downloading a file from the user drive.
 Method for getting the download link. See [details](https://tech.yandex.ru/disk/api/reference/content-docpage/#url-request). Example:
 
 ```javascript
-import {createWriteStream} from 'fs';
-import {request} from 'https';
-import {parse} from 'url';
-import {download} from 'ya-disk';
+import { createWriteStream } from 'fs';
+// Thi is lib is neccessary, beacause of Yandex Disk
+// returns a 302 header when you try to download file
+// using provided link
+import { https } from 'follow-redirects';
+import { parse } from 'url';
+import download from '../src/download';
 
-const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
-const file = 'disk:/path/to/file/on/drive/file.txt';
+const API_TOKEN = 'sdf9283h9hfkjdhfa-87dsgasdg82gjhg';
+const file = 'disk:/Зима.jpg';
 
 download.link(API_TOKEN, file, ({method, href}) => {
-  const output = createWriteStream('file.txt');
-  request(Object.assign(parse(hred), {method}), (res) => {
-    res.pipe(output);
-
+  const output = createWriteStream('Зима.jpg');
+  const req = https.get(href, (res) => {
     res.on('end', () => output.end());
+    res.pipe(output);
   });
-})
+
+  req.on('error', console.error);
+  req.end();
+}, function(err) {
+  console.error(err);
+});
 ```
 
 ### info(token, [succes], [error])
@@ -65,14 +72,14 @@ download.link(API_TOKEN, file, ({method, href}) => {
 Getting common info about user drive. See [details](https://tech.yandex.ru/disk/api/reference/capacity-docpage/). Example:
 
 ```javascript
-import info from 'ya-disk';
+import info from '../src/info';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
 info(API_TOKEN, ({total_space, used_space}) => {
   console.log(`
     Total space: ${Math.round(total_space / 1000000000)}GB
-    Free space: ${Math.round((total_space - used_space) / 1000000000)}MB
+    Free space: ${Math.round((total_space - used_space) / 1000000)}MB
   `);
 });
 
