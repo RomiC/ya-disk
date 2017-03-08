@@ -75,5 +75,8 @@ module.exports = {
   },
   put: function(options, ...callbacks) {
     this.request(Object.assign(options, {method: 'PUT'}), ...callbacks);
+  },
+  patch: function(options, ...callbacks) {
+    this.request(Object.assign(options, {method: 'PATCH'}), ...callbacks)
   }
 };

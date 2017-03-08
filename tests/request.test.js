@@ -231,3 +231,27 @@ test('put wrapper', () => {
   requestMock.verify();
   requestMock.restore();
 });
+
+test('patch wrapper', () => {
+  const requestMock = mock(request);
+
+  const success = () => console.log('success');
+  const error = () => console.log('error');
+
+  requestMock.expects('request').calledWith({
+    url: url,
+    token: API_TOKEN,
+    method: 'PATCH',
+    data: data
+  });
+
+  request.patch({
+    url: url,
+    token: API_TOKEN,
+    query: query,
+    data: data
+  });
+
+  requestMock.verify();
+  requestMock.restore();
+});

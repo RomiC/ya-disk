@@ -6,7 +6,7 @@ import { https } from 'follow-redirects';
 import { parse } from 'url';
 import download from '../src/download';
 
-const API_TOKEN = ;
+const API_TOKEN = '';
 const file = 'disk:/Зима.jpg';
 
 download.link(API_TOKEN, file, ({method, href}) => {
