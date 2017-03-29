@@ -50,7 +50,7 @@ import { https } from 'follow-redirects';
 import { parse } from 'url';
 import download from '../src/download';
 
-const API_TOKEN = 'sdf9283h9hfkjdhfa-87dsgasdg82gjhg';
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const file = 'disk:/Зима.jpg';
 
 download.link(API_TOKEN, file, ({method, href}) => {
@@ -95,7 +95,7 @@ import list from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-list(API_TOKEN, {limit: 20}, ({items}) => items.forEach((f) => console.log(`${f.name} (${f.mime_type})`)));
+list(API_TOKEN, {}, ({items}) => items.forEach(({name, size}) => console.log('%s: %dB', name, size)));
 ```
 
 ### meta
