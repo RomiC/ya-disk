@@ -34,10 +34,15 @@ const get = (token, path, options = {}, success, error) => {
  * @param {function} [error] Error callback
  */
 const add = (token, path, props, success, error) => {
-  request.put({
+  request.patch({
     url: API_RESOURCES_URL,
     token: token,
-    data: props
+    query: {
+      path: path
+    },
+    data: {
+      custom_properties: props
+    },
   }, success, error);
 };
 
@@ -45,4 +50,3 @@ module.exports = {
   get,
   add
 };
- 

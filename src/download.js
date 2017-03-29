@@ -4,6 +4,7 @@ const {API_DOWNLOAD_LINK_URL} = require('./constants');
 
 /**
  * Get download link for the file
+ * @see https://tech.yandex.ru/disk/api/reference/content-docpage/#url-request
  * @param {string} token OAuth token
  * @param {string} path Path to the file
  * @param {function} [success] Success callback

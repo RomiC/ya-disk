@@ -41,7 +41,7 @@ test('get', () => {
 test('add', () => {
   const requestMock = mock(request);
 
-  requestMock.expects('put').calledWith({
+  requestMock.expects('patch').calledWith({
     url: API_RESOURCES_URL,
     token: API_TOKEN,
     data: props
