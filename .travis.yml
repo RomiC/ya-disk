@@ -1,8 +1,15 @@
 language: node_js
 node_js:
-  - "node"
+- node
 cache: yarn
 git:
   depth: 3
 after_success:
-  - npm run coverage
+- npm run coverage
+deploy:
+  provider: npm
+  email: "i@charugin.ru"
+  api_token:
+    secure: ouqbbgqeJiRelu35/rL51eVxsxyRip3Q/o/YlA9JOO0uCvt3/3U5s/0zXiNfyU43N2FjsIkYA1JiohLFh3V7Dy73T5ebtV6Y/j9jxGvluyJgM85HtwJ/nzU6vhGWcbiSdqIQQrfUNhGkV+rMJ5Nu0pAmRUwLsewz3vjfueEtfOCst8E73FCj0S6oV/a7EUzys5Vsx+FyGxxC6SmlpYSNvH59KMMBP2fHv8Kse2o33mNp18jdV999bH7Jt0P8AG99aYtWtp4TfLBi6o9FjJ8hVFgHq35BNdBMMVVFo0zUCPGo7K4XRVr3NPpTFWGEeqVOXOLOz/E1hERSV72phiYu3G7iIjlGLM0hci1hbXHsqmfMX4RJGGQpCcE9MlcqLbD18LeFK/iJbEghAWWvGgtvS3yOUl23TlikENbPMNqwh2dhAf7DO21/oYMEcXMsnKn0QHhwHzkLJO7W9czraDOP3yIYLT5n2W2at+VySDthufSd+Aq7TOtoYlQDZXNOAzhPnWE/KTHva0D8GiY6T3vyazDyMYcFpF2FVJ5IbWgJJoSRhiQQBKAgpML10P8cxuq2PWJBfR/0uDf4zE29RCL8HaGX9kWD4Wv689FtzHMY/trsqCv7bd9ASCo43170e1MntswvR9ypwvHmTgmioi632W9nIjiJ3FESeX+a5b987Tg=
+  on:
+    tag: true
