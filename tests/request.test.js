@@ -18,7 +18,7 @@ const query = {
 };
 const data = {"custom_properties": {"foo": "1","bar": "2"}};
 
-test.afterEach(() => {
+test.afterEach.always(() => {
   if (typeof https.request.restore === 'function') {
     https.request.restore();
   }
@@ -108,7 +108,7 @@ test('firing successfull callback with correct params', (t) => {
   );
 });
 
-test('firing error callback with error info', (t) => {
+test('firing error callback with response error info', (t) => {
   const httpsRequest = stub(https, 'request');
 
   const expectedArg = {
@@ -138,6 +138,40 @@ test('firing error callback with error info', (t) => {
       t.pass();
     }
   );
+});
+
+test('firing error callback with stream error info', (t) => {
+  const httpsRequest = stub(https, 'request');
+
+  const errorMessage = 'sometimes it happens';
+  const errorName = 'StreamError';
+
+  const res = new PassThrough;
+  res.statusCode = 200;
+  res.write(JSON.stringify({ data: 'data' }));
+  res.end();
+
+  const req = new PassThrough;
+
+  httpsRequest.callsArgWith(1, res)
+    .returns(req);
+
+  request.request(
+    {
+      url: url,
+      token: API_TOKEN
+    },
+    null,
+    (err) => {
+      t.is(err.name, errorName, 'Error should have a proper type');
+      t.is(err.message, errorMessage, 'Error should have a proper message');
+      t.pass();
+    }
+  );
+
+  const error = new Error(errorMessage);
+  error.name = errorName;
+  req.emit('error', error);
 });
 
 test('sending correct data', (t) => {
@@ -221,7 +255,7 @@ test('put wrapper', () => {
     data: data
   });
 
-  request.post({
+  request.put({
     url: url,
     token: API_TOKEN,
     query: query,

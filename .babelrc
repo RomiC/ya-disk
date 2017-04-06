@@ -1,0 +1,12 @@
+{
+  "presets": ["es2015"],
+  "plugins": ["transform-runtime"],
+  "ignore": [
+    "tests/*.js"
+  ],
+  "env": {
+    "development": {
+      "sourceMaps": "inline"
+    }
+  }
+}
