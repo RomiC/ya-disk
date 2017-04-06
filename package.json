@@ -71,8 +71,8 @@
     "example": "babel-node",
     "test": "nyc ava tests/*.test.js",
     "test:watch": "ava --watch tests/*.test.js",
-    "build": "set BABEL_ENV=production babel --out-dir=dist index.js",
-    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov --token=c6135c0d-58d0-47ff-8cca-7c38f31f637d"
+    "test:debug": "node --inspect node_modules/ava/profile.js",
+    "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov --token=c6135c0d-58d0-47ff-8cca-7c38f31f637d"
   },
   "keywords": [
     "yandex",
