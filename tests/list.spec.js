@@ -1,11 +1,11 @@
-import {mock} from 'sinon';
+import { mock } from 'sinon';
 import test from 'ava';
 
-import request from '../src/request';
-import list from '../src/list';
+import request from '../lib/request';
+import list from '../lib/list';
 
-import {API_TOKEN} from './constants';
-import {API_FILES_URL} from '../src/constants';
+import { API_TOKEN } from './constants';
+import { API_FILES_URL } from '../lib/constants';
 
 const options = {
   limit: 13,
