@@ -1,11 +1,11 @@
-import {mock} from 'sinon';
+import { mock } from 'sinon';
 import test from 'ava';
 
-import request from '../src/request';
-import meta from '../src/meta';
+import request from '../lib/request';
+import meta from '../lib/meta';
 
-const {API_TOKEN} = require('./constants');
-const {API_RESOURCES_URL} = require('../src/constants');
+const { API_TOKEN } = require('./constants');
+const { API_RESOURCES_URL } = require('../lib/constants');
 
 const path = `disk:/file1.txt`;
 const options = {
@@ -29,7 +29,7 @@ test('get', () => {
   requestMock.expects('get').calledWith({
     url: API_RESOURCES_URL,
     token: API_TOKEN,
-    query: Object.assign({path}, options)
+    query: Object.assign({ path }, options)
   });
 
   meta.get(API_TOKEN, path, options);

@@ -1,8 +1,8 @@
 module.exports = {
-  download: require('./src/download'),
-  info: require('./src/info'),
-  list: require('./src/list'),
-  meta: require('./src/meta'),
-  recent: require('./src/recent'),
-  upload: require('./src/upload')
+  download: require('./lib/download'),
+  info: require('./lib/info'),
+  list: require('./lib/list'),
+  meta: require('./lib/meta'),
+  recent: require('./lib/recent'),
+  upload: require('./lib/upload')
 };

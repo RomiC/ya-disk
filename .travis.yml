@@ -5,4 +5,4 @@ cache: yarn
 git:
   depth: 3
 after_success:
-- npm run coverage
+- yarn run coverage
