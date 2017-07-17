@@ -10,15 +10,15 @@
   "author": "Roman Charugin <i@charugin.ru>",
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.18.0",
+    "ava": "^0.21.0",
     "babel-cli": "^6.23.0",
     "babel-preset-env": "^1.5.2",
     "codecov": "^2.1.0",
     "follow-redirects": "^1.2.1",
-    "husky": "^0.13.4",
+    "husky": "^0.14.3",
     "lint-staged": "^4.0.0",
-    "nyc": "^10.2.0",
-    "sinon": "^1.17.7"
+    "nyc": "^11.0.3",
+    "sinon": "^2.3.8"
   },
   "bugs": {
     "url": "https://github.com/RomiC/ya-disk/issues"
