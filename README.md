@@ -1,5 +1,7 @@
 # ya-disk [![Build Status](https://travis-ci.org/RomiC/ya-disk.svg?branch=master)](https://travis-ci.org/RomiC/ya-disk) [![codecov](https://codecov.io/gh/RomiC/ya-disk/branch/master/graph/badge.svg)](https://codecov.io/gh/RomiC/ya-disk)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/RomiC/ya-disk.svg)](https://greenkeeper.io/)
+
 Yandex Disk API library which provides some methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
 ```javascript
