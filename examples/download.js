@@ -3,13 +3,12 @@ import { createWriteStream } from 'fs';
 // returns a 302 header when you try to download file
 // using provided link
 import { https } from 'follow-redirects';
-import { parse } from 'url';
-import download from '../src/download';
+import download from '../lib/download';
 
 const API_TOKEN = '';
 const file = 'disk:/Зима.jpg';
 
-download.link(API_TOKEN, file, ({method, href}) => {
+download.link(API_TOKEN, file, ({ href }) => {
   const output = createWriteStream('Зима.jpg');
   const req = https.get(href, (res) => {
     res.on('end', () => output.end());
@@ -18,6 +17,4 @@ download.link(API_TOKEN, file, ({method, href}) => {
 
   req.on('error', console.error);
   req.end();
-}, function(err) {
-  console.error(err);
-});
+}, console.error);

@@ -1,12 +1,15 @@
 {
-  "presets": ["es2015"],
-  "plugins": ["transform-runtime"],
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ],
   "ignore": [
     "tests/*.js"
-  ],
-  "env": {
-    "development": {
-      "sourceMaps": "inline"
-    }
-  }
+  ]
 }
