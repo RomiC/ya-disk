@@ -1,13 +1,13 @@
 import test from 'ava';
 import https from 'https';
-import {stringify as queryStringfy} from 'querystring';
-import {mock, spy, stub} from 'sinon';
-import {PassThrough} from 'stream';
-import {parse as urlParse} from 'url';
+import { stringify as queryStringfy } from 'querystring';
+import { mock, spy, stub } from 'sinon';
+import { PassThrough } from 'stream';
+import { parse as urlParse } from 'url';
 
-import request from '../src/request';
+import request from '../lib/request';
 
-import {API_TOKEN} from './constants';
+import { API_TOKEN } from './constants';
 
 const url = 'https://cloud-api.yandex.net/v1/disk';
 const urlParsed = urlParse(url);
@@ -16,7 +16,7 @@ const query = {
   foo: 'string',
   bar: 3
 };
-const data = {"custom_properties": {"foo": "1", "bar": "2"}};
+const data = { "custom_properties": { "foo": "1", "bar": "2" } };
 
 test.afterEach.always(() => {
   if (typeof https.request.restore === 'function') {
@@ -24,7 +24,7 @@ test.afterEach.always(() => {
   }
 });
 
-test('calling https.request with correct DEFAULT params', t => {
+test('calling https.request with correct DEFAULT params', (t) => {
   const httpsSpy = spy(https, 'request');
 
   const {
@@ -44,7 +44,7 @@ test('calling https.request with correct DEFAULT params', t => {
   t.is(args.host, expectHost, 'Should call with correct host');
   t.is(args.path, expectPath, 'Should call with correct path');
   t.is(args.method, expectMethod, 'Should call with correct method');
-  t.deepEqual(args.headers, {'Authorization': expectAuthHeader}, 'Should call with correct auth header');
+  t.deepEqual(args.headers, { 'Authorization': expectAuthHeader }, 'Should call with correct auth header');
 });
 
 test('calling https.request with correct params', (t) => {
@@ -70,7 +70,7 @@ test('calling https.request with correct params', (t) => {
   t.is(args.host, expectHost, 'Should call with proper host');
   t.is(args.path, `${expectPath}?${expectQuery}`, 'Should call with proper path and query params');
   t.is(args.method, expectMethod, 'Should call with proper method');
-  t.deepEqual(args.headers, {'Authorization': expectAuthHeader}, 'Should call with corrent auth header');
+  t.deepEqual(args.headers, { 'Authorization': expectAuthHeader }, 'Should call with corrent auth header');
 });
 
 test('firing successfull callback with correct params', (t) => {
@@ -148,7 +148,7 @@ test('firing error callback with stream error info', (t) => {
 
   const res = new PassThrough;
   res.statusCode = 200;
-  res.write(JSON.stringify({data: 'data'}));
+  res.write(JSON.stringify({ data: 'data' }));
   res.end();
 
   const req = new PassThrough;

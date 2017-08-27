@@ -1,11 +1,11 @@
-import {mock} from 'sinon';
+import { mock } from 'sinon';
 import test from 'ava';
 
-import request from '../src/request';
-import {link} from '../src/download';
+import request from '../lib/request';
+import { link } from '../lib/download';
 
-import {API_TOKEN} from './constants';
-import {API_DOWNLOAD_LINK_URL} from '../src/constants';
+import { API_TOKEN } from './constants';
+import { API_DOWNLOAD_LINK_URL } from '../lib/constants';
 
 const path = 'disk:/file.txt';
 
@@ -15,7 +15,7 @@ test('should call request.do method with correct params', () => {
   requestMock.expects('get').calledWith({
     url: API_DOWNLOAD_LINK_URL,
     token: API_TOKEN,
-    query: {path}
+    query: { path }
   });
 
   link(API_TOKEN, path);

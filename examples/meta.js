@@ -1,11 +1,11 @@
-import meta from '../src/meta';
+import meta from '../lib/meta';
 
-const API_TOKEN = 'AQAAAAAbX24dAAQB-z80p6HY-02ts2aztofaFeQ';
+const API_TOKEN = '';
 
 meta.add(
   API_TOKEN,
   'disk:/Зима.jpg',
-  {my_field: 'my_value'},
+  { my_field: 'my_value' },
   null,
   (err) => process.stderror.write(err.message)
 );

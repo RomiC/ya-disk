@@ -1,11 +1,11 @@
-import {mock} from 'sinon';
+import { mock } from 'sinon';
 import test from 'ava';
 
-import request from '../src/request';
-import info from '../src/info';
+import request from '../lib/request';
+import info from '../lib/info';
 
-import {API_TOKEN} from './constants';
-import {API_DISK_URL} from '../src/constants';
+import { API_TOKEN } from './constants';
+import { API_DISK_URL } from '../lib/constants';
 
 test('should call request.do with correct params', () => {
   const requestMock = mock(request);
@@ -16,7 +16,7 @@ test('should call request.do with correct params', () => {
   });
 
   info(API_TOKEN);
-  
+
   requestMock.verify();
   requestMock.restore();
 });

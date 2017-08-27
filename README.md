@@ -3,16 +3,16 @@
 Yandex Disk API library which provides some methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
 ```javascript
-import info from 'ya-disk';
+import { info } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-info(API_TOKEN, ({total_space, used_space}) => {
+info(API_TOKEN, ({total_space, used_space}) =>
   console.log(`
     Total space: ${Math.round(total_space / 1000000000)}GB
     Free space: ${Math.round((total_space - used_space) / 1000000000)}MB
   `);
-});
+);
 ```
 
 
@@ -21,7 +21,7 @@ Yes, it's callback-based lib. Because it was made to have at least dependencies 
 
 ```javascript
 import Promise from 'bluebird';
-import info from 'ya-disk';
+import { info } from 'ya-disk';
 
 const infoPromise = (token) => new Promise((resolve, reject) => info(token, resolve, reject));
 
@@ -49,12 +49,12 @@ import { createWriteStream } from 'fs';
 // using provided link
 import { https } from 'follow-redirects';
 import { parse } from 'url';
-import download from '../src/download';
+import { download } from '../lib/download';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const file = 'disk:/Зима.jpg';
 
-download.link(API_TOKEN, file, ({method, href}) => {
+download.link(API_TOKEN, file, ({ method, href }) => {
   const output = createWriteStream('Зима.jpg');
   const req = https.get(href, (res) => {
     res.on('end', () => output.end());
@@ -63,9 +63,7 @@ download.link(API_TOKEN, file, ({method, href}) => {
 
   req.on('error', console.error);
   req.end();
-}, function(err) {
-  console.error(err);
-});
+}, console.error);
 ```
 
 ### info(token, [succes], [error])
@@ -73,16 +71,16 @@ download.link(API_TOKEN, file, ({method, href}) => {
 Getting common info about user drive. See [details](https://tech.yandex.ru/disk/api/reference/capacity-docpage/). Example:
 
 ```javascript
-import info from '../src/info';
+import { info } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-info(API_TOKEN, ({total_space, used_space}) => {
+info(API_TOKEN, ({ total_space, used_space }) =>
   console.log(`
     Total space: ${Math.round(total_space / 1000000000)}GB
     Free space: ${Math.round((total_space - used_space) / 1000000)}MB
   `);
-});
+);
 
 ```
 
@@ -91,12 +89,11 @@ info(API_TOKEN, ({total_space, used_space}) => {
 Getting a flat list of the user files on the drive. See [details](https://tech.yandex.ru/disk/api/reference/all-files-docpage/).
 
 ```javascript
-
-import list from 'ya-disk';
+import { list } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-list(API_TOKEN, {}, ({items}) => items.forEach(({name, size}) => console.log('%s: %dB', name, size)));
+list(API_TOKEN, {}, ({ items }) => items.forEach(({ name, size}) => console.log('%s: %dB', name, size)));
 ```
 
 ### meta
@@ -106,7 +103,7 @@ list(API_TOKEN, {}, ({items}) => items.forEach(({name, size}) => console.log('%s
 Getting meta-information about the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-docpage/). Example:
 
 ```javascript
-import meta from 'ya-disk';
+import { meta } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -118,11 +115,11 @@ meta.get(API_TOKEN, 'disk:/path/to/the/file.txt', {}, console.log);
 Append meta information to the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-add-docpage/). Example:
 
 ```javascript
-import meta from 'ya-disk';
+import { meta } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', {my_field: 'my_value'});
+meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', { my_field: 'my_value' });
 ```
 
 
@@ -131,11 +128,11 @@ meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', {my_field: 'my_value'});
 Getting a flat list of recently changed files. See [details](https://tech.yandex.ru/disk/api/reference/recent-upload-docpage/).
 
 ```javascript
-import recent from 'ya-disk';
+import { recent } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-recent(API_TOKEN, {media_type: 'image'}, ({items}) =>
+recent(API_TOKEN, {media_type: 'image'}, ({ items }) =>
   items.forEach((f) =>
     console.log(`${f.name} (${f.size}B)`)));
 ```
@@ -149,17 +146,18 @@ Tool for uploading a file to the user drive. See details.
 Getting link for uploaded file. See [details](https://tech.yandex.ru/disk/api/reference/upload-docpage/#url-request). Example:
 
 ```javascript
-import {createReadStream} from 'fs';
-import {request} from 'https';
-import {parse} from 'url';
-import upload from 'ya-disk';
+import { createReadStream } from 'fs';
+import { request } from 'https';
+import { parse } from 'url';
+
+import { upload } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-upload.link(API_TOKEN, 'disk:/path/to/the/file.txt', true, ({href, method}) => {
+upload.link(API_TOKEN, 'disk:/path/to/the/file.txt', true, ({ href, method }) => {
   const fileStream = createReadStream('file.txt');
 
-  const uploadStream = request(Object.assign(parse(href), {method}));
+  const uploadStream = request(Object.assign(parse(href), { method }));
 
   fileStream.pipe(uploadStream);
 

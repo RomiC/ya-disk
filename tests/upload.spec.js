@@ -1,11 +1,11 @@
 import test from 'ava';
-import {mock} from 'sinon';
+import { mock } from 'sinon';
 
-import request from '../src/request';
-import {link} from '../src/upload';
+import request from '../lib/request';
+import { link } from '../lib/upload';
 
-import {API_TOKEN} from './constants';
-import {API_UPLOAD_LINK_URL} from '../src/constants';
+import { API_TOKEN } from './constants';
+import { API_UPLOAD_LINK_URL } from '../lib/constants';
 
 const path = 'disk:/file.txt';
 const overwrite = true;
