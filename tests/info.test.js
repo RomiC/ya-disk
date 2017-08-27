@@ -7,7 +7,7 @@ import info from '../src/info';
 import {API_TOKEN} from './constants';
 import {API_DISK_URL} from '../src/constants';
 
-test('should call request.do with correct params', (t) => {
+test('should call request.do with correct params', () => {
   const requestMock = mock(request);
 
   requestMock.expects('get').once().withArgs({

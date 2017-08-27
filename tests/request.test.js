@@ -16,7 +16,7 @@ const query = {
   foo: 'string',
   bar: 3
 };
-const data = {"custom_properties": {"foo": "1","bar": "2"}};
+const data = {"custom_properties": {"foo": "1", "bar": "2"}};
 
 test.afterEach.always(() => {
   if (typeof https.request.restore === 'function') {
@@ -148,7 +148,7 @@ test('firing error callback with stream error info', (t) => {
 
   const res = new PassThrough;
   res.statusCode = 200;
-  res.write(JSON.stringify({ data: 'data' }));
+  res.write(JSON.stringify({data: 'data'}));
   res.end();
 
   const req = new PassThrough;
@@ -174,7 +174,7 @@ test('firing error callback with stream error info', (t) => {
   req.emit('error', error);
 });
 
-test('sending correct data', (t) => {
+test('sending correct data', () => {
   const httpsRequest = stub(https, 'request');
 
   const req = new PassThrough;
@@ -197,9 +197,6 @@ test('sending correct data', (t) => {
 test('get wrapper', () => {
   const requestMock = mock(request);
 
-  const success = () => console.log('success');
-  const error = () => console.log('error');
-
   requestMock.expects('request').calledWith({
     url: url,
     token: API_TOKEN,
@@ -219,9 +216,6 @@ test('get wrapper', () => {
 
 test('post wrapper', () => {
   const requestMock = mock(request);
-
-  const success = () => console.log('success');
-  const error = () => console.log('error');
 
   requestMock.expects('request').calledWith({
     url: url,
@@ -245,9 +239,6 @@ test('post wrapper', () => {
 test('put wrapper', () => {
   const requestMock = mock(request);
 
-  const success = () => console.log('success');
-  const error = () => console.log('error');
-
   requestMock.expects('request').calledWith({
     url: url,
     token: API_TOKEN,
@@ -268,9 +259,6 @@ test('put wrapper', () => {
 
 test('patch wrapper', () => {
   const requestMock = mock(request);
-
-  const success = () => console.log('success');
-  const error = () => console.log('error');
 
   requestMock.expects('request').calledWith({
     url: url,

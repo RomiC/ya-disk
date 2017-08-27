@@ -5,13 +5,13 @@ import request from '../src/request';
 import {link} from '../src/download';
 
 import {API_TOKEN} from './constants';
-import {API_DOWNLOAD_LINK_URL} from '../src/constants'
+import {API_DOWNLOAD_LINK_URL} from '../src/constants';
 
 const path = 'disk:/file.txt';
 
-test('should call request.do method with correct params', (t) => {
+test('should call request.do method with correct params', () => {
   const requestMock = mock(request);
-  
+
   requestMock.expects('get').calledWith({
     url: API_DOWNLOAD_LINK_URL,
     token: API_TOKEN,
