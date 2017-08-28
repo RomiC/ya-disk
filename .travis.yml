@@ -7,4 +7,4 @@ git:
 after_success:
 - yarn run coverage
 script:
-- npm test:ci
+- npm run test:ci
