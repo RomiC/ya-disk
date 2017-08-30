@@ -24,7 +24,7 @@ test.afterEach.always(() => {
   }
 });
 
-test('calling https.request with correct DEFAULT params', (t) => {
+test.serial('calling https.request with correct DEFAULT params', (t) => {
   const httpsSpy = spy(https, 'request');
 
   const {
@@ -47,7 +47,7 @@ test('calling https.request with correct DEFAULT params', (t) => {
   t.deepEqual(args.headers, { 'Authorization': expectAuthHeader }, 'Should call with correct auth header');
 });
 
-test('calling https.request with correct params', (t) => {
+test.serial('calling https.request with correct params', (t) => {
   const httpsSpy = spy(https, 'request');
 
   const {
@@ -73,7 +73,7 @@ test('calling https.request with correct params', (t) => {
   t.deepEqual(args.headers, { 'Authorization': expectAuthHeader }, 'Should call with corrent auth header');
 });
 
-test('firing successfull callback with correct params', (t) => {
+test.serial.cb('firing successfull callback with correct params', (t) => {
   const httpsRequest = stub(https, 'request');
 
   const expectedArg = {
@@ -103,12 +103,12 @@ test('firing successfull callback with correct params', (t) => {
     },
     (res) => {
       t.deepEqual(res, expectedArg, 'Should be called with correct args');
-      t.pass();
+      t.end();
     }
   );
 });
 
-test('firing error callback with response error info', (t) => {
+test.serial.cb('firing error callback with response error info', (t) => {
   const httpsRequest = stub(https, 'request');
 
   const expectedArg = {
@@ -135,12 +135,12 @@ test('firing error callback with response error info', (t) => {
     (err) => {
       t.is(err.name, expectedArg.error, 'Error should have a proper name');
       t.is(err.message, expectedArg.description, 'Error should have a proper description');
-      t.pass();
+      t.end();
     }
   );
 });
 
-test('firing error callback with stream error info', (t) => {
+test.serial.cb('firing error callback with stream error info', (t) => {
   const httpsRequest = stub(https, 'request');
 
   const errorMessage = 'sometimes it happens';
@@ -165,7 +165,7 @@ test('firing error callback with stream error info', (t) => {
     (err) => {
       t.is(err.name, errorName, 'Error should have a proper type');
       t.is(err.message, errorMessage, 'Error should have a proper message');
-      t.pass();
+      t.end();
     }
   );
 
@@ -174,7 +174,7 @@ test('firing error callback with stream error info', (t) => {
   req.emit('error', error);
 });
 
-test('sending correct data', () => {
+test.serial('sending correct data', (t) => {
   const httpsRequest = stub(https, 'request');
 
   const req = new PassThrough;
@@ -192,9 +192,10 @@ test('sending correct data', () => {
   });
 
   reqMock.verify();
+  t.pass();
 });
 
-test('get wrapper', () => {
+test.serial('get wrapper', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('request').calledWith({
@@ -212,9 +213,11 @@ test('get wrapper', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
 
-test('post wrapper', () => {
+test.serial('post wrapper', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('request').calledWith({
@@ -234,9 +237,11 @@ test('post wrapper', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
 
-test('put wrapper', () => {
+test.serial('put wrapper', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('request').calledWith({
@@ -255,9 +260,11 @@ test('put wrapper', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
 
-test('patch wrapper', () => {
+test.serial('patch wrapper', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('request').calledWith({
@@ -276,4 +283,6 @@ test('patch wrapper', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });

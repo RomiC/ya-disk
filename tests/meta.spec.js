@@ -23,7 +23,7 @@ const props = {
   }
 };
 
-test('get', () => {
+test('get', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('get').calledWith({
@@ -36,9 +36,11 @@ test('get', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
 
-test('add', () => {
+test('add', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('patch').calledWith({
@@ -51,4 +53,6 @@ test('add', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });

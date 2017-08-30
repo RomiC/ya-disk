@@ -14,7 +14,7 @@ const options = {
   preview_crop: false
 };
 
-test('should call request.do with correct params', () => {
+test('should call request.do with correct params', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('get').calledWith({
@@ -27,4 +27,6 @@ test('should call request.do with correct params', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });

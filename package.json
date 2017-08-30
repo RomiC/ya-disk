@@ -10,16 +10,16 @@
   "author": "Roman Charugin <i@charugin.ru>",
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.18.0",
+    "ava": "^0.21.0",
     "babel-cli": "^6.23.0",
     "babel-preset-env": "^1.5.2",
     "codecov": "^2.1.0",
     "eslint": "^4.5.0",
     "follow-redirects": "^1.2.1",
-    "husky": "^0.13.4",
+    "husky": "^0.14.3",
     "lint-staged": "^4.0.0",
-    "nyc": "^10.2.0",
-    "sinon": "^1.17.7"
+    "nyc": "^11.0.3",
+    "sinon": "^2.3.8"
   },
   "bugs": {
     "url": "https://github.com/RomiC/ya-disk/issues"
@@ -32,10 +32,11 @@
     "example": "babel-node",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "precommit": "npm run lint:fix ./",
+    "precommit": "lint-staged",
     "prepush": "npm test",
-    "test": "nyc ava tests/*.spec.js",
-    "test:watch": "ava --watch tests/*.spec.js",
+    "test": "ava tests/*.spec.js",
+    "test:ci": "nyc npm test",
+    "test:watch": "npm test -- --watch",
     "test:debug": "node --inspect node_modules/ava/profile.js",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov --token=c6135c0d-58d0-47ff-8cca-7c38f31f637d"
   },
@@ -50,11 +51,12 @@
     ],
     "require": [
       "babel-core"
-    ]
+    ],
+    "failWithoutAssertions": true
   },
   "lint-staged": {
     "+(examples|lib|tests)/*.js": [
-      "eslint --fix",
+      "npm run lint:fix",
       "git add"
     ]
   }

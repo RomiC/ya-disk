@@ -7,7 +7,7 @@ import info from '../lib/info';
 import { API_TOKEN } from './constants';
 import { API_DISK_URL } from '../lib/constants';
 
-test('should call request.do with correct params', () => {
+test('should call request.do with correct params', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('get').once().withArgs({
@@ -19,4 +19,6 @@ test('should call request.do with correct params', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
