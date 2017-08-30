@@ -15,7 +15,7 @@ const options = {
   preview_crop: true
 };
 
-test('should call request.get ', () => {
+test('should call request.get ', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('get').calledWith({
@@ -28,4 +28,6 @@ test('should call request.get ', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });

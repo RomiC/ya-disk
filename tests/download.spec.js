@@ -9,7 +9,7 @@ import { API_DOWNLOAD_LINK_URL } from '../lib/constants';
 
 const path = 'disk:/file.txt';
 
-test('should call request.do method with correct params', () => {
+test('should call request.do method with correct params', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('get').calledWith({
@@ -22,4 +22,6 @@ test('should call request.do method with correct params', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });

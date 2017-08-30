@@ -51,7 +51,8 @@
     ],
     "require": [
       "babel-core"
-    ]
+    ],
+    "failWithoutAssertions": true
   },
   "lint-staged": {
     "+(examples|lib|tests)/*.js": [
