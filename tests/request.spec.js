@@ -174,7 +174,7 @@ test('firing error callback with stream error info', (t) => {
   req.emit('error', error);
 });
 
-test('sending correct data', () => {
+test('sending correct data', (t) => {
   const httpsRequest = stub(https, 'request');
 
   const req = new PassThrough;
@@ -192,9 +192,10 @@ test('sending correct data', () => {
   });
 
   reqMock.verify();
+  t.pass();
 });
 
-test('get wrapper', () => {
+test('get wrapper', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('request').calledWith({
@@ -212,9 +213,11 @@ test('get wrapper', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
 
-test('post wrapper', () => {
+test('post wrapper', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('request').calledWith({
@@ -234,9 +237,11 @@ test('post wrapper', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
 
-test('put wrapper', () => {
+test('put wrapper', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('request').calledWith({
@@ -255,9 +260,11 @@ test('put wrapper', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
 
-test('patch wrapper', () => {
+test('patch wrapper', (t) => {
   const requestMock = mock(request);
 
   requestMock.expects('request').calledWith({
@@ -276,4 +283,6 @@ test('patch wrapper', () => {
 
   requestMock.verify();
   requestMock.restore();
+
+  t.pass();
 });
