@@ -32,11 +32,11 @@
     "example": "babel-node",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "precommit": "npm run lint:fix ./",
+    "precommit": "lint-staged",
     "prepush": "npm test",
-    "test": "nyc ava tests/*.spec.js",
-    "test:ci": "nyc ava --timeout=10m -s tests/*.spec.js",
-    "test:watch": "ava --watch tests/*.spec.js",
+    "test": "ava tests/*.spec.js",
+    "test:ci": "nyc npm test",
+    "test:watch": "npm test -- --watch",
     "test:debug": "node --inspect node_modules/ava/profile.js",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov --token=c6135c0d-58d0-47ff-8cca-7c38f31f637d"
   },
@@ -55,7 +55,7 @@
   },
   "lint-staged": {
     "+(examples|lib|tests)/*.js": [
-      "eslint --fix",
+      "npm run lint:fix",
       "git add"
     ]
   }
