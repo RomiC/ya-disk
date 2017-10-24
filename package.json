@@ -10,7 +10,7 @@
   "author": "Roman Charugin <i@charugin.ru>",
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.21.0",
+    "ava": "^0.23.0",
     "babel-cli": "^6.23.0",
     "babel-preset-env": "^1.5.2",
     "codecov": "^2.1.0",
