@@ -13,7 +13,7 @@
     "ava": "^0.21.0",
     "babel-cli": "^6.23.0",
     "babel-preset-env": "^1.5.2",
-    "codecov": "^2.1.0",
+    "codecov": "^3.0.1",
     "eslint": "^4.5.0",
     "follow-redirects": "^1.2.1",
     "husky": "^0.14.3",
