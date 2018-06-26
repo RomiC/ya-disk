@@ -14,12 +14,12 @@
     "babel-cli": "^6.23.0",
     "babel-preset-env": "^1.5.2",
     "codecov": "^3.0.1",
-    "eslint": "^4.5.0",
+    "eslint": "^5.0.1",
     "follow-redirects": "^1.2.1",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.4",
     "nyc": "^12.0.2",
-    "sinon": "^5.0.3"
+    "sinon": "^6.0.0"
   },
   "bugs": {
     "url": "https://github.com/RomiC/ya-disk/issues"
