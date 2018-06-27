@@ -15,6 +15,11 @@ info(API_TOKEN, ({total_space, used_space}) =>
 );
 ```
 
+## Installation
+
+```sh
+npm i --save ya-disk
+```
 
 Yes, it's callback-based lib. Because it was made to have at least dependencies as possible. If you want you can write you own wrapper based on, i.e. Bluebird library. Example:
 
