@@ -7,7 +7,7 @@ cache:
 git:
   depth: 3
 after_success:
-- yarn run coverage
+- npm run coverage
 script:
 - npm run test:ci
 deploy:
