@@ -15,9 +15,7 @@ info(API_TOKEN, ({total_space, used_space}) =>
 );
 ```
 
-
 Yes, it's callback-based lib. Because it was made to have at least dependencies as possible. If you want you can write you own wrapper based on, i.e. Bluebird library. Example:
-
 
 ```javascript
 import Promise from 'bluebird';
@@ -26,6 +24,12 @@ import { info } from 'ya-disk';
 const infoPromise = (token) => new Promise((resolve, reject) => info(token, resolve, reject));
 
 export default infoPromise;
+```
+
+## Installation
+
+```sh
+npm i --save ya-disk
 ```
 
 ## Authorization
