@@ -1,0 +1,9 @@
+examples
+tests
+.babelrc
+.editorconfig
+.eslintrc
+.gitattributes
+.travis.yml
+npm-shrinkwrap.json
+*.tgz

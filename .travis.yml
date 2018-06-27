@@ -1,10 +1,20 @@
 language: node_js
 node_js:
 - node
-cache: yarn
+cache:
+  directories:
+  - "node_modules"
 git:
   depth: 3
 after_success:
 - yarn run coverage
 script:
 - npm run test:ci
+deploy:
+  provider: npm
+  email: i@charugin.ru
+  api_key:
+    secure: FV5ykUVNtJZL92LwFMTA1l0IDdJG4Bpw61LhCmSVx7o6AdWHgw+SODlT+qZehLNYONkXqdKGMjzx+saT++h71XuLqrTM/xsXmdhctPQKYebftDH8Y/Z3vcRCz4n1+k99q6bB4A1HXaIkln5QINZZCP7Z51tPvsgJq8eyQKya0asGoophn5dxpgmiCTAc54OVcguPNdZxXHH5xAHDITZeyq2LCO4Zzg66dhC+NyZsKZv0g6FDNhsoCmD1YX8CvWvxYtsD2M+zxp+mPALbV5L0B6ipD7pc5LyowRNHWo995gujD+vnHX+HEbXj/x/20vAQkmlFxFIIJSY3Ow67Lc5USfETjxFFyG04tM2QCNRUxnVom6XS5leHcyLVCqPlJdYou6iAlfW2HIJr6/3Xq1vMtCu+cfinzL73P3xy3UJF1MXhdsCyPYat2fiDDfqgNFIASrOyktY9I9+ZS0Gw8xLZA1raOIM/5WQbIBfwIrP9wOqnIxfkb952PSev+RCOwrH17MspgkYC6ZCyDAd2nFhiZiPaqg5h4MAFx8+7WnSil0Blt7u+74j3eWCNjQ+BM1DW8LQsb4Id03v/HS4R5KLq6iCVZ26muWIgvQeA/UDRiqd5t5EzsR5+nslyorTinMxg6qAadimO18xfFEqEWV5/G4H2T/rxMdNIuSHpxohFLKw=
+  on:
+    branch: master
+    tags: true

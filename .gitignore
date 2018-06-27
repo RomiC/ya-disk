@@ -41,3 +41,5 @@ jspm_packages
 .idea
 settings.json
 .vscode
+
+*.tgz
