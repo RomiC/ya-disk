@@ -3,6 +3,7 @@ module.exports = {
   info: require('./lib/info'),
   list: require('./lib/list'),
   meta: require('./lib/meta'),
+  operations: require('./lib/operations'),
   recent: require('./lib/recent'),
   upload: require('./lib/upload')
 };

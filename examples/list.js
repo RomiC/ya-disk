@@ -1,6 +1,6 @@
 import list from '../lib/list';
 
-const API_TOKEN = '';
+const { API_TOKEN = '' } = process.env;
 
 list(
   API_TOKEN,
