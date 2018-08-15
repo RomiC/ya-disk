@@ -29,7 +29,7 @@ export default infoPromise;
 ## Installation
 
 ```sh
-npm i --save ya-disk
+npm install --save ya-disk
 ```
 
 ## Authorization
@@ -44,7 +44,7 @@ Downloading a file from the user drive.
 
 #### link(token, path, [success], [error])
 
-Method for getting the download link. See [details](https://tech.yandex.ru/disk/api/reference/content-docpage/#url-request). Example:
+Getting the download link. See [details](https://tech.yandex.ru/disk/api/reference/content-docpage/#url-request). Example:
 
 ```javascript
 import { createWriteStream } from 'fs';
@@ -126,6 +126,19 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', { my_field: 'my_value' });
 ```
 
+### operations
+
+Getting operation status. See [details](https://tech.yandex.ru/disk/api/reference/operations-docpage/). Example:
+
+```javascript
+import operations from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+const operationId = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
+
+opeartions(API_TOKEN, operationId, ({status}) => console.log(`Operation ${opeartionId} ${status}`));
+```
+
 
 ### recent(token, [options={}], [success], [error])
 
@@ -143,7 +156,7 @@ recent(API_TOKEN, {media_type: 'image'}, ({ items }) =>
 
 ### upload
 
-Tool for uploading a file to the user drive. See details.
+Tool for uploading a file to the user drive.
 
 #### link(token, path, [overwrite = false], [success], [error])
 
@@ -167,4 +180,23 @@ upload.link(API_TOKEN, 'disk:/path/to/the/file.txt', true, ({ href, method }) =>
 
   fileStream.on('end', () => uploadStream.end());
 });
+```
+
+#### remoteFile(token, url, path, [success], [error])
+
+Upload remote file to the disk by its url. See [details](https://tech.yandex.ru/disk/api/reference/upload-ext-docpage/). Example:
+
+```javascript
+import upload from '../lib/upload';
+
+const { API_TOKEN = '' } = process.env;
+const url = 'https://tech.yandex.com/disk/doc/dg/yandex-disk-dg.pdf';
+const path = 'disk:/Приложения/ya-disk-api/yandex-disk-dg.pdf';
+
+upload.remoteFile(API_TOKEN, url, path, ({ href }) => {
+  process.stdout.write(`File upload started!
+You can check the operation status by url below:
+${href}
+  \n`);
+}, (err) => process.stderror.write(err.message));
 ```

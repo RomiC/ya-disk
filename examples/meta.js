@@ -1,6 +1,6 @@
 import meta from '../lib/meta';
 
-const API_TOKEN = '';
+const { API_TOKEN = '' } = process.env;
 
 meta.add(
   API_TOKEN,

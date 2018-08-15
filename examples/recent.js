@@ -1,6 +1,6 @@
 import recent from '../lib/recent';
 
-const API_TOKEN = '';
+const { API_TOKEN = '' } = process.env;
 
 recent(
   API_TOKEN,

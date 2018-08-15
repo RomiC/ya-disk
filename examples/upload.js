@@ -3,7 +3,7 @@ import { request } from 'https';
 import { parse } from 'url';
 import upload from '../lib/upload';
 
-const API_TOKEN = '';
+const { API_TOKEN = '' } = process.env;
 
 upload.link(
   API_TOKEN,

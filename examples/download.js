@@ -5,7 +5,7 @@ import { createWriteStream } from 'fs';
 import { https } from 'follow-redirects';
 import download from '../lib/download';
 
-const API_TOKEN = '';
+const { API_TOKEN = '' } = process.env;
 const file = 'disk:/Зима.jpg';
 
 download.link(
