@@ -204,14 +204,14 @@ ${href}
 
 ### create(token, path, [success], [error])
 
-Create file or folder. See [details](https://tech.yandex.com/disk/api/reference/create-folder-docpage/).
+Create folder. See [details](https://tech.yandex.com/disk/api/reference/create-folder-docpage/).
 
 ```javascript
 import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-resources.create(API_TOKEN, 'disk:/fileOrFolderName', () => {
+resources.create(API_TOKEN, 'disk:/folderName', () => {
   // success
 },() => {
   //error
