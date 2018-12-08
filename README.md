@@ -1,6 +1,7 @@
 # ya-disk2
 ---
 Original Repo: https://github.com/RomiC/ya-disk
+Original Package: https://www.npmjs.com/package/ya-disk
 ---
 
 Yandex Disk API library which provides some methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
