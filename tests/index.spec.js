@@ -15,4 +15,6 @@ test('it should export all methods', (t) => {
   t.is(typeof yaDisk.upload, 'object', 'upload should be an object');
   t.is(typeof yaDisk.upload.link, 'function', 'upload.link should be a function');
   t.is(typeof yaDisk.upload.remoteFile, 'function', 'upload.remoteFile should be a function');
+  t.is(typeof yaDisk.resources.create, 'function', 'resources.create should be a function');
+  t.is(typeof yaDisk.resources.remove, 'function', 'resources.remove should be a function');
 });
