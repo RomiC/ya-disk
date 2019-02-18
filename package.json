@@ -1,11 +1,11 @@
 {
-  "name": "ya-disk2",
-  "version": "1.3.2",
+  "name": "ya-disk",
+  "version": "1.3.1",
   "description": "Yandex Disk API Library",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/myazarc/ya-disk2.git"
+    "url": "git+ssh://git@github.com/RomiC/ya-disk.git"
   },
   "author": "Roman Charugin <i@charugin.ru> (https://github.com/RomiC)",
   "contributors": [
@@ -31,9 +31,9 @@
     "sinon": "^6.1.5"
   },
   "bugs": {
-    "url": "https://github.com/myazarc/ya-disk2/issues"
+    "url": "https://github.com/RomiC/ya-disk/issues"
   },
-  "homepage": "https://github.com/myazarc/ya-disk2#readme",
+  "homepage": "https://github.com/RomiC/ya-disk#readme",
   "directories": {
     "test": "tests/*.spec.js"
   },

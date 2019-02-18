@@ -1,13 +1,9 @@
-# ya-disk2
----
-Original Repo: https://github.com/RomiC/ya-disk
-Original Package: https://www.npmjs.com/package/ya-disk
----
+# ya-disk
 
 Yandex Disk API library which provides some methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
 ```javascript
-import { info } from 'ya-disk2';
+import { info } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -23,7 +19,7 @@ Yes, it's callback-based lib. Because it was made to have at least dependencies 
 
 ```javascript
 import Promise from 'bluebird';
-import { info } from 'ya-disk2';
+import { info } from 'ya-disk';
 
 const infoPromise = (token) => new Promise((resolve, reject) => info(token, resolve, reject));
 
@@ -33,7 +29,7 @@ export default infoPromise;
 ## Installation
 
 ```sh
-npm install --save ya-disk2
+npm install --save ya-disk
 ```
 
 ## Authorization
@@ -79,7 +75,7 @@ download.link(API_TOKEN, file, ({ method, href }) => {
 Getting common info about user drive. See [details](https://tech.yandex.ru/disk/api/reference/capacity-docpage/). Example:
 
 ```javascript
-import { info } from 'ya-disk2';
+import { info } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -97,7 +93,7 @@ info(API_TOKEN, ({ total_space, used_space }) =>
 Getting a flat list of the user files on the drive. See [details](https://tech.yandex.ru/disk/api/reference/all-files-docpage/).
 
 ```javascript
-import { list } from 'ya-disk2';
+import { list } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -111,7 +107,7 @@ list(API_TOKEN, {}, ({ items }) => items.forEach(({ name, size}) => console.log(
 Getting meta-information about the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-docpage/). Example:
 
 ```javascript
-import { meta } from 'ya-disk2';
+import { meta } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -123,7 +119,7 @@ meta.get(API_TOKEN, 'disk:/path/to/the/file.txt', {}, console.log);
 Append meta information to the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-add-docpage/). Example:
 
 ```javascript
-import { meta } from 'ya-disk2';
+import { meta } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -135,7 +131,7 @@ meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', { my_field: 'my_value' });
 Getting operation status. See [details](https://tech.yandex.ru/disk/api/reference/operations-docpage/). Example:
 
 ```javascript
-import operations from 'ya-disk2';
+import operations from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const operationId = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
@@ -149,7 +145,7 @@ opeartions(API_TOKEN, operationId, ({status}) => console.log(`Operation ${opeart
 Getting a flat list of recently changed files. See [details](https://tech.yandex.ru/disk/api/reference/recent-upload-docpage/).
 
 ```javascript
-import { recent } from 'ya-disk2';
+import { recent } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -171,7 +167,7 @@ import { createReadStream } from 'fs';
 import { request } from 'https';
 import { parse } from 'url';
 
-import { upload } from 'ya-disk2';
+import { upload } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -195,7 +191,7 @@ import upload from '../lib/upload';
 
 const { API_TOKEN = '' } = process.env;
 const url = 'https://tech.yandex.com/disk/doc/dg/yandex-disk-dg.pdf';
-const path = 'disk:/Приложения/ya-disk2-api/yandex-disk-dg.pdf';
+const path = 'disk:/Приложения/ya-disk-api/yandex-disk-dg.pdf';
 
 upload.remoteFile(API_TOKEN, url, path, ({ href }) => {
   process.stdout.write(`File upload started!
@@ -211,7 +207,7 @@ ${href}
 Create folder. See [details](https://tech.yandex.com/disk/api/reference/create-folder-docpage/).
 
 ```javascript
-import { resources } from 'ya-disk2';
+import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -226,7 +222,7 @@ resources.create(API_TOKEN, 'disk:/folderName', () => {
 Delete file or folder. See [details](https://tech.yandex.com/disk/api/reference/delete-docpage/).
 
 ```javascript
-import { resources } from 'ya-disk2';
+import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
