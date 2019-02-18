@@ -21,7 +21,7 @@ test('create folder', (t) => {
     }
   });
 
-  create(API_TOKEN);
+  create(API_TOKEN,folderName);
 
   requestMock.verify();
   requestMock.restore();
@@ -41,7 +41,7 @@ test('remove folder or file', (t) => {
     }
   });
 
-  remove(API_TOKEN);
+  remove(API_TOKEN,folderName,permanently);
 
   requestMock.verify();
   requestMock.restore();

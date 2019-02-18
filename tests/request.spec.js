@@ -286,3 +286,26 @@ test.serial('patch wrapper', (t) => {
 
   t.pass();
 });
+
+test.serial('delete wrapper', (t) => {
+  const requestMock = mock(request);
+
+  requestMock.expects('request').calledWith({
+    url: url,
+    token: API_TOKEN,
+    method: 'DELETE',
+    data: data
+  });
+
+  request.delete({
+    url: url,
+    token: API_TOKEN,
+    query: query,
+    data: data
+  });
+
+  requestMock.verify();
+  requestMock.restore();
+
+  t.pass();
+});
