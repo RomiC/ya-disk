@@ -5,5 +5,6 @@ module.exports = {
   meta: require('./lib/meta'),
   operations: require('./lib/operations'),
   recent: require('./lib/recent'),
-  upload: require('./lib/upload')
+  upload: require('./lib/upload'),
+  resources: require('./lib/resources'),
 };

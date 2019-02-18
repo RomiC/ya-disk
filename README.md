@@ -200,3 +200,34 @@ ${href}
   \n`);
 }, (err) => process.stderror.write(err.message));
 ```
+### File and Folder Actions
+
+### create(token, path, [success], [error])
+
+Create folder. See [details](https://tech.yandex.com/disk/api/reference/create-folder-docpage/).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+resources.create(API_TOKEN, 'disk:/folderName', () => {
+  // success
+},() => {
+  //error
+});
+```
+### remove(token, path, permanently, [success], [error])
+
+Delete file or folder. See [details](https://tech.yandex.com/disk/api/reference/delete-docpage/).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false, () => {
+  // success
+},() => {
+  //error
+});
