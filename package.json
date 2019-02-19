@@ -58,9 +58,6 @@
     "files": [
       "tests/*.spec.js"
     ],
-    "require": [
-      "babel-core"
-    ],
     "failWithoutAssertions": true
   },
   "lint-staged": {
