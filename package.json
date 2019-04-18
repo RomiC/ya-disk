@@ -27,8 +27,8 @@
     "follow-redirects": "^1.5.5",
     "husky": "^1.3.1",
     "lint-staged": "^8.1.4",
-    "nyc": "^13.3.0",
-    "sinon": "^7.2.4"
+    "nyc": "^14.0.0",
+    "sinon": "^7.3.2"
   },
   "bugs": {
     "url": "https://github.com/RomiC/ya-disk/issues"
