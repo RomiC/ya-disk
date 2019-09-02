@@ -101,8 +101,9 @@ test.serial.cb('firing successfull callback with correct params', (t) => {
       url,
       API_TOKEN
     },
-    (res) => {
+    (res, statusCode) => {
       t.deepEqual(res, expectedArg, 'Should be called with correct args');
+      t.is(statusCode, 200, 'Should be called with correct status code');
       t.end();
     }
   );
@@ -132,9 +133,10 @@ test.serial.cb('firing error callback with response error info', (t) => {
       token: API_TOKEN
     },
     null,
-    (err) => {
+    (err, statusCode) => {
       t.is(err.name, expectedArg.error, 'Error should have a proper name');
       t.is(err.message, expectedArg.description, 'Error should have a proper description');
+      t.is(statusCode, 401, 'Should be called with correct status code');
       t.end();
     }
   );
