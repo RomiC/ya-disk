@@ -231,3 +231,36 @@ resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false, () => {
 },() => {
   //error
 });
+```
+
+### copy(token, from, path, overwrite, [success], [error])
+
+Copy file or folder from `from` to `path`. See [details](https://tech.yandex.com/disk/api/reference/copy-docpage/).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+resources.copy(API_TOKEN, 'disk:/fileOrFolderName1', 'disk:/fileOrFolderName2', false, () => {
+  // success
+},() => {
+  //error
+});
+```
+
+### move(token, from, path, overwrite, [success], [error])
+
+Move file or folder from `from` to `path`. See [details](https://tech.yandex.com/disk/api/reference/move-docpage/).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+resources.move(API_TOKEN, 'disk:/fileOrFolderName1', 'disk:/fileOrFolderName2', false, () => {
+  // success
+},() => {
+  //error
+});
+```
