@@ -108,6 +108,30 @@ test.serial.cb('firing successfull callback with correct params', (t) => {
   );
 });
 
+test.serial.cb(`don't parse empty body`, (t) => {
+  const httpsRequest = stub(https, 'request');
+
+  const res = new PassThrough;
+  res.statusCode = 201;
+  res.end();
+
+  const req = new PassThrough;
+
+  httpsRequest.callsArgWith(1, res)
+    .returns(req);
+
+  request.request(
+    {
+      url,
+      API_TOKEN,
+    },
+    (res) => {
+      t.is(res, null, 'Should be called with null');
+      t.end();
+    }
+  );
+});
+
 test.serial.cb('firing error callback with response error info', (t) => {
   const httpsRequest = stub(https, 'request');
 
