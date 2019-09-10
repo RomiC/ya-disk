@@ -133,10 +133,9 @@ test.serial.cb('firing error callback with response error info', (t) => {
       token: API_TOKEN
     },
     null,
-    (err, statusCode) => {
+    (err) => {
       t.is(err.name, expectedArg.error, 'Error should have a proper name');
       t.is(err.message, expectedArg.description, 'Error should have a proper description');
-      t.is(statusCode, 401, 'Should be called with correct status code');
       t.end();
     }
   );
