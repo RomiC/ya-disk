@@ -1,6 +1,6 @@
 {
   "name": "ya-disk",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Yandex Disk API Library",
   "main": "index.js",
   "repository": {
@@ -10,7 +10,8 @@
   "author": "Roman Charugin <i@charugin.ru> (https://github.com/RomiC)",
   "contributors": [
     "Roman Charugin <i@charugin.ru> (https://github.com/RomiC)",
-    "Mustafa Yazar <myazarc@gmail.com> (https://github.com/myazarc)"
+    "Mustafa Yazar <myazarc@gmail.com> (https://github.com/myazarc)",
+    "Alexey Gerasimov <lokomot476@gmail.com> (https://github.com/fan-tom)"
   ],
   "license": "MIT",
   "engines": {
