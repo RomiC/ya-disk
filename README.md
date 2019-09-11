@@ -36,6 +36,12 @@ npm install --save ya-disk
 
 Each method requires an OAuth token. You can receive one manually or use one of OAuth library, i.e. [passport-yandex-token](https://github.com/ghaiklor/passport-yandex-token).
 
+## Callbacks
+
+Each method accepts `success` and `error` callbacks.
+Success callback is called with deserialized (`JSON.parse`) response body
+and response HTTP status code (required in [copy](#copytoken-from-path-overwrite-success-error)/[move](#movetoken-from-path-overwrite-success-error)) operations).
+Error callback is called with deserialized (`JSON.parse`) response body
 ## List of available methods
 
 ### download
@@ -231,3 +237,36 @@ resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false, () => {
 },() => {
   //error
 });
+```
+
+### copy(token, from, path, overwrite, [success], [error])
+
+Copy file or folder from `from` to `path`. See [details](https://tech.yandex.com/disk/api/reference/copy-docpage/).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+resources.copy(API_TOKEN, 'disk:/fileOrFolderName1', 'disk:/fileOrFolderName2', false, () => {
+  // success
+},() => {
+  //error
+});
+```
+
+### move(token, from, path, overwrite, [success], [error])
+
+Move file or folder from `from` to `path`. See [details](https://tech.yandex.com/disk/api/reference/move-docpage/).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+resources.move(API_TOKEN, 'disk:/fileOrFolderName1', 'disk:/fileOrFolderName2', false, () => {
+  // success
+},() => {
+  //error
+});
+```
