@@ -36,6 +36,12 @@ npm install --save ya-disk
 
 Each method requires an OAuth token. You can receive one manually or use one of OAuth library, i.e. [passport-yandex-token](https://github.com/ghaiklor/passport-yandex-token).
 
+## Callbacks
+
+Each method accepts `success` and `error` callbacks.
+Success callback is called with deserialized (`JSON.parse`) response body
+and response HTTP status code (required in [copy](#copytoken-from-path-overwrite-success-error)/[move](#movetoken-from-path-overwrite-success-error)) operations).
+Error callback is called with deserialized (`JSON.parse`) response body
 ## List of available methods
 
 ### download
