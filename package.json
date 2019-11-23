@@ -20,7 +20,7 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.7.4",
-    "@babel/node": "^7.5.0",
+    "@babel/node": "^7.7.4",
     "@babel/preset-env": "^7.5.4",
     "ava": "^2.2.0",
     "codecov": "^3.0.4",
