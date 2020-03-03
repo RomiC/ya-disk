@@ -25,11 +25,12 @@
     "ava": "^2.2.0",
     "codecov": "^3.0.4",
     "eslint": "^6.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "follow-redirects": "^1.5.5",
     "husky": "^4.0.2",
     "lint-staged": "^10.0.3",
-    "nyc": "^15.0.0",
-    "sinon": "^9.0.0"
+    "prettier": "^1.19.1"
   },
   "bugs": {
     "url": "https://github.com/RomiC/ya-disk/issues"
@@ -40,10 +41,10 @@
   },
   "scripts": {
     "example": "babel-node",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "precommit": "lint-staged",
-    "prepush": "npm test",
+    "lint": "eslint --max-warnings 0",
+    "lint:fix": "npm run lint -- --fix",
+    "lint:all": "npm run lint -- lib/* tests/* __mocks__/* examples/*",
+    "lint:all:fix": "npm run lint:all -- --fix",
     "test": "ava tests/*.spec.js",
     "test:ci": "nyc npm test",
     "test:watch": "npm test -- --watch",
@@ -55,11 +56,8 @@
     "disk",
     "api"
   ],
-  "ava": {
-    "files": [
-      "tests/*.spec.js"
-    ],
-    "failWithoutAssertions": true
+  "lint-staged": {
+    "+(examples|lib|tests|__mocks__)/*.js": "npm run lint:fix"
   },
   "lint-staged": {
     "+(examples|lib|tests)/*.js": [

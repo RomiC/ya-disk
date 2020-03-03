@@ -21,7 +21,8 @@ Yes, it's callback-based lib. Because it was made to have at least dependencies 
 import Promise from 'bluebird';
 import { info } from 'ya-disk';
 
-const infoPromise = (token) => new Promise((resolve, reject) => info(token, resolve, reject));
+const infoPromise = (token) =>
+  new Promise((resolve, reject) => info(token, resolve, reject));
 
 export default infoPromise;
 ```
@@ -42,6 +43,7 @@ Each method accepts `success` and `error` callbacks.
 Success callback is called with deserialized (`JSON.parse`) response body
 and response HTTP status code (required in [copy](#copytoken-from-path-overwrite-success-error)/[move](#movetoken-from-path-overwrite-success-error)) operations).
 Error callback is called with deserialized (`JSON.parse`) response body
+
 ## List of available methods
 
 ### download
@@ -64,16 +66,21 @@ import { download } from '../lib/download';
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const file = 'disk:/Зима.jpg';
 
-download.link(API_TOKEN, file, ({ method, href }) => {
-  const output = createWriteStream('Зима.jpg');
-  const req = https.get(href, (res) => {
-    res.on('end', () => output.end());
-    res.pipe(output);
-  });
+download.link(
+  API_TOKEN,
+  file,
+  ({ method, href }) => {
+    const output = createWriteStream('Зима.jpg');
+    const req = https.get(href, (res) => {
+      res.on('end', () => output.end());
+      res.pipe(output);
+    });
 
-  req.on('error', console.error);
-  req.end();
-}, console.error);
+    req.on('error', console.error);
+    req.end();
+  },
+  console.error
+);
 ```
 
 ### info(token, [succes], [error])
@@ -103,7 +110,9 @@ import { list } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-list(API_TOKEN, {}, ({ items }) => items.forEach(({ name, size}) => console.log('%s: %dB', name, size)));
+list(API_TOKEN, {}, ({ items }) =>
+  items.forEach(({ name, size }) => console.log('%s: %dB', name, size))
+);
 ```
 
 ### meta
@@ -142,9 +151,10 @@ import operations from 'ya-disk';
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const operationId = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
 
-opeartions(API_TOKEN, operationId, ({status}) => console.log(`Operation ${opeartionId} ${status}`));
+opeartions(API_TOKEN, operationId, ({ status }) =>
+  console.log(`Operation ${opeartionId} ${status}`)
+);
 ```
-
 
 ### recent(token, [options={}], [success], [error])
 
@@ -155,9 +165,9 @@ import { recent } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-recent(API_TOKEN, {media_type: 'image'}, ({ items }) =>
-  items.forEach((f) =>
-    console.log(`${f.name} (${f.size}B)`)));
+recent(API_TOKEN, { media_type: 'image' }, ({ items }) =>
+  items.forEach((f) => console.log(`${f.name} (${f.size}B)`))
+);
 ```
 
 ### upload
@@ -177,15 +187,20 @@ import { upload } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-upload.link(API_TOKEN, 'disk:/path/to/the/file.txt', true, ({ href, method }) => {
-  const fileStream = createReadStream('file.txt');
+upload.link(
+  API_TOKEN,
+  'disk:/path/to/the/file.txt',
+  true,
+  ({ href, method }) => {
+    const fileStream = createReadStream('file.txt');
 
-  const uploadStream = request(Object.assign(parse(href), { method }));
+    const uploadStream = request(Object.assign(parse(href), { method }));
 
-  fileStream.pipe(uploadStream);
+    fileStream.pipe(uploadStream);
 
-  fileStream.on('end', () => uploadStream.end());
-});
+    fileStream.on('end', () => uploadStream.end());
+  }
+);
 ```
 
 #### remoteFile(token, url, path, [success], [error])
@@ -199,13 +214,20 @@ const { API_TOKEN = '' } = process.env;
 const url = 'https://tech.yandex.com/disk/doc/dg/yandex-disk-dg.pdf';
 const path = 'disk:/Приложения/ya-disk-api/yandex-disk-dg.pdf';
 
-upload.remoteFile(API_TOKEN, url, path, ({ href }) => {
-  process.stdout.write(`File upload started!
+upload.remoteFile(
+  API_TOKEN,
+  url,
+  path,
+  ({ href }) => {
+    process.stdout.write(`File upload started!
 You can check the operation status by url below:
 ${href}
   \n`);
-}, (err) => process.stderror.write(err.message));
+  },
+  (err) => process.stderror.write(err.message)
+);
 ```
+
 ### File and Folder Actions
 
 ### create(token, path, [success], [error])
@@ -217,12 +239,18 @@ import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-resources.create(API_TOKEN, 'disk:/folderName', () => {
-  // success
-},() => {
-  //error
-});
+resources.create(
+  API_TOKEN,
+  'disk:/folderName',
+  () => {
+    // success
+  },
+  () => {
+    //error
+  }
+);
 ```
+
 ### remove(token, path, permanently, [success], [error])
 
 Delete file or folder. See [details](https://tech.yandex.com/disk/api/reference/delete-docpage/).
@@ -232,11 +260,17 @@ import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false, () => {
-  // success
-},() => {
-  //error
-});
+resources.remove(
+  API_TOKEN,
+  'disk:/fileOrFolderName',
+  false,
+  () => {
+    // success
+  },
+  () => {
+    //error
+  }
+);
 ```
 
 ### copy(token, from, path, overwrite, [success], [error])
@@ -248,11 +282,18 @@ import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-resources.copy(API_TOKEN, 'disk:/fileOrFolderName1', 'disk:/fileOrFolderName2', false, () => {
-  // success
-},() => {
-  //error
-});
+resources.copy(
+  API_TOKEN,
+  'disk:/fileOrFolderName1',
+  'disk:/fileOrFolderName2',
+  false,
+  () => {
+    // success
+  },
+  () => {
+    //error
+  }
+);
 ```
 
 ### move(token, from, path, overwrite, [success], [error])
@@ -264,9 +305,16 @@ import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-resources.move(API_TOKEN, 'disk:/fileOrFolderName1', 'disk:/fileOrFolderName2', false, () => {
-  // success
-},() => {
-  //error
-});
+resources.move(
+  API_TOKEN,
+  'disk:/fileOrFolderName1',
+  'disk:/fileOrFolderName2',
+  false,
+  () => {
+    // success
+  },
+  () => {
+    //error
+  }
+);
 ```

@@ -16,7 +16,7 @@ const query = {
   foo: 'string',
   bar: 3
 };
-const data = { "custom_properties": { "foo": "1", "bar": "2" } };
+const data = { custom_properties: { foo: '1', bar: '2' } };
 
 test.afterEach.always(() => {
   if (typeof https.request.restore === 'function') {
@@ -44,7 +44,11 @@ test.serial('calling https.request with correct DEFAULT params', (t) => {
   t.is(args.host, expectHost, 'Should call with correct host');
   t.is(args.path, expectPath, 'Should call with correct path');
   t.is(args.method, expectMethod, 'Should call with correct method');
-  t.deepEqual(args.headers, { 'Authorization': expectAuthHeader }, 'Should call with correct auth header');
+  t.deepEqual(
+    args.headers,
+    { Authorization: expectAuthHeader },
+    'Should call with correct auth header'
+  );
 });
 
 test.serial('calling https.request with correct params', (t) => {
@@ -68,33 +72,40 @@ test.serial('calling https.request with correct params', (t) => {
   const args = httpsSpy.args[0][0];
 
   t.is(args.host, expectHost, 'Should call with proper host');
-  t.is(args.path, `${expectPath}?${expectQuery}`, 'Should call with proper path and query params');
+  t.is(
+    args.path,
+    `${expectPath}?${expectQuery}`,
+    'Should call with proper path and query params'
+  );
   t.is(args.method, expectMethod, 'Should call with proper method');
-  t.deepEqual(args.headers, { 'Authorization': expectAuthHeader }, 'Should call with corrent auth header');
+  t.deepEqual(
+    args.headers,
+    { Authorization: expectAuthHeader },
+    'Should call with corrent auth header'
+  );
 });
 
 test.serial.cb('firing successfull callback with correct params', (t) => {
   const httpsRequest = stub(https, 'request');
 
   const expectedArg = {
-    "trash_size": 4631577437,
-    "total_space": 319975063552,
-    "used_space": 26157681270,
-    "system_folders": {
-      "applications": "disk:/Приложения",
-      "downloads": "disk:/Загрузки/"
+    trash_size: 4631577437,
+    total_space: 319975063552,
+    used_space: 26157681270,
+    system_folders: {
+      applications: 'disk:/Приложения',
+      downloads: 'disk:/Загрузки/'
     }
   };
 
-  const res = new PassThrough;
+  const res = new PassThrough();
   res.statusCode = 200;
   res.write(JSON.stringify(expectedArg));
   res.end();
 
-  const req = new PassThrough;
+  const req = new PassThrough();
 
-  httpsRequest.callsArgWith(1, res)
-    .returns(req);
+  httpsRequest.callsArgWith(1, res).returns(req);
 
   request.request(
     {
@@ -112,19 +123,18 @@ test.serial.cb('firing successfull callback with correct params', (t) => {
 test.serial.cb(`don't parse empty body`, (t) => {
   const httpsRequest = stub(https, 'request');
 
-  const res = new PassThrough;
+  const res = new PassThrough();
   res.statusCode = 201;
   res.end();
 
-  const req = new PassThrough;
+  const req = new PassThrough();
 
-  httpsRequest.callsArgWith(1, res)
-    .returns(req);
+  httpsRequest.callsArgWith(1, res).returns(req);
 
   request.request(
     {
       url,
-      API_TOKEN,
+      API_TOKEN
     },
     (res) => {
       t.is(res, null, 'Should be called with null');
@@ -137,19 +147,18 @@ test.serial.cb('firing error callback with response error info', (t) => {
   const httpsRequest = stub(https, 'request');
 
   const expectedArg = {
-    "description": "resource already exists",
-    "error": "PlatformResourceAlreadyExists"
+    description: 'resource already exists',
+    error: 'PlatformResourceAlreadyExists'
   };
 
-  const res = new PassThrough;
+  const res = new PassThrough();
   res.statusCode = 401;
   res.write(JSON.stringify(expectedArg));
   res.end();
 
-  const req = new PassThrough;
+  const req = new PassThrough();
 
-  httpsRequest.callsArgWith(1, res)
-    .returns(req);
+  httpsRequest.callsArgWith(1, res).returns(req);
 
   request.request(
     {
@@ -159,7 +168,11 @@ test.serial.cb('firing error callback with response error info', (t) => {
     null,
     (err) => {
       t.is(err.name, expectedArg.error, 'Error should have a proper name');
-      t.is(err.message, expectedArg.description, 'Error should have a proper description');
+      t.is(
+        err.message,
+        expectedArg.description,
+        'Error should have a proper description'
+      );
       t.end();
     }
   );
@@ -171,15 +184,14 @@ test.serial.cb('firing error callback with stream error info', (t) => {
   const errorMessage = 'sometimes it happens';
   const errorName = 'StreamError';
 
-  const res = new PassThrough;
+  const res = new PassThrough();
   res.statusCode = 200;
   res.write(JSON.stringify({ data: 'data' }));
   res.end();
 
-  const req = new PassThrough;
+  const req = new PassThrough();
 
-  httpsRequest.callsArgWith(1, res)
-    .returns(req);
+  httpsRequest.callsArgWith(1, res).returns(req);
 
   request.request(
     {
@@ -202,7 +214,7 @@ test.serial.cb('firing error callback with stream error info', (t) => {
 test.serial('sending correct data', (t) => {
   const httpsRequest = stub(https, 'request');
 
-  const req = new PassThrough;
+  const req = new PassThrough();
   const reqMock = mock(req);
 
   httpsRequest.returns(req);
