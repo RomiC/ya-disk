@@ -1,22 +1,20 @@
-import test from 'ava';
+const yaDisk = require('../index');
 
-import yaDisk from '../index';
-
-test('it should export all methods', (t) => {
-  t.is(typeof yaDisk.download, 'object', 'download should be an object');
-  t.is(typeof yaDisk.download.link, 'function', 'download.link should be a function');
-  t.is(typeof yaDisk.info, 'function', 'info should be a function');
-  t.is(typeof yaDisk.list, 'function', 'list should be a function');
-  t.is(typeof yaDisk.meta, 'object', 'meta should be an object');
-  t.is(typeof yaDisk.meta.add, 'function', 'meta.add should be a function');
-  t.is(typeof yaDisk.meta.get, 'function', 'meta.get should be a function');
-  t.is(typeof yaDisk.operations, 'function', 'opeartions should be a funtion');
-  t.is(typeof yaDisk.recent, 'function', 'recent should be a funtion');
-  t.is(typeof yaDisk.upload, 'object', 'upload should be an object');
-  t.is(typeof yaDisk.upload.link, 'function', 'upload.link should be a function');
-  t.is(typeof yaDisk.upload.remoteFile, 'function', 'upload.remoteFile should be a function');
-  t.is(typeof yaDisk.resources.create, 'function', 'resources.create should be a function');
-  t.is(typeof yaDisk.resources.remove, 'function', 'resources.remove should be a function');
-  t.is(typeof yaDisk.resources.copy, 'function', 'resources.copy should be a function');
-  t.is(typeof yaDisk.resources.move, 'function', 'resources.move should be a function');
+test('it should export all methods', () => {
+  expect(typeof yaDisk.download).toBe('object');
+  expect(typeof yaDisk.download.link).toBe('function');
+  expect(typeof yaDisk.info).toBe('function');
+  expect(typeof yaDisk.list).toBe('function');
+  expect(typeof yaDisk.meta).toBe('object');
+  expect(typeof yaDisk.meta.add).toBe('function');
+  expect(typeof yaDisk.meta.get).toBe('function');
+  expect(typeof yaDisk.operations).toBe('function');
+  expect(typeof yaDisk.recent).toBe('function');
+  expect(typeof yaDisk.upload).toBe('object');
+  expect(typeof yaDisk.upload.link).toBe('function');
+  expect(typeof yaDisk.upload.remoteFile).toBe('function');
+  expect(typeof yaDisk.resources.create).toBe('function');
+  expect(typeof yaDisk.resources.remove).toBe('function');
+  expect(typeof yaDisk.resources.copy).toBe('function');
+  expect(typeof yaDisk.resources.move).toBe('function');
 });

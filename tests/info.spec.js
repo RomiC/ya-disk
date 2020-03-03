@@ -1,24 +1,23 @@
-import { mock } from 'sinon';
-import test from 'ava';
+const info = require('../lib/info');
+const request = require('../lib/request');
 
-import request from '../lib/request';
-import info from '../lib/info';
+const { API_DISK_URL } = require('../lib/constants');
+const { API_TOKEN } = require('./constants');
 
-import { API_TOKEN } from './constants';
-import { API_DISK_URL } from '../lib/constants';
+jest.mock('../lib/request');
 
-test('should call request.do with correct params', (t) => {
-  const requestMock = mock(request);
+test('should call request.do with correct params', () => {
+  const onSuccessCallback = jest.mock();
+  const onErrorCallback = jest.mock();
 
-  requestMock.expects('get').once().withArgs({
-    url: API_DISK_URL,
-    token: API_TOKEN
-  });
+  info(API_TOKEN, onSuccessCallback, onErrorCallback);
 
-  info(API_TOKEN);
-
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
+  expect(request.get).toHaveBeenCalledWith(
+    {
+      url: API_DISK_URL,
+      token: API_TOKEN
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
 });
