@@ -1,26 +1,25 @@
-import test from 'ava';
-import { mock } from 'sinon';
+const request = require('../lib/request');
+const operations = require('../lib/operations');
 
-import request from '../lib/request';
-import operations from '../lib/operations';
-
-import { API_TOKEN } from './constants';
-import { API_OPERATIONS_URL } from '../lib/constants';
+const { API_TOKEN } = require('./constants');
+const { API_OPERATIONS_URL } = require('../lib/constants');
 
 const id = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
 
-test('status', (t) => {
-  const requestMock = mock(request);
+jest.mock('../lib/request');
 
-  requestMock.expects('get').calledWith({
-    url: `${API_OPERATIONS_URL}/${id}`,
-    token: API_TOKEN
-  });
+test('status', () => {
+  const onSuccessCallback = jest.fn();
+  const onErrorCallback = jest.fn();
 
-  operations(API_TOKEN, id);
+  operations(API_TOKEN, id, onSuccessCallback, onErrorCallback);
 
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
+  expect(request.get).toHaveBeenCalledWith(
+    {
+      url: `${API_OPERATIONS_URL}/${id}`,
+      token: API_TOKEN
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
 });

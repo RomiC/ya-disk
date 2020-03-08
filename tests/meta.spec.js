@@ -1,8 +1,5 @@
-import { mock } from 'sinon';
-import test from 'ava';
-
-import request from '../lib/request';
-import meta from '../lib/meta';
+const request = require('../lib/request');
+const meta = require('../lib/meta');
 
 const { API_TOKEN } = require('./constants');
 const { API_RESOURCES_URL } = require('../lib/constants');
@@ -15,44 +12,49 @@ const options = {
   preview_size: 'x120',
   preview_crop: true
 };
-const props = {
+const custom_properties = {
   uno: 'value1',
   duos: {
     tres: 'tres',
     quatros: 'quatros'
   }
 };
+const onSuccessCallback = jest.fn();
+const onErrorCallback = jest.fn();
 
-test('get', (t) => {
-  const requestMock = mock(request);
+jest.mock('../lib/request');
 
-  requestMock.expects('get').calledWith({
-    url: API_RESOURCES_URL,
-    token: API_TOKEN,
-    query: Object.assign({ path }, options)
-  });
+test('get', () => {
+  meta.get(API_TOKEN, path, options, onSuccessCallback, onErrorCallback);
 
-  meta.get(API_TOKEN, path, options);
-
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
+  expect(request.get).toHaveBeenCalledWith(
+    {
+      url: API_RESOURCES_URL,
+      token: API_TOKEN,
+      query: Object.assign({ path }, options)
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
 });
 
-test('add', (t) => {
-  const requestMock = mock(request);
+test('add', () => {
+  meta.add(
+    API_TOKEN,
+    path,
+    custom_properties,
+    onSuccessCallback,
+    onErrorCallback
+  );
 
-  requestMock.expects('patch').calledWith({
-    url: API_RESOURCES_URL,
-    token: API_TOKEN,
-    data: props
-  });
-
-  meta.add(API_TOKEN, path, props);
-
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
+  expect(request.patch).toHaveBeenCalledWith(
+    {
+      url: API_RESOURCES_URL,
+      token: API_TOKEN,
+      query: { path },
+      data: { custom_properties }
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
 });
