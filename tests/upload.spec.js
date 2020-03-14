@@ -1,52 +1,47 @@
-import test from 'ava';
-import { mock } from 'sinon';
+const request = require('../lib/request');
+const { link, remoteFile } = require('../lib/upload');
 
-import request from '../lib/request';
-import { link, remoteFile } from '../lib/upload';
-
-import { API_TOKEN } from './constants';
-import { API_UPLOAD_LINK_URL } from '../lib/constants';
+const { API_TOKEN } = require('./constants');
+const { API_UPLOAD_LINK_URL } = require('../lib/constants');
 
 const path = 'disk:/file.txt';
 const overwrite = true;
 const url = 'https://example.com/file.txt';
+const onSuccessCallback = jest.fn();
+const onErrorCallback = jest.fn();
 
-test('link', (t) => {
-  const requestMock = mock(request);
+jest.mock('../lib/request');
 
-  requestMock.expects('get').calledWith({
-    url: API_UPLOAD_LINK_URL,
-    token: API_TOKEN,
-    query: {
-      path: path,
-      overwrite: overwrite
-    }
-  });
+test('link', () => {
+  link(API_TOKEN, path, overwrite, onSuccessCallback, onErrorCallback);
 
-  link(API_TOKEN, path, overwrite);
-
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
+  expect(request.get).toHaveBeenCalledWith(
+    {
+      url: API_UPLOAD_LINK_URL,
+      token: API_TOKEN,
+      query: {
+        path: path,
+        overwrite: overwrite
+      }
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
 });
 
-test('remoteFile', (t) => {
-  const requestMock = mock(request);
+test('remoteFile', () => {
+  remoteFile(API_TOKEN, url, path, onSuccessCallback, onErrorCallback);
 
-  requestMock.expects('post').calledWith({
-    url: API_UPLOAD_LINK_URL,
-    token: API_TOKEN,
-    query: {
-      url: url,
-      path: path
-    }
-  });
-
-  remoteFile(API_TOKEN, url, path);
-
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
+  expect(request.post).toHaveBeenCalledWith(
+    {
+      url: API_UPLOAD_LINK_URL,
+      token: API_TOKEN,
+      query: {
+        url: url,
+        path: path
+      }
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
 });

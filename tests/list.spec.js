@@ -1,11 +1,8 @@
-import { mock } from 'sinon';
-import test from 'ava';
+const request = require('../lib/request');
+const list = require('../lib/list');
 
-import request from '../lib/request';
-import list from '../lib/list';
-
-import { API_TOKEN } from './constants';
-import { API_FILES_URL } from '../lib/constants';
+const { API_TOKEN } = require('./constants');
+const { API_FILES_URL } = require('../lib/constants');
 
 const options = {
   limit: 13,
@@ -15,19 +12,21 @@ const options = {
   preview_crop: true
 };
 
-test('should call request.get ', (t) => {
-  const requestMock = mock(request);
+jest.mock('../lib/request');
 
-  requestMock.expects('get').calledWith({
-    url: API_FILES_URL,
-    token: API_TOKEN,
-    query: options
-  });
+test('should call request.get with proper params', () => {
+  const onSuccessCallback = jest.fn();
+  const onErrorCallback = jest.fn();
 
-  list(API_TOKEN, options);
+  list(API_TOKEN, options, onSuccessCallback, onErrorCallback);
 
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
+  expect(request.get).toHaveBeenCalledWith(
+    {
+      url: API_FILES_URL,
+      token: API_TOKEN,
+      query: options
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
 });

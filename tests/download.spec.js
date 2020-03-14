@@ -1,27 +1,26 @@
-import { mock } from 'sinon';
-import test from 'ava';
+const request = require('../lib/request');
+const { link } = require('../lib/download');
 
-import request from '../lib/request';
-import { link } from '../lib/download';
-
-import { API_TOKEN } from './constants';
-import { API_DOWNLOAD_LINK_URL } from '../lib/constants';
+const { API_TOKEN } = require('./constants');
+const { API_DOWNLOAD_LINK_URL } = require('../lib/constants');
 
 const path = 'disk:/file.txt';
 
-test('should call request.do method with correct params', (t) => {
-  const requestMock = mock(request);
+jest.mock('../lib/request');
 
-  requestMock.expects('get').calledWith({
-    url: API_DOWNLOAD_LINK_URL,
-    token: API_TOKEN,
-    query: { path }
-  });
+test('should call request.do method with correct params', () => {
+  const onSuccessCallback = jest.fn();
+  const onErrorCallback = jest.fn();
 
-  link(API_TOKEN, path);
+  link(API_TOKEN, path, onSuccessCallback, onErrorCallback);
 
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
+  expect(request.get).toHaveBeenCalledWith(
+    {
+      url: API_DOWNLOAD_LINK_URL,
+      token: API_TOKEN,
+      query: { path }
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
 });

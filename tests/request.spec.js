@@ -1,13 +1,11 @@
-import test from 'ava';
-import https from 'https';
-import { stringify as queryStringfy } from 'querystring';
-import { mock, spy, stub } from 'sinon';
-import { PassThrough } from 'stream';
-import { parse as urlParse } from 'url';
+const https = require('https');
+const { Readable } = require('stream');
+const { stringify: queryStringify } = require('querystring');
+const { parse: urlParse } = require('url');
 
-import request from '../lib/request';
+const request = require('../lib/request');
 
-import { API_TOKEN } from './constants';
+const { API_TOKEN: token } = require('./constants');
 
 const url = 'https://cloud-api.yandex.net/v1/disk';
 const urlParsed = urlParse(url);
@@ -16,321 +14,265 @@ const query = {
   foo: 'string',
   bar: 3
 };
-const data = { "custom_properties": { "foo": "1", "bar": "2" } };
+const data = {
+  baz: 4,
+  zoom: 'zoom'
+};
+const queryString = queryStringify(query);
+const authHeader = `OAuth ${token}`;
+const onSuccess = jest.fn();
+const onError = jest.fn();
 
-test.afterEach.always(() => {
-  if (typeof https.request.restore === 'function') {
-    https.request.restore();
+class IncomingMessageStub extends Readable {
+  constructor(message, statusCode) {
+    super();
+
+    this._message = message;
+    this.statusCode = statusCode;
   }
-});
 
-test.serial('calling https.request with correct DEFAULT params', (t) => {
-  const httpsSpy = spy(https, 'request');
+  _read() {
+    this.push(this._message);
+    this.push(null);
+  }
+}
 
-  const {
-    host: expectHost,
-    path: expectPath,
-    expectMethod = 'GET',
-    expectAuthHeader = `OAuth ${API_TOKEN}`
-  } = urlParsed;
+jest.mock('https');
 
+afterEach(() => jest.clearAllMocks());
+
+test('should have proper default params and pass them to https.request', () => {
   request.request({
-    url: url,
-    token: API_TOKEN
+    url,
+    token
   });
 
-  const args = httpsSpy.args[0][0];
-
-  t.is(args.host, expectHost, 'Should call with correct host');
-  t.is(args.path, expectPath, 'Should call with correct path');
-  t.is(args.method, expectMethod, 'Should call with correct method');
-  t.deepEqual(args.headers, { 'Authorization': expectAuthHeader }, 'Should call with correct auth header');
+  expect(https.request).toHaveBeenLastCalledWith(
+    Object.assign(urlParsed, {
+      method: 'GET',
+      headers: { Authorization: authHeader }
+    }),
+    expect.any(Function)
+  );
 });
 
-test.serial('calling https.request with correct params', (t) => {
-  const httpsSpy = spy(https, 'request');
-
-  const {
-    host: expectHost,
-    path: expectPath,
-    expectMethod = method,
-    expectAuthHeader = `OAuth ${API_TOKEN}`,
-    expectQuery = queryStringfy(query)
-  } = urlParsed;
-
+test('should call https.request with correct params', () => {
   request.request({
-    url: url,
-    token: API_TOKEN,
-    method: method,
-    query: query
+    url,
+    token,
+    method,
+    query
   });
 
-  const args = httpsSpy.args[0][0];
-
-  t.is(args.host, expectHost, 'Should call with proper host');
-  t.is(args.path, `${expectPath}?${expectQuery}`, 'Should call with proper path and query params');
-  t.is(args.method, expectMethod, 'Should call with proper method');
-  t.deepEqual(args.headers, { 'Authorization': expectAuthHeader }, 'Should call with corrent auth header');
+  expect(https.request).toHaveBeenCalledWith(
+    Object.assign({}, urlParsed, {
+      method,
+      path: `${urlParsed.path}?${queryString}`,
+      headers: {
+        Authorization: authHeader
+      }
+    }),
+    expect.any(Function)
+  );
 });
 
-test.serial.cb('firing successfull callback with correct params', (t) => {
-  const httpsRequest = stub(https, 'request');
-
-  const expectedArg = {
-    "trash_size": 4631577437,
-    "total_space": 319975063552,
-    "used_space": 26157681270,
-    "system_folders": {
-      "applications": "disk:/Приложения",
-      "downloads": "disk:/Загрузки/"
+test('should call onSuccess-callback with parsed result and status code', (done) => {
+  const expectedResponse = {
+    param1: 4631577437,
+    param2: 'disk:/Загрузки/',
+    param3: {
+      param4: 'disk:/Приложения'
     }
   };
-
-  const res = new PassThrough;
-  res.statusCode = 200;
-  res.write(JSON.stringify(expectedArg));
-  res.end();
-
-  const req = new PassThrough;
-
-  httpsRequest.callsArgWith(1, res)
-    .returns(req);
 
   request.request(
     {
       url,
-      API_TOKEN
+      token
     },
-    (res, statusCode) => {
-      t.deepEqual(res, expectedArg, 'Should be called with correct args');
-      t.is(statusCode, 200, 'Should be called with correct status code');
-      t.end();
-    }
+    onSuccess
   );
+
+  const res = new IncomingMessageStub(JSON.stringify(expectedResponse), 200);
+
+  https.request._requestCallback(res);
+
+  res.on('end', function() {
+    expect(onSuccess).toHaveBeenCalledWith(expectedResponse, res.statusCode);
+    done();
+  });
 });
 
-test.serial.cb(`don't parse empty body`, (t) => {
-  const httpsRequest = stub(https, 'request');
+test('should call onSuccess-callback with null and status code when response is empty', (done) => {
+  request.request(
+    {
+      url,
+      token
+    },
+    onSuccess
+  );
 
-  const res = new PassThrough;
-  res.statusCode = 201;
-  res.end();
+  const res = new IncomingMessageStub('', 201);
 
-  const req = new PassThrough;
+  https.request._requestCallback(res);
 
-  httpsRequest.callsArgWith(1, res)
-    .returns(req);
+  res.on('end', function() {
+    expect(onSuccess).toHaveBeenCalledWith(null, 201);
+    done();
+  });
+});
+
+test(`should call onError-callback with Error instance when response code isn't 2xx`, (done) => {
+  const expectedResponse = {
+    description: 'resource already exists',
+    error: 'PlatformResourceAlreadyExists'
+  };
 
   request.request(
     {
       url,
-      API_TOKEN,
+      token
     },
-    (res) => {
-      t.is(res, null, 'Should be called with null');
-      t.end();
-    }
+    null,
+    onError
   );
+
+  const res = new IncomingMessageStub(JSON.stringify(expectedResponse), 401);
+
+  https.request._requestCallback(res);
+
+  res.on('end', () => {
+    const expectedError = new Error(expectedResponse.description);
+    expectedError.name = expectedResponse.error;
+
+    expect(onError).toHaveBeenCalledWith(expectedError);
+    done();
+  });
 });
 
-test.serial.cb('firing error callback with response error info', (t) => {
-  const httpsRequest = stub(https, 'request');
-
-  const expectedArg = {
-    "description": "resource already exists",
-    "error": "PlatformResourceAlreadyExists"
-  };
-
-  const res = new PassThrough;
-  res.statusCode = 401;
-  res.write(JSON.stringify(expectedArg));
-  res.end();
-
-  const req = new PassThrough;
-
-  httpsRequest.callsArgWith(1, res)
-    .returns(req);
+test('should call onError-callback when https.request failed', (done) => {
+  const error = new Error('sometimes it happens');
+  error.name = 'StreamError';
 
   request.request(
     {
-      url: url,
-      token: API_TOKEN
+      url,
+      token
     },
     null,
-    (err) => {
-      t.is(err.name, expectedArg.error, 'Error should have a proper name');
-      t.is(err.message, expectedArg.description, 'Error should have a proper description');
-      t.end();
-    }
-  );
-});
-
-test.serial.cb('firing error callback with stream error info', (t) => {
-  const httpsRequest = stub(https, 'request');
-
-  const errorMessage = 'sometimes it happens';
-  const errorName = 'StreamError';
-
-  const res = new PassThrough;
-  res.statusCode = 200;
-  res.write(JSON.stringify({ data: 'data' }));
-  res.end();
-
-  const req = new PassThrough;
-
-  httpsRequest.callsArgWith(1, res)
-    .returns(req);
-
-  request.request(
-    {
-      url: url,
-      token: API_TOKEN
-    },
-    null,
-    (err) => {
-      t.is(err.name, errorName, 'Error should have a proper type');
-      t.is(err.message, errorMessage, 'Error should have a proper message');
-      t.end();
-    }
+    onError
   );
 
-  const error = new Error(errorMessage);
-  error.name = errorName;
-  req.emit('error', error);
+  https.request._serverResponse.on('error', () => {
+    expect(onError).toHaveBeenCalledWith(error);
+    done();
+  });
+
+  https.request._serverResponse.emit('error', error);
 });
 
-test.serial('sending correct data', (t) => {
-  const httpsRequest = stub(https, 'request');
-
-  const req = new PassThrough;
-  const reqMock = mock(req);
-
-  httpsRequest.returns(req);
-
-  reqMock.expects('write').calledWith(JSON.stringify(data));
-
+test('should send data', () => {
   request.request({
-    url: url,
-    method: method,
-    token: API_TOKEN,
-    data: data
+    url,
+    method,
+    token,
+    data
   });
 
-  reqMock.verify();
-  t.pass();
+  expect(https.request._serverResponse._data).toBe(JSON.stringify(data));
 });
 
-test.serial('get wrapper', (t) => {
-  const requestMock = mock(request);
+describe('wrappers', () => {
+  let originalRequest = request.request;
 
-  requestMock.expects('request').calledWith({
-    url: url,
-    token: API_TOKEN,
-    method: 'GET',
-    query: query
+  beforeEach(() => {
+    request.request = jest.fn();
   });
 
-  request.get({
-    url: url,
-    token: API_TOKEN,
-    query: query
+  afterEach(() => {
+    request.request = originalRequest;
   });
 
-  requestMock.verify();
-  requestMock.restore();
+  test('GET-wrapper', () => {
+    request.get({
+      url: url,
+      token: token,
+      query: query
+    });
 
-  t.pass();
-});
-
-test.serial('post wrapper', (t) => {
-  const requestMock = mock(request);
-
-  requestMock.expects('request').calledWith({
-    url: url,
-    token: API_TOKEN,
-    method: 'POST',
-    query: query,
-    data: data
+    expect(request.request).toHaveBeenCalledWith({
+      url: url,
+      token: token,
+      method: 'GET',
+      query: query
+    });
   });
 
-  request.post({
-    url: url,
-    token: API_TOKEN,
-    query: query,
-    data: data
+  test('POST-wrapper', () => {
+    request.post({
+      url: url,
+      token: token,
+      query: query,
+      data: data
+    });
+
+    expect(request.request).toHaveBeenCalledWith({
+      url: url,
+      token: token,
+      method: 'POST',
+      query: query,
+      data: data
+    });
   });
 
-  requestMock.verify();
-  requestMock.restore();
+  test('PUT-wrapper', () => {
+    request.put({
+      url,
+      token: token,
+      query,
+      data
+    });
 
-  t.pass();
-});
-
-test.serial('put wrapper', (t) => {
-  const requestMock = mock(request);
-
-  requestMock.expects('request').calledWith({
-    url: url,
-    token: API_TOKEN,
-    method: 'PUT',
-    data: data
+    expect(request.request).toHaveBeenCalledWith({
+      url,
+      token: token,
+      method: 'PUT',
+      query,
+      data
+    });
   });
 
-  request.put({
-    url: url,
-    token: API_TOKEN,
-    query: query,
-    data: data
+  test('PATCH-wrapper', () => {
+    request.patch({
+      url,
+      token,
+      query,
+      data
+    });
+
+    expect(request.request).toHaveBeenCalledWith({
+      url,
+      token,
+      method: 'PATCH',
+      data,
+      query
+    });
   });
 
-  requestMock.verify();
-  requestMock.restore();
+  test('DELETE-wrapper', () => {
+    request.delete({
+      url,
+      token,
+      query,
+      data
+    });
 
-  t.pass();
-});
-
-test.serial('patch wrapper', (t) => {
-  const requestMock = mock(request);
-
-  requestMock.expects('request').calledWith({
-    url: url,
-    token: API_TOKEN,
-    method: 'PATCH',
-    data: data
+    expect(request.request).toHaveBeenCalledWith({
+      url,
+      token,
+      method: 'DELETE',
+      data,
+      query
+    });
   });
-
-  request.patch({
-    url: url,
-    token: API_TOKEN,
-    query: query,
-    data: data
-  });
-
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
-});
-
-test.serial('delete wrapper', (t) => {
-  const requestMock = mock(request);
-
-  requestMock.expects('request').calledWith({
-    url: url,
-    token: API_TOKEN,
-    method: 'DELETE',
-    data: data
-  });
-
-  request.delete({
-    url: url,
-    token: API_TOKEN,
-    query: query,
-    data: data
-  });
-
-  requestMock.verify();
-  requestMock.restore();
-
-  t.pass();
 });
