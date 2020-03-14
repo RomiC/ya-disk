@@ -38,7 +38,7 @@ module.exports = {
   restoreMocks: false,
 
   // A list of paths to directories that Jest should use to search for files in
-  roots: ['<rootDir>'],
+  roots: ['<rootDir>/tests/', '<rootDir>/lib/'],
 
   // The test environment that will be used for testing
   testEnvironment: 'node',

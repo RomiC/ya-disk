@@ -1,4 +1,4 @@
-# ya-disk [![codecov](https://codecov.io/gh/RomiC/ya-disk/branch/master/graph/badge.svg)](https://codecov.io/gh/RomiC/ya-disk)
+# ya-disk ![Tests](https://github.com/RomiC/ya-disk/workflows/Tests/badge.svg) [![codecov](https://codecov.io/gh/RomiC/ya-disk/branch/master/graph/badge.svg)](https://codecov.io/gh/RomiC/ya-disk)
 
 Yandex Disk API library which provides some methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
@@ -15,7 +15,7 @@ info(API_TOKEN, ({total_space, used_space}) =>
 );
 ```
 
-Yes, it's callback-based lib. Because it was made to have at least dependencies as possible. If you want you can write you own wrapper based on, i.e. Bluebird library. Example:
+Yes, it's callback-based lib. Because it was made to have 0 dependencies. If you want you can write you own wrapper based on, i.e. Bluebird library. Example:
 
 ```javascript
 import Promise from 'bluebird';
