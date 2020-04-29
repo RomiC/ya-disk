@@ -20,8 +20,6 @@ const data = {
 };
 const queryString = queryStringify(query);
 const authHeader = `OAuth ${token}`;
-const onSuccess = jest.fn();
-const onError = jest.fn();
 
 class IncomingMessageStub extends Readable {
   constructor(message, statusCode) {
@@ -76,7 +74,7 @@ test('should call https.request with correct params', () => {
   );
 });
 
-test('should call onSuccess-callback with parsed result and status code', (done) => {
+test('should resolve Promise with parsed result and status code', (done) => {
   const expectedResponse = {
     param1: 4631577437,
     param2: 'disk:/Загрузки/',
@@ -85,39 +83,36 @@ test('should call onSuccess-callback with parsed result and status code', (done)
     }
   };
 
-  request.request(
-    {
-      url,
-      token
-    },
-    onSuccess
-  );
+  const requestPromise = request.request({
+    url,
+    token
+  });
 
   const res = new IncomingMessageStub(JSON.stringify(expectedResponse), 200);
 
   https.request._requestCallback(res);
 
   res.on('end', function() {
-    expect(onSuccess).toHaveBeenCalledWith(expectedResponse, res.statusCode);
+    expect(requestPromise).resolves.toEqual({
+      data: expectedResponse,
+      status: 200
+    });
     done();
   });
 });
 
 test('should call onSuccess-callback with null and status code when response is empty', (done) => {
-  request.request(
-    {
-      url,
-      token
-    },
-    onSuccess
-  );
+  const requestPromise = request.request({
+    url,
+    token
+  });
 
   const res = new IncomingMessageStub('', 201);
 
   https.request._requestCallback(res);
 
   res.on('end', function() {
-    expect(onSuccess).toHaveBeenCalledWith(null, 201);
+    expect(requestPromise).resolves.toEqual(null, 201);
     done();
   });
 });
@@ -128,14 +123,10 @@ test(`should call onError-callback with Error instance when response code isn't 
     error: 'PlatformResourceAlreadyExists'
   };
 
-  request.request(
-    {
-      url,
-      token
-    },
-    null,
-    onError
-  );
+  const requestPromise = request.request({
+    url,
+    token
+  });
 
   const res = new IncomingMessageStub(JSON.stringify(expectedResponse), 401);
 
@@ -145,30 +136,26 @@ test(`should call onError-callback with Error instance when response code isn't 
     const expectedError = new Error(expectedResponse.description);
     expectedError.name = expectedResponse.error;
 
-    expect(onError).toHaveBeenCalledWith(expectedError);
+    expect(requestPromise).rejects.toEqual(expectedError);
     done();
   });
 });
 
 test('should call onError-callback when https.request failed', (done) => {
-  const error = new Error('sometimes it happens');
-  error.name = 'StreamError';
+  const expectedError = new Error('sometimes it happens');
+  expectedError.name = 'StreamError';
 
-  request.request(
-    {
-      url,
-      token
-    },
-    null,
-    onError
-  );
+  const requestPromise = request.request({
+    url,
+    token
+  });
 
   https.request._serverResponse.on('error', () => {
-    expect(onError).toHaveBeenCalledWith(error);
+    expect(requestPromise).rejects.toEqual(expectedError);
     done();
   });
 
-  https.request._serverResponse.emit('error', error);
+  https.request._serverResponse.emit('error', expectedError);
 });
 
 test('should send data', () => {
