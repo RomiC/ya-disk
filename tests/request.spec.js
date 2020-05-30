@@ -92,7 +92,7 @@ test('should resolve Promise with parsed result and status code', (done) => {
 
   https.request._requestCallback(res);
 
-  res.on('end', function() {
+  res.on('end', () => {
     expect(requestPromise).resolves.toEqual({
       data: expectedResponse,
       status: 200
@@ -111,8 +111,8 @@ test('should call onSuccess-callback with null and status code when response is 
 
   https.request._requestCallback(res);
 
-  res.on('end', function() {
-    expect(requestPromise).resolves.toEqual(null, 201);
+  res.on('end', () => {
+    expect(requestPromise).resolves.toEqual({ data: null, status: 201 });
     done();
   });
 });
@@ -183,46 +183,46 @@ describe('wrappers', () => {
   test('GET-wrapper', () => {
     request.get({
       url: url,
-      token: token,
-      query: query
+      token,
+      query
     });
 
     expect(request.request).toHaveBeenCalledWith({
       url: url,
-      token: token,
+      token,
       method: 'GET',
-      query: query
+      query
     });
   });
 
   test('POST-wrapper', () => {
     request.post({
       url: url,
-      token: token,
-      query: query,
-      data: data
+      token,
+      query,
+      data
     });
 
     expect(request.request).toHaveBeenCalledWith({
       url: url,
-      token: token,
+      token,
       method: 'POST',
-      query: query,
-      data: data
+      query,
+      data
     });
   });
 
   test('PUT-wrapper', () => {
     request.put({
       url,
-      token: token,
+      token,
       query,
       data
     });
 
     expect(request.request).toHaveBeenCalledWith({
       url,
-      token: token,
+      token,
       method: 'PUT',
       query,
       data

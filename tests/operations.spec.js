@@ -8,18 +8,22 @@ const id = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
 
 jest.mock('../lib/request');
 
-test('status', () => {
-  const onSuccessCallback = jest.fn();
-  const onErrorCallback = jest.fn();
-
-  operations(API_TOKEN, id, onSuccessCallback, onErrorCallback);
-
-  expect(request.get).toHaveBeenCalledWith(
-    {
-      url: `${API_OPERATIONS_URL}/${id}`,
-      token: API_TOKEN
+test('should call request.get with proper params and resolve Promise with data', () => {
+  const responseMock = {
+    data: {
+      status: 'failed'
     },
-    onSuccessCallback,
-    onErrorCallback
-  );
+    status: 200
+  };
+
+  const operationPromise = operations(API_TOKEN, id);
+
+  expect(request.get).toHaveBeenCalledWith({
+    url: `${API_OPERATIONS_URL}/${id}`,
+    token: API_TOKEN
+  });
+
+  request.get._resolve(responseMock);
+
+  expect(operationPromise).resolves.toBe(responseMock.data);
 });

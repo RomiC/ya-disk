@@ -6,18 +6,24 @@ const { API_TOKEN } = require('./constants');
 
 jest.mock('../lib/request');
 
-test('should call request.do with correct params', () => {
-  const onSuccessCallback = jest.mock();
-  const onErrorCallback = jest.mock();
-
-  info(API_TOKEN, onSuccessCallback, onErrorCallback);
-
-  expect(request.get).toHaveBeenCalledWith(
-    {
-      url: API_DISK_URL,
-      token: API_TOKEN
+test('should call request.do with correct params and resolve Promise with data', () => {
+  const responseMock = {
+    data: {
+      total_space: 10 * 1024 * 1024 * 1024,
+      trash_size: 2 * 1024 * 1024,
+      used_space: 3 * 1024 * 1024 * 1024
     },
-    onSuccessCallback,
-    onErrorCallback
-  );
+    status: 200
+  };
+
+  const infoPromise = info(API_TOKEN);
+
+  expect(request.get).toHaveBeenCalledWith({
+    url: API_DISK_URL,
+    token: API_TOKEN
+  });
+
+  request.get._resolve(responseMock);
+
+  expect(infoPromise).resolves.toBe(responseMock.data);
 });
