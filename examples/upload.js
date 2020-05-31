@@ -4,17 +4,18 @@ import { parse } from 'url';
 import upload from '../lib/upload';
 
 const { API_TOKEN = '' } = process.env;
+const remotePath = 'disk:/Приложения/ya-disk-api/package.json';
+const fileToUpload = './package.json';
 
-upload.link(
-  API_TOKEN,
-  'disk:/Приложения/ya-disk-api/package.json',
-  true,
-  ({ href, method }) => {
-    const fileStream = createReadStream('./package.json');
-    const uploadStream = request(Object.assign(parse(href), { method }));
+(async () => {
+  try {
+    const { href, method } = await upload.link(API_TOKEN, remotePath, true);
+    const fileStream = createReadStream(fileToUpload);
+    const uploadStream = request({ ...parse(href), method });
 
     fileStream.pipe(uploadStream);
     fileStream.on('end', () => uploadStream.end());
-  },
-  (err) => process.stderror.write(err.message)
-);
+  } catch (error) {
+    console.error(error);
+  }
+})();

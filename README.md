@@ -1,31 +1,27 @@
 # ya-disk ![Tests](https://github.com/RomiC/ya-disk/workflows/Tests/badge.svg) [![codecov](https://codecov.io/gh/RomiC/ya-disk/branch/master/graph/badge.svg)](https://codecov.io/gh/RomiC/ya-disk)
 
-Yandex Disk API library which provides some methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
+This library provides methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
 ```javascript
-import { info } from 'ya-disk';
+import info from '../lib/info';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-info(API_TOKEN, ({total_space, used_space}) =>
-  console.log(`
-    Total space: ${Math.round(total_space / 1000000000)}GB
-    Free space: ${Math.round((total_space - used_space) / 1000000000)}MB
-  `);
-);
+(async () => {
+  try {
+    const { total_space, used_space } = await info(API_TOKEN);
+
+    console.log(`
+Total space: ${Math.round(total_space / 1000000000)}GB
+Free space: ${Math.round((total_space - used_space) / 1000000)}MB
+`);
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
-Yes, it's callback-based lib. Because it was made to have 0 dependencies. If you want you can write you own wrapper based on, i.e. Bluebird library. Example:
-
-```javascript
-import Promise from 'bluebird';
-import { info } from 'ya-disk';
-
-const infoPromise = (token) =>
-  new Promise((resolve, reject) => info(token, resolve, reject));
-
-export default infoPromise;
-```
+Starting from v4.x _ya-disk_ moved from callback to Promise. If you still wish to use callbacks, pls switch to v3.x.
 
 ## Installation
 
@@ -37,12 +33,9 @@ npm install --save ya-disk
 
 Each method requires an OAuth token. You can receive one manually or use one of OAuth library, i.e. [passport-yandex-token](https://github.com/ghaiklor/passport-yandex-token).
 
-## Callbacks
+## Promises
 
-Each method accepts `success` and `error` callbacks.
-Success callback is called with deserialized (`JSON.parse`) response body
-and response HTTP status code (required in [copy](#copytoken-from-path-overwrite-success-error)/[move](#movetoken-from-path-overwrite-success-error)) operations).
-Error callback is called with deserialized (`JSON.parse`) response body
+Each returned Promise is being resolved with deserialized response body or rejected with an error. Except [copy](#copy) and [move](#move) methods which return value extended by status code.
 
 ## List of available methods
 
@@ -50,13 +43,13 @@ Error callback is called with deserialized (`JSON.parse`) response body
 
 Downloading a file from the user drive.
 
-#### link(token, path, [success], [error])
+#### link(token, path)
 
 Getting the download link. See [details](https://yandex.ru/dev/disk/api/reference/content-docpage/#url-request). Example:
 
 ```javascript
 import { createWriteStream } from 'fs';
-// Thi is lib is neccessary, beacause of Yandex Disk
+// This lib is necessary, because Yandex Disk
 // returns a 302 header when you try to download file
 // using provided link
 import { https } from 'follow-redirects';
@@ -66,24 +59,26 @@ import { download } from '../lib/download';
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const file = 'disk:/Зима.jpg';
 
-download.link(
-  API_TOKEN,
-  file,
-  ({ method, href }) => {
+(async () => {
+  try {
+    const { href } = await download.link(API_TOKEN, file);
     const output = createWriteStream('Зима.jpg');
     const req = https.get(href, (res) => {
       res.on('end', () => output.end());
       res.pipe(output);
     });
 
-    req.on('error', console.error);
+    req.on('error', (err) => {
+      throw err;
+    });
     req.end();
-  },
-  console.error
-);
+  } catch (err) {
+    console.error(err);
+  }
+})();
 ```
 
-### info(token, [succes], [error])
+### info(token)
 
 Getting common info about user drive. See [details](https://yandex.ru/dev/disk/api/reference/capacity-docpage/). Example:
 
@@ -92,16 +87,21 @@ import { info } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-info(API_TOKEN, ({ total_space, used_space }) =>
-  console.log(`
-    Total space: ${Math.round(total_space / 1000000000)}GB
-    Free space: ${Math.round((total_space - used_space) / 1000000)}MB
-  `);
-);
+(async () => {
+  try {
+    const { total_space, used_space } = await info(API_TOKEN);
 
+    console.log(`
+Total space: ${Math.round(total_space / 1000000000)}GB
+Free space: ${Math.round((total_space - used_space) / 1000000)}MB
+`);
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
-### list(token, [options={}], [success], [error])
+### list(token, [options={}])
 
 Getting a flat list of the user files on the drive. See [details](https://yandex.ru/dev/disk/api/reference/all-files-docpage/).
 
@@ -110,14 +110,22 @@ import { list } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-list(API_TOKEN, {}, ({ items }) =>
-  items.forEach(({ name, size }) => console.log('%s: %dB', name, size))
-);
+(async () => {
+  try {
+    const { items } = await list(API_TOKEN);
+
+    items.forEach((item, index) =>
+      console.log(`${index + 1}. ${item.name} (${item.size}B)`)
+    );
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
 ### meta
 
-#### get(token, path, [options={}], [success], [error])
+#### get(token, path, [options={}])
 
 Getting meta-information about the resource (file or directory). See [details](https://yandex.ru/dev/disk/api/reference/meta-docpage/). Example:
 
@@ -126,10 +134,25 @@ import { meta } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-meta.get(API_TOKEN, 'disk:/path/to/the/file.txt', {}, console.log);
+(async () => {
+  try {
+    const metaGet = await meta.get(API_TOKEN, filePath, {
+      fields: 'name,path,custom_properties'
+    });
+    console.log(`${metaGet.name} (${metaGet.path})`);
+
+    Object.keys(metaGet.custom_properties).forEach((propertyName) =>
+      console.log(
+        `- ${propertyName}: ${metaGet.custom_properties[propertyName]}`
+      )
+    );
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
-#### add(token, path, properties, [success], [error])
+#### add(token, path, properties)
 
 Append meta information to the resource (file or directory). See [details](https://yandex.ru/dev/disk/api/reference/meta-add-docpage/). Example:
 
@@ -138,7 +161,15 @@ import { meta } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', { my_field: 'my_value' });
+(async () => {
+  try {
+    await meta.add(API_TOKEN, filePath, {
+      my_field: 'my_value'
+    });
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
 ### operations
@@ -151,12 +182,17 @@ import operations from 'ya-disk';
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const operationId = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
 
-opeartions(API_TOKEN, operationId, ({ status }) =>
-  console.log(`Operation ${opeartionId} ${status}`)
-);
+(async () => {
+  try {
+    const { status } = await operations(API_TOKEN, operationId);
+    console.log(`Operation ${status}!`);
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
-### recent(token, [options={}], [success], [error])
+### recent(token, [options={}])
 
 Getting a flat list of recently changed files. See [details](https://yandex.ru/dev/disk/api/reference/recent-upload-docpage/).
 
@@ -165,16 +201,22 @@ import { recent } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-recent(API_TOKEN, { media_type: 'image' }, ({ items }) =>
-  items.forEach((f) => console.log(`${f.name} (${f.size}B)`))
-);
+(async () => {
+  try {
+    const { items } = await recent(API_TOKEN, { media_type: 'image' });
+
+    items.forEach((item) => console.log(`${item.name} (${item.size}B)`));
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
 ### upload
 
 Tool for uploading a file to the user drive.
 
-#### link(token, path, [overwrite = false], [success], [error])
+#### link(token, path, [overwrite = false])
 
 Getting link for uploaded file. See [details](https://yandex.ru/dev/disk/api/reference/upload-docpage/#url-request). Example:
 
@@ -186,31 +228,31 @@ import { parse } from 'url';
 import { upload } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+const fileToUpload = './file.txt';
+const remotePath = 'disk:/file.txt';
 
-upload.link(
-  API_TOKEN,
-  'disk:/path/to/the/file.txt',
-  true,
-  ({ href, method }) => {
-    const fileStream = createReadStream('file.txt');
-
-    const uploadStream = request(Object.assign(parse(href), { method }));
+(async () => {
+  try {
+    const { href, method } = await upload.link(API_TOKEN, remotePath, true);
+    const fileStream = createReadStream(fileToUpload);
+    const uploadStream = request({ ...parse(href), method });
 
     fileStream.pipe(uploadStream);
-
     fileStream.on('end', () => uploadStream.end());
+  } catch (error) {
+    console.error(error);
   }
-);
+})();
 ```
 
-#### remoteFile(token, url, path, [success], [error])
+#### remoteFile(token, url, path)
 
 Upload remote file to the disk by its url. See [details](https://yandex.ru/dev/disk/api/reference/upload-ext-docpage/). Example:
 
 ```javascript
 import upload from '../lib/upload';
 
-const { API_TOKEN = '' } = process.env;
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const url = 'https://tech.yandex.com/disk/doc/dg/yandex-disk-dg.pdf';
 const path = 'disk:/Приложения/ya-disk-api/yandex-disk-dg.pdf';
 
@@ -230,7 +272,27 @@ ${href}
 
 ### File and Folder Actions
 
-### create(token, path, [success], [error])
+#### copy(token, from, path, overwrite)
+
+Copy file or folder from `from` to `path`. See [details](https://tech.yandex.com/disk/api/reference/copy-docpage/).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+const from = 'disk:/Зима.png';
+const to = 'disk:/new_folder/Зима.png';
+
+(async () => {
+  try {
+    await resources.copy(API_TOKEN, from, to, true);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### create(token, path)
 
 Create folder. See [details](https://tech.yandex.com/disk/api/reference/create-folder-docpage/).
 
@@ -239,19 +301,36 @@ import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-resources.create(
-  API_TOKEN,
-  'disk:/folderName',
-  () => {
-    // success
-  },
-  () => {
-    //error
+(async () => {
+  try {
+    await resources.create(API_TOKEN, 'disk:/new_folder');
+  } catch (error) {
+    console.error(error);
   }
-);
+})();
 ```
 
-### remove(token, path, permanently, [success], [error])
+#### move(token, from, path, overwrite)
+
+Move file or folder from `from` to `path`. See [details](https://tech.yandex.com/disk/api/reference/move-docpage/).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+const from = 'disk:/Зима.png';
+const to = 'disk:/new_folder/Зима.png';
+
+(async () => {
+  try {
+    await resources.move(API_TOKEN, from, to, true);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### remove(token, path, permanently)
 
 Delete file or folder. See [details](https://tech.yandex.com/disk/api/reference/delete-docpage/).
 
@@ -260,61 +339,5 @@ import { resources } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
-resources.remove(
-  API_TOKEN,
-  'disk:/fileOrFolderName',
-  false,
-  () => {
-    // success
-  },
-  () => {
-    //error
-  }
-);
-```
-
-### copy(token, from, path, overwrite, [success], [error])
-
-Copy file or folder from `from` to `path`. See [details](https://tech.yandex.com/disk/api/reference/copy-docpage/).
-
-```javascript
-import { resources } from 'ya-disk';
-
-const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
-
-resources.copy(
-  API_TOKEN,
-  'disk:/fileOrFolderName1',
-  'disk:/fileOrFolderName2',
-  false,
-  () => {
-    // success
-  },
-  () => {
-    //error
-  }
-);
-```
-
-### move(token, from, path, overwrite, [success], [error])
-
-Move file or folder from `from` to `path`. See [details](https://tech.yandex.com/disk/api/reference/move-docpage/).
-
-```javascript
-import { resources } from 'ya-disk';
-
-const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
-
-resources.move(
-  API_TOKEN,
-  'disk:/fileOrFolderName1',
-  'disk:/fileOrFolderName2',
-  false,
-  () => {
-    // success
-  },
-  () => {
-    //error
-  }
-);
+resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false);
 ```
