@@ -1,6 +1,6 @@
 {
   "name": "ya-disk",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Yandex Disk API Library",
   "main": "index.js",
   "repository": {
