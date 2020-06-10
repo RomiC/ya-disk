@@ -21,5 +21,5 @@ download.link(
     req.on('error', (err) => process.stderror.write(err));
     req.end();
   },
-  (err) => process.stderror.write(err)
+  (error) => process.stderror.write(error)
 );
