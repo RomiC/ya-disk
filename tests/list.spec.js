@@ -14,19 +14,35 @@ const options = {
 
 jest.mock('../lib/request');
 
-test('should call request.get with proper params', () => {
-  const onSuccessCallback = jest.fn();
-  const onErrorCallback = jest.fn();
+test('should call request.get with proper params and resolve Promise with data', () => {
+  const responseMock = {
+    data: {
+      items: [
+        {
+          name: 'photo2.png',
+          preview: 'https://downloader.disk.yandex.ru/preview/...',
+          created: '2014-04-22T14:57:13+04:00',
+          modified: '2014-04-22T14:57:14+04:00',
+          path: 'disk:/foo/photo2.png',
+          md5: '53f4dc6379c8f95ddf11b9508cfea271',
+          type: 'file',
+          mime_type: 'image/png',
+          size: 54321
+        }
+      ],
+      limit: 20,
+      offset: 0
+    }
+  };
+  const listPromise = list(API_TOKEN, options);
 
-  list(API_TOKEN, options, onSuccessCallback, onErrorCallback);
+  expect(request.get).toHaveBeenCalledWith({
+    url: API_FILES_URL,
+    token: API_TOKEN,
+    query: options
+  });
 
-  expect(request.get).toHaveBeenCalledWith(
-    {
-      url: API_FILES_URL,
-      token: API_TOKEN,
-      query: options
-    },
-    onSuccessCallback,
-    onErrorCallback
-  );
+  request.get._resolve(responseMock);
+
+  expect(listPromise).resolves.toBe(responseMock.data);
 });

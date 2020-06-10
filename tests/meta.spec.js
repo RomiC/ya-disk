@@ -16,45 +16,80 @@ const custom_properties = {
   uno: 'value1',
   duos: {
     tres: 'tres',
-    quatros: 'quatros'
+    cuatro: 'cuatro'
   }
 };
-const onSuccessCallback = jest.fn();
-const onErrorCallback = jest.fn();
 
 jest.mock('../lib/request');
 
-test('get', () => {
-  meta.get(API_TOKEN, path, options, onSuccessCallback, onErrorCallback);
+describe('get', () => {
+  it('should call request.get method with correct params and resolve Promise with data', () => {
+    const responseMock = {
+      data: {
+        name: 'photo2.png',
+        preview: 'https://downloader.disk.yandex.ru/preview/...',
+        created: '2014-04-22T14:57:13+04:00',
+        modified: '2014-04-22T14:57:14+04:00',
+        path: 'disk:/foo/photo2.png',
+        md5: '53f4dc6379c8f95ddf11b9508cfea271',
+        type: 'file',
+        mime_type: 'image/png',
+        size: 54321
+      },
+      status: 200
+    };
+    const metaGetPromise = meta.get(API_TOKEN, path, options);
 
-  expect(request.get).toHaveBeenCalledWith(
-    {
+    expect(request.get).toHaveBeenCalledWith({
       url: API_RESOURCES_URL,
       token: API_TOKEN,
-      query: Object.assign({ path }, options)
-    },
-    onSuccessCallback,
-    onErrorCallback
-  );
+      query: { path, ...options }
+    });
+
+    request.get._resolve(responseMock);
+
+    expect(metaGetPromise).resolves.toBe(responseMock.data);
+  });
+
+  it('should append empty object when options is mised', () => {
+    meta.get(API_TOKEN, path);
+
+    expect(request.get).toHaveBeenCalledWith({
+      url: API_RESOURCES_URL,
+      token: API_TOKEN,
+      query: { path }
+    });
+  });
 });
 
-test('add', () => {
-  meta.add(
-    API_TOKEN,
-    path,
-    custom_properties,
-    onSuccessCallback,
-    onErrorCallback
-  );
+describe('add', () => {
+  it('should call request.patch with proper params and resolve Promise with data', () => {
+    const responseMock = {
+      data: {
+        name: 'photo2.png',
+        preview: 'https://downloader.disk.yandex.ru/preview/...',
+        created: '2014-04-22T14:57:13+04:00',
+        modified: '2014-04-22T14:57:14+04:00',
+        path: 'disk:/foo/photo2.png',
+        md5: '53f4dc6379c8f95ddf11b9508cfea271',
+        type: 'file',
+        mime_type: 'image/png',
+        size: 54321
+      },
+      status: 200
+    };
 
-  expect(request.patch).toHaveBeenCalledWith(
-    {
+    const metaAddPromise = meta.add(API_TOKEN, path, custom_properties);
+
+    expect(request.patch).toHaveBeenCalledWith({
       url: API_RESOURCES_URL,
       token: API_TOKEN,
       query: { path },
       data: { custom_properties }
-    },
-    onSuccessCallback,
-    onErrorCallback
-  );
+    });
+
+    request.patch._resolve(responseMock);
+
+    expect(metaAddPromise).resolves.toBe(responseMock.data);
+  });
 });

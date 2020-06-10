@@ -8,19 +8,26 @@ const path = 'disk:/file.txt';
 
 jest.mock('../lib/request');
 
-test('should call request.do method with correct params', () => {
-  const onSuccessCallback = jest.fn();
-  const onErrorCallback = jest.fn();
+describe('link', () => {
+  it('should call request.get method with correct params and resolve Promise with data', () => {
+    const responseMock = {
+      data: {
+        href: 'https://yandex.ru/disk/download/file.txt',
+        method: 'GET',
+        templated: false
+      },
+      status: 200
+    };
+    const linkPromise = link(API_TOKEN, path);
 
-  link(API_TOKEN, path, onSuccessCallback, onErrorCallback);
-
-  expect(request.get).toHaveBeenCalledWith(
-    {
+    expect(request.get).toHaveBeenCalledWith({
       url: API_DOWNLOAD_LINK_URL,
       token: API_TOKEN,
       query: { path }
-    },
-    onSuccessCallback,
-    onErrorCallback
-  );
+    });
+
+    request.get._resolve(responseMock);
+
+    expect(linkPromise).resolves.toBe(responseMock.data);
+  });
 });

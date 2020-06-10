@@ -1,9 +1,25 @@
 import meta from '../lib/meta';
 
 const { API_TOKEN = '' } = process.env;
+const filePath = 'disk:/Зима.png';
 
-meta.add(API_TOKEN, 'disk:/Зима.jpg', { my_field: 'my_value' }, null, (err) =>
-  process.stderror.write(err.message)
-);
+(async () => {
+  try {
+    await meta.add(API_TOKEN, filePath, {
+      my_field: 'my_value'
+    });
 
-meta.get(API_TOKEN, 'disk:/Зима.jpg', {}, (data) => process.stdout.write(data));
+    const metaGet = await meta.get(API_TOKEN, filePath, {
+      fields: 'name,path,custom_properties'
+    });
+    console.log(`${metaGet.name} (${metaGet.path})`);
+
+    Object.keys(metaGet.custom_properties).forEach((propertyName) =>
+      console.log(
+        `- ${propertyName}: ${metaGet.custom_properties[propertyName]}`
+      )
+    );
+  } catch (error) {
+    console.error(error);
+  }
+})();

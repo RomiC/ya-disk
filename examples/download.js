@@ -1,25 +1,28 @@
 import { createWriteStream } from 'fs';
-// Thi is lib is neccessary, beacause of Yandex Disk
+// This lib is necessary, because of Yandex Disk
 // returns a 302 header when you try to download file
 // using provided link
 import { https } from 'follow-redirects';
 import download from '../lib/download';
 
 const { API_TOKEN = '' } = process.env;
-const file = 'disk:/Зима.jpg';
+// Replace this path with the real path from your disk
+const file = 'disk:/Зима.png';
 
-download.link(
-  API_TOKEN,
-  file,
-  ({ href }) => {
+(async () => {
+  try {
+    const { href } = await download.link(API_TOKEN, file);
     const output = createWriteStream('Зима.jpg');
     const req = https.get(href, (res) => {
       res.on('end', () => output.end());
       res.pipe(output);
     });
 
-    req.on('error', (err) => process.stderror.write(err));
+    req.on('error', (err) => {
+      throw err;
+    });
     req.end();
-  },
-  (err) => process.stderror.write(err)
-);
+  } catch (err) {
+    console.error(err);
+  }
+})();
