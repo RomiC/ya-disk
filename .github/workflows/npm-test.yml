@@ -3,13 +3,16 @@ name: Tests
 on:
   pull_request:
     types: [opened, edited, synchronize]
+  push:
+    branches:
+      - master
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['10', '12']
+        node: ["10", "12"]
     name: Test with node ${{ matrix.node }}
     steps:
       - uses: actions/checkout@v2
@@ -19,4 +22,18 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
-      - run: npm run coverage
+      - uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          flag-name: node v${{ matrix.node }}
+          parallel: true
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    name: Publishing coverage report
+    steps:
+      - uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
