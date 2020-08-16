@@ -52,7 +52,7 @@ Downloading a file from the user drive.
 
 #### link(token, path, [success], [error])
 
-Getting the download link. See [details](https://tech.yandex.ru/disk/api/reference/content-docpage/#url-request). Example:
+Getting the download link. See [details](https://tech.yandex.com/disk/api/reference/content-docpage/#url-request). Example:
 
 ```javascript
 import { createWriteStream } from 'fs';
@@ -85,7 +85,7 @@ download.link(
 
 ### info(token, [succes], [error])
 
-Getting common info about user drive. See [details](https://tech.yandex.ru/disk/api/reference/capacity-docpage/). Example:
+Getting common info about user drive. See [details](https://tech.yandex.com/disk/api/reference/capacity-docpage/). Example:
 
 ```javascript
 import { info } from 'ya-disk';
@@ -103,7 +103,7 @@ info(API_TOKEN, ({ total_space, used_space }) =>
 
 ### list(token, [options={}], [success], [error])
 
-Getting a flat list of the user files on the drive. See [details](https://tech.yandex.ru/disk/api/reference/all-files-docpage/).
+Getting a flat list of the user files on the drive. See [details](https://tech.yandex.com/disk/api/reference/all-files-docpage/).
 
 ```javascript
 import { list } from 'ya-disk';
@@ -119,7 +119,7 @@ list(API_TOKEN, {}, ({ items }) =>
 
 #### get(token, path, [options={}], [success], [error])
 
-Getting meta-information about the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-docpage/). Example:
+Getting meta-information about the resource (file or directory). See [details](https://tech.yandex.com/disk/api/reference/meta-docpage/). Example:
 
 ```javascript
 import { meta } from 'ya-disk';
@@ -131,7 +131,7 @@ meta.get(API_TOKEN, 'disk:/path/to/the/file.txt', {}, console.log);
 
 #### add(token, path, properties, [success], [error])
 
-Append meta information to the resource (file or directory). See [details](https://tech.yandex.ru/disk/api/reference/meta-add-docpage/). Example:
+Append meta information to the resource (file or directory). See [details](https://tech.yandex.com/disk/api/reference/meta-add-docpage/). Example:
 
 ```javascript
 import { meta } from 'ya-disk';
@@ -143,7 +143,7 @@ meta.add(API_TOKEN, 'disk:/path/to/the/file.txt', { my_field: 'my_value' });
 
 ### operations
 
-Getting operation status. See [details](https://tech.yandex.ru/disk/api/reference/operations-docpage/). Example:
+Getting operation status. See [details](https://tech.yandex.com/disk/api/reference/operations-docpage/). Example:
 
 ```javascript
 import operations from 'ya-disk';
@@ -158,7 +158,7 @@ opeartions(API_TOKEN, operationId, ({ status }) =>
 
 ### recent(token, [options={}], [success], [error])
 
-Getting a flat list of recently changed files. See [details](https://tech.yandex.ru/disk/api/reference/recent-upload-docpage/).
+Getting a flat list of recently changed files. See [details](https://tech.yandex.com/disk/api/reference/recent-upload-docpage/).
 
 ```javascript
 import { recent } from 'ya-disk';
@@ -176,7 +176,7 @@ Tool for uploading a file to the user drive.
 
 #### link(token, path, [overwrite = false], [success], [error])
 
-Getting link for uploaded file. See [details](https://tech.yandex.ru/disk/api/reference/upload-docpage/#url-request). Example:
+Getting link for uploaded file. See [details](https://tech.yandex.com/disk/api/reference/upload-docpage/#url-request). Example:
 
 ```javascript
 import { createReadStream } from 'fs';
@@ -205,7 +205,7 @@ upload.link(
 
 #### remoteFile(token, url, path, [success], [error])
 
-Upload remote file to the disk by its url. See [details](https://tech.yandex.ru/disk/api/reference/upload-ext-docpage/). Example:
+Upload remote file to the disk by its url. See [details](https://tech.yandex.com/disk/api/reference/upload-ext-docpage/). Example:
 
 ```javascript
 import upload from '../lib/upload';
