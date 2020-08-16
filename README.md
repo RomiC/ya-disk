@@ -1,4 +1,4 @@
-# ya-disk ![Tests](https://github.com/RomiC/ya-disk/workflows/Tests/badge.svg) [![codecov](https://codecov.io/gh/RomiC/ya-disk/branch/master/graph/badge.svg)](https://codecov.io/gh/RomiC/ya-disk)
+# ya-disk ![Tests](https://github.com/RomiC/ya-disk/workflows/Tests/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/RomiC/ya-disk/badge.svg?branch=v3.x)](https://coveralls.io/github/RomiC/ya-disk?branch=v3.x)
 
 Yandex Disk API library which provides some methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
