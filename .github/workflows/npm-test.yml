@@ -5,7 +5,7 @@ on:
     types: [opened, edited, synchronize]
   push:
     branches:
-      - master
+      - v3.x
 
 jobs:
   test:
