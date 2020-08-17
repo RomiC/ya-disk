@@ -29,7 +29,7 @@
     "husky": "^4.0.2",
     "jest": "^26.4.0",
     "lint-staged": "^10.0.3",
-    "prettier": "^1.19.1"
+    "prettier": "^2.0.5"
   },
   "bugs": {
     "url": "https://github.com/RomiC/ya-disk/issues"
