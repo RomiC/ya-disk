@@ -341,3 +341,11 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
 resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false);
 ```
+
+## Examples
+
+You may find samle of the real usage in the example folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:
+```sh
+API_TOKEN=[token] node examples/upload-remote-file.js
+```
+Beware that examples work in nodejs >= 14.x.

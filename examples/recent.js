@@ -1,4 +1,4 @@
-import recent from '../lib/recent';
+import recent from '../lib/recent.js';
 
 const { API_TOKEN = '' } = process.env;
 

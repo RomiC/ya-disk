@@ -1,7 +1,7 @@
 import { createReadStream } from 'fs';
 import { request } from 'https';
 import { parse } from 'url';
-import upload from '../lib/upload';
+import upload from '../lib/upload.js';
 
 const { API_TOKEN = '' } = process.env;
 const remotePath = 'disk:/Приложения/ya-disk-api/package.json';

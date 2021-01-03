@@ -1,4 +1,4 @@
-import operations from '../lib/operations';
+import operations from '../lib/operations.js';
 
 const { API_TOKEN = '' } = process.env;
 const operationId =

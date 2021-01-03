@@ -1,4 +1,4 @@
-import info from '../lib/info';
+import info from '../lib/info.js';
 
 const { API_TOKEN } = process.env;
 
