@@ -1,4 +1,4 @@
-import meta from '../lib/meta';
+import meta from '../lib/meta.js';
 
 const { API_TOKEN = '' } = process.env;
 const filePath = 'disk:/Зима.png';

@@ -1,4 +1,4 @@
-import list from '../lib/list';
+import list from '../lib/list.js';
 
 const { API_TOKEN = '' } = process.env;
 
