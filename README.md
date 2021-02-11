@@ -130,6 +130,18 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 meta.get(API_TOKEN, 'disk:/path/to/the/file.txt', {}, console.log);
 ```
 
+With the `get`-method you could also get the list of files inside the folder. See [Response-format](https://yandex.com/dev/disk/api/reference/meta.html#response). Example:
+
+```javascript
+import { meta } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+ 
+meta.get(API_TOKEN, 'disk:/', {}, (({_embedded}) => {
+  _embedded.items.forEach((item, index) => console.log(`${index + 1}: ${item.name}`));
+}, console.error);
+ ```
+
 #### add(token, path, properties, [success], [error])
 
 Append meta information to the resource (file or directory). See [details](https://tech.yandex.com/disk/api/reference/meta-add-docpage/). Example:
