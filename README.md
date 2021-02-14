@@ -57,12 +57,9 @@ Getting the download link. See [details](https://tech.yandex.com/disk/api/refere
 
 ```javascript
 import { createWriteStream } from 'fs';
-// Thi is lib is neccessary, beacause of Yandex Disk
-// returns a 302 header when you try to download file
-// using provided link
 import { https } from 'follow-redirects';
 import { parse } from 'url';
-import { download } from '../lib/download';
+import { download } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const file = 'disk:/Зима.jpg';
@@ -221,7 +218,7 @@ upload.link(
 Upload remote file to the disk by its url. See [details](https://tech.yandex.com/disk/api/reference/upload-ext-docpage/). Example:
 
 ```javascript
-import upload from '../lib/upload';
+import { upload } from 'ya-disk';
 
 const { API_TOKEN = '' } = process.env;
 const url = 'https://tech.yandex.com/disk/doc/dg/yandex-disk-dg.pdf';
@@ -255,12 +252,8 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 resources.create(
   API_TOKEN,
   'disk:/folderName',
-  () => {
-    // success
-  },
-  () => {
-    //error
-  }
+  () => {},
+  () => {}
 );
 ```
 
@@ -277,12 +270,8 @@ resources.remove(
   API_TOKEN,
   'disk:/fileOrFolderName',
   false,
-  () => {
-    // success
-  },
-  () => {
-    //error
-  }
+  () => {},
+  () => {}
 );
 ```
 
@@ -300,12 +289,8 @@ resources.copy(
   'disk:/fileOrFolderName1',
   'disk:/fileOrFolderName2',
   false,
-  () => {
-    // success
-  },
-  () => {
-    //error
-  }
+  () => {},
+  () => {}
 );
 ```
 
@@ -323,11 +308,17 @@ resources.move(
   'disk:/fileOrFolderName1',
   'disk:/fileOrFolderName2',
   false,
-  () => {
-    // success
-  },
-  () => {
-    //error
-  }
+  () => {},
+  () => {}
 );
 ```
+
+## Examples
+
+You may find samle of the real usage in the example folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:
+
+```sh
+API_TOKEN=[token] node examples/upload-remote-file.js
+```
+
+Beware that examples work in nodejs >= 14.x.

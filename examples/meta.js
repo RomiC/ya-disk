@@ -1,9 +1,19 @@
-import meta from '../lib/meta';
+import meta from '../lib/meta.js';
 
 const { API_TOKEN = '' } = process.env;
 
-meta.add(API_TOKEN, 'disk:/Зима.jpg', { my_field: 'my_value' }, null, (err) =>
-  process.stderror.write(err.message)
+meta.add(
+  API_TOKEN,
+  'disk:/Capture.PNG',
+  { my_field: 'my_value' },
+  null,
+  console.error
 );
 
-meta.get(API_TOKEN, 'disk:/Зима.jpg', {}, (data) => process.stdout.write(data));
+meta.get(
+  API_TOKEN,
+  'disk:/Capture.PNG',
+  {},
+  (data) => console.log(data.custom_properties),
+  console.error
+);

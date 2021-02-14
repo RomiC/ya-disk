@@ -17,11 +17,7 @@
   "engines": {
     "node": ">= 10.0.0"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/node": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
     "eslint": "^7.7.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.2",
@@ -39,13 +35,11 @@
     "test": "tests/*.spec.js"
   },
   "scripts": {
-    "example": "babel-node",
     "lint": "eslint --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "lint:all": "npm run lint -- lib/* tests/* __mocks__/* examples/*",
     "lint:all:fix": "npm run lint:all -- --fix",
-    "test": "jest",
-    "coverage": "codecov --token=c6135c0d-58d0-47ff-8cca-7c38f31f637d"
+    "test": "jest"
   },
   "keywords": [
     "yandex",

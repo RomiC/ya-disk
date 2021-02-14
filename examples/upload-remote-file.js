@@ -1,8 +1,8 @@
-import upload from '../lib/upload';
+import upload from '../lib/upload.js';
 
 const { API_TOKEN = '' } = process.env;
-const url = 'https://tech.yandex.com/disk/doc/dg/yandex-disk-dg.pdf';
-const path = 'disk:/Приложения/ya-disk-api/yandex-disk-dg.pdf';
+const url = 'http://africau.edu/images/default/sample.pdf';
+const path = 'disk:/Приложения/ya-disk-api/sample.pdf';
 
 upload.remoteFile(
   API_TOKEN,

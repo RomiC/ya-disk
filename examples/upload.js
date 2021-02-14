@@ -1,7 +1,8 @@
 import { createReadStream } from 'fs';
 import { request } from 'https';
 import { parse } from 'url';
-import upload from '../lib/upload';
+
+import upload from '../lib/upload.js';
 
 const { API_TOKEN = '' } = process.env;
 
@@ -10,11 +11,10 @@ upload.link(
   'disk:/Приложения/ya-disk-api/package.json',
   true,
   ({ href, method }) => {
-    const fileStream = createReadStream('./package.json');
-    const uploadStream = request(Object.assign(parse(href), { method }));
-
-    fileStream.pipe(uploadStream);
-    fileStream.on('end', () => uploadStream.end());
+    createReadStream('./package.json')
+      .on('end', () => console.log('completed!'))
+      .pipe(request(Object.assign(parse(href), { method })))
+      .on('error', console.error);
   },
   (err) => process.stderror.write(err.message)
 );
