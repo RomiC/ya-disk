@@ -24,7 +24,7 @@
     "follow-redirects": "^1.5.5",
     "husky": "^6.0.0",
     "jest": "^26.4.0",
-    "lint-staged": "^10.0.3",
+    "lint-staged": "^11.0.0",
     "prettier": "^2.0.5"
   },
   "bugs": {
