@@ -1,48 +1,33 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "03:00"
-  open-pull-requests-limit: 10
-  assignees:
-  - RomiC
-  ignore:
-  - dependency-name: husky
-    versions:
-    - 5.1.0
-  - dependency-name: eslint-config-prettier
-    versions:
-    - 8.0.0
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "03:00"
-  open-pull-requests-limit: 10
-  target-branch: v3.x
-  assignees:
-  - RomiC
-  labels:
-  - v3.x
-  - dependencies
-  ignore:
-  - dependency-name: husky
-    versions:
-    - 5.1.0
-    - 5.1.1
-  - dependency-name: eslint-config-prettier
-    versions:
-    - 8.0.0
-  - dependency-name: "@babel/node"
-    versions:
-    - 7.12.16
-  - dependency-name: "@babel/core"
-    versions:
-    - 7.12.13
-    - 7.12.16
-  - dependency-name: "@babel/preset-env"
-    versions:
-    - 7.12.13
-    - 7.12.16
+
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    assignees:
+      - "RomiC"
+    commit-message:
+      prefix: "🆙 🛠️"
+    labels:
+      - "dependencies"
+      - "dx"
+    reviewers:
+      - "RomiC"
+
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    assignees:
+      - "RomiC"
+    commit-message:
+      prefix: "🆙 📦"
+    labels:
+      - "dependencies"
+      - "dx"
+    reviewers:
+      - "RomiC"
+    versioning-strategy: increase
