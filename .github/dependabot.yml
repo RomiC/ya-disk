@@ -1,33 +1,85 @@
 version: 2
 updates:
-
+# MASTER branch
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "daily"
     assignees:
       - "RomiC"
     commit-message:
       prefix: "🆙 🛠️"
+    directory: "/"
     labels:
       - "dependencies"
       - "dx"
+    open-pull-requests-limit: 10
     reviewers:
       - "RomiC"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "14:00"
+      timezone: "Europe/Sofia"
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "daily"
     assignees:
       - "RomiC"
     commit-message:
       prefix: "🆙 📦"
+    directory: "/"
     labels:
       - "dependencies"
       - "dx"
+    open-pull-requests-limit: 10
     reviewers:
       - "RomiC"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "14:00"
+      timezone: "Europe/Sofia"
+    versioning-strategy: increase
+
+# V3.X branch
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    assignees:
+      - "RomiC"
+    commit-message:
+      prefix: "🆙 🛠️"
+    directory: "/"
+    labels:
+      - "dependencies"
+      - "dx"
+      - "v3.x"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "RomiC"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "14:00"
+      timezone: "Europe/Sofia"
+    target-branch: "v3.x"
+
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    assignees:
+      - "RomiC"
+    commit-message:
+      prefix: "🆙 📦"
+    directory: "/"
+    labels:
+      - "dependencies"
+      - "dx"
+      - "v3.x"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "RomiC"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "14:00"
+      timezone: "Europe/Sofia"
+    target-branch: "v3.x"
     versioning-strategy: increase
