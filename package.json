@@ -17,13 +17,12 @@
   "engines": {
     "node": ">= 16.0.0"
   },
-  "dependencies": {},
   "devDependencies": {
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "follow-redirects": "^1.5.5",
-    "husky": "^8.0.0",
+    "husky": "^8.0.3",
     "jest": "^29.0.0",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8"
@@ -43,7 +42,8 @@
     "lint:all:fix": "npm run lint:all -- --fix",
     "test": "jest",
     "test:watch": "npm test -- --watch --no-coverage",
-    "coverage": "codecov --token=c6135c0d-58d0-47ff-8cca-7c38f31f637d"
+    "coverage": "codecov --token=c6135c0d-58d0-47ff-8cca-7c38f31f637d",
+    "prepare": "husky install"
   },
   "keywords": [
     "yandex",
@@ -52,11 +52,5 @@
   ],
   "lint-staged": {
     "+(examples|lib|tests)/*.js": "npm run lint:fix"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged -r --no-stash",
-      "pre-push": "npm test"
-    }
   }
 }
