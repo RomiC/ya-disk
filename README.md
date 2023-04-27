@@ -366,4 +366,4 @@ You may find samle of the real usage in the example folder. You should obtain th
 ```sh
 API_TOKEN=[token] node examples/upload-remote-file.js
 ```
-Beware that examples work in nodejs >= 14.x.
+Beware that examples work in nodejs >= 16.x.
