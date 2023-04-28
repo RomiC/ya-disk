@@ -97,7 +97,7 @@ test('should call onSuccess-callback with parsed result and status code', (done)
 
   https.request._requestCallback(res);
 
-  res.on('end', function() {
+  res.on('end', function () {
     expect(onSuccess).toHaveBeenCalledWith(expectedResponse, res.statusCode);
     done();
   });
@@ -116,7 +116,7 @@ test('should call onSuccess-callback with null and status code when response is 
 
   https.request._requestCallback(res);
 
-  res.on('end', function() {
+  res.on('end', function () {
     expect(onSuccess).toHaveBeenCalledWith(null, 201);
     done();
   });
