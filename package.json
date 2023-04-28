@@ -35,10 +35,8 @@
     "test": "tests/*.spec.js"
   },
   "scripts": {
-    "lint": "eslint --max-warnings 0",
-    "lint:fix": "npm run lint -- --fix",
-    "lint:all": "npm run lint -- lib/* tests/* __mocks__/* examples/*",
-    "lint:all:fix": "npm run lint:all -- --fix",
+    "lint": "eslint --max-warnings 0 -- index.js lib/*.js tests/*.js examples/*.js",
+    "lint:fix": "eslint --fix",
     "test": "jest"
   },
   "keywords": [
@@ -47,7 +45,8 @@
     "api"
   ],
   "lint-staged": {
-    "+(examples|lib|tests|__mocks__)/*.js": "npm run lint:fix"
+    "+(examples|lib|tests|__mocks__)/*.js": "npm run lint:fix",
+    "+index.js": "npm run lint:fix"
   },
   "husky": {
     "hooks": {
