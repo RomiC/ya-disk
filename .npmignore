@@ -1,8 +1,6 @@
-.babelrc
 .eslintrc
 .gitattributes
 .github
-.nyc_output
 .prettierrc
 .vscode
 *.tgz
