@@ -51,8 +51,7 @@ describe('remoteFile', () => {
   it('should call request.post with proper params and resolve Promise with data', () => {
     const responseMock = {
       data: {
-        href:
-          'https://cloud-api.yandex.net/v1/disk/operations?id=33ca7d03ab21ct41b4a40182e78d828a3f8b72cdb5f4c0e94cc4b1449a63a2fe',
+        href: 'https://cloud-api.yandex.net/v1/disk/operations?id=33ca7d03ab21ct41b4a40182e78d828a3f8b72cdb5f4c0e94cc4b1449a63a2fe',
         method: 'GET',
         templated: false
       },

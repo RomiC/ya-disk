@@ -6,5 +6,5 @@ module.exports = {
   operations: require('./lib/operations'),
   recent: require('./lib/recent'),
   upload: require('./lib/upload'),
-  resources: require('./lib/resources'),
+  resources: require('./lib/resources')
 };
