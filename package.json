@@ -38,14 +38,12 @@
     "test": "./tests"
   },
   "scripts": {
-    "example": "babel-node",
     "lint": "eslint --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "lint:all": "npm run lint -- lib/* tests/* examples/*",
     "lint:all:fix": "npm run lint:all -- --fix",
     "test": "jest",
     "test:watch": "npm test -- --watch --no-coverage",
-    "coverage": "codecov --token=c6135c0d-58d0-47ff-8cca-7c38f31f637d",
     "prepare": "husky install"
   },
   "keywords": [
