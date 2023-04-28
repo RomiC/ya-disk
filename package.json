@@ -32,7 +32,10 @@
   },
   "homepage": "https://github.com/RomiC/ya-disk#readme",
   "directories": {
-    "test": "tests/*.spec.js"
+    "doc": "./README.md",
+    "example": "./examples",
+    "lib": "./lib",
+    "test": "./tests"
   },
   "scripts": {
     "example": "babel-node",
