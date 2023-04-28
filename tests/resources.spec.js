@@ -20,8 +20,7 @@ describe('copy', () => {
   it('should call request.post and resolve Promise with data and status', () => {
     const responseMock = {
       data: {
-        href:
-          'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Ffoo%2Fbar',
+        href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Ffoo%2Fbar',
         method: 'GET',
         templated: false
       },
@@ -71,8 +70,7 @@ describe('create', () => {
   it('should call request.put-method and resolve Promise with data', () => {
     const responseMock = {
       data: {
-        href:
-          'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2FMusic',
+        href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2FMusic',
         method: 'GET',
         templated: false
       },
@@ -98,8 +96,7 @@ describe('move', () => {
   it('should call request.post and resolve Promise with data and status', () => {
     const responseMock = {
       data: {
-        href:
-          'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Fbar%2Fphoto.png',
+        href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Fbar%2Fphoto.png',
         method: 'GET',
         templated: false
       },
@@ -149,8 +146,7 @@ describe('remove', () => {
   it('should call request.deleted-method and resolve promise with data and status', () => {
     const responseMock = {
       data: {
-        href:
-          'https://cloud-api.yandex.net/v1/disk/operations?id=d80c269ce4eb16c0207f0a15t4a31415313452f9e950cd9576f36b1146ee0e42',
+        href: 'https://cloud-api.yandex.net/v1/disk/operations?id=d80c269ce4eb16c0207f0a15t4a31415313452f9e950cd9576f36b1146ee0e42',
         method: 'GET',
         templated: false
       },
