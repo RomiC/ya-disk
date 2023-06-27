@@ -15,10 +15,7 @@ updates:
     reviewers:
       - "RomiC"
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "14:00"
-      timezone: "Europe/Sofia"
+      interval: "monthly"
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
@@ -34,10 +31,7 @@ updates:
     reviewers:
       - "RomiC"
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "14:00"
-      timezone: "Europe/Sofia"
+      interval: "monthly"
     versioning-strategy: increase
 
 # V3.X branch
@@ -56,10 +50,7 @@ updates:
     reviewers:
       - "RomiC"
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "14:00"
-      timezone: "Europe/Sofia"
+      interval: "monthly"
     target-branch: "v3.x"
 
   # Maintain dependencies for npm
@@ -77,9 +68,6 @@ updates:
     reviewers:
       - "RomiC"
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "14:00"
-      timezone: "Europe/Sofia"
+      interval: "monthly"
     target-branch: "v3.x"
     versioning-strategy: increase
