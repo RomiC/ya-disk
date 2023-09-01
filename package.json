@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "eslint": "^8.48.0",
-    "eslint-config-prettier": "^8.9.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "follow-redirects": "^1.5.5",
     "husky": "^8.0.3",
