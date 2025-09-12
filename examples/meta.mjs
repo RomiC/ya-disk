@@ -1,7 +1,7 @@
 import meta from '../lib/meta.js';
 
 const { API_TOKEN = '' } = process.env;
-const filePath = 'disk:/Зима.png';
+const filePath = 'disk:/CV.pdf';
 
 (async () => {
   try {
