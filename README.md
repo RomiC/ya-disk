@@ -1,10 +1,11 @@
 # ya-disk
+
 [![NPM version](https://img.shields.io/npm/v/ya-disk.svg?style=flat-square)](https://www.npmjs.com/package/ya-disk) ![Tests](https://github.com/RomiC/ya-disk/workflows/Tests/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/RomiC/ya-disk/badge.svg)](https://coveralls.io/github/RomiC/ya-disk)
 
 This library provides methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
 ```javascript
-import info from '../lib/info';
+import info from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -162,7 +163,7 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
 (async () => {
   try {
-    const {items} = (await meta.get(token, '/'))._embedded;
+    const { items } = (await meta.get(token, '/'))._embedded;
     items.forEach((item, index) => console.log(`${index + 1}: ${item.name}`));
   } catch (error) {
     console.error(error);
@@ -362,8 +363,10 @@ resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false);
 
 ## Examples
 
-You may find samle of the real usage in the example folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:
+You may find examples of the real usage in the `examples` folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:
+
 ```sh
 API_TOKEN=[token] node examples/upload-remote-file.js
 ```
+
 Beware that examples work in nodejs >= 16.x.
