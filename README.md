@@ -487,6 +487,47 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 })();
 ```
 
+### Trash Actions
+
+#### delete(token, [path])
+
+Empty Trash completely or remove a specific resource from Trash. See [details](https://yandex.com/dev/disk-api/doc/en/reference/trash-delete).
+
+```javascript
+import { trash } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+// Empty whole Trash
+trash.delete(API_TOKEN);
+
+// Remove specific resource from Trash
+trash.delete(API_TOKEN, '/foo/photo.png');
+```
+
+#### restore(token, path, [name], [overwrite=false])
+
+Restore a resource from Trash. See [details](https://yandex.com/dev/disk-api/doc/en/reference/trash-restore).
+
+```javascript
+import { trash } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    await trash.restore(
+      API_TOKEN,
+      '/foo/photo.png',
+      'photo-restored.png',
+      true
+    );
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
 ## Examples
 
 You may find examples of the real usage in the `examples` folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:

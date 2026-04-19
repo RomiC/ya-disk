@@ -15,6 +15,9 @@ test('it should export all methods', () => {
   expect(typeof yaDisk.publicResources.saveToDisk).toBe('function');
   expect(typeof yaDisk.publicResources.list).toBe('function');
   expect(typeof yaDisk.recent).toBe('function');
+  expect(typeof yaDisk.trash).toBe('object');
+  expect(typeof yaDisk.trash.delete).toBe('function');
+  expect(typeof yaDisk.trash.restore).toBe('function');
   expect(typeof yaDisk.upload).toBe('object');
   expect(typeof yaDisk.upload.link).toBe('function');
   expect(typeof yaDisk.upload.remoteFile).toBe('function');
