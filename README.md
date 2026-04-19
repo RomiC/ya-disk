@@ -133,11 +133,11 @@ With the `get`-method you could also get the list of files inside the folder. Se
 import { meta } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
- 
+
 meta.get(API_TOKEN, 'disk:/', {}, (({_embedded}) => {
   _embedded.items.forEach((item, index) => console.log(`${index + 1}: ${item.name}`));
 }, console.error);
- ```
+```
 
 #### add(token, path, properties, [success], [error])
 
@@ -313,9 +313,100 @@ resources.move(
 );
 ```
 
+### publish(token, path, [success], [error])
+
+Publish file or folder and get public access link metadata. See [details](https://yandex.com/dev/disk-api/doc/en/reference/publish).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+resources.publish(
+  API_TOKEN,
+  'disk:/fileOrFolderName',
+  console.log,
+  console.error
+);
+```
+
+### unpublish(token, path, [success], [error])
+
+Unpublish file or folder and revoke public access. See [details](https://yandex.com/dev/disk-api/doc/en/reference/publish#unpublish-q).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+resources.unpublish(
+  API_TOKEN,
+  'disk:/fileOrFolderName',
+  console.log,
+  console.error
+);
+```
+
+### Public Resources
+
+#### get(token, public_key, [options={}], [success], [error])
+
+Request metadata for a public resource. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public#meta-request).
+
+#### download(token, public_key, [path], [success], [error])
+
+Get download link for a public resource. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public#download-request).
+
+#### saveToDisk(token, public_key, [path], [name], [success], [error])
+
+Save a public resource to user Downloads folder. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public#save-request).
+
+#### list(token, [options={}], [success], [error])
+
+Get list of user published resources. See [details](https://yandex.com/dev/disk-api/doc/en/reference/recent-public#format).
+
+```javascript
+import { publicResource } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+publicResource.list(
+  API_TOKEN,
+  { limit: 10, type: 'file' },
+  console.log,
+  console.error
+);
+```
+
+### Trash Actions
+
+#### delete(token, [path], [success], [error])
+
+Empty trash or delete a specific resource from trash. See [details](https://yandex.com/dev/disk-api/doc/en/reference/trash-delete).
+
+#### restore(token, path, [name], [overwrite=false], [success], [error])
+
+Restore resource from trash. See [details](https://yandex.com/dev/disk-api/doc/en/reference/trash-restore).
+
+```javascript
+import { trash } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+trash.delete(API_TOKEN, '/foo/photo.png', console.log, console.error);
+trash.restore(
+  API_TOKEN,
+  '/foo/photo.png',
+  'photo-restored.png',
+  true,
+  console.log,
+  console.error
+);
+```
+
 ## Examples
 
-You may find samle of the real usage in the example folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:
+You may find sample of the real usage in the example folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:
 
 ```sh
 API_TOKEN=[token] node examples/upload-remote-file.js

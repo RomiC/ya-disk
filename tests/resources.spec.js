@@ -1,11 +1,20 @@
 const request = require('../lib/request');
-const { create, remove, copy, move } = require('../lib/resources');
+const {
+  create,
+  remove,
+  copy,
+  move,
+  publish,
+  unpublish
+} = require('../lib/resources');
 
 const { API_TOKEN } = require('./constants');
 const {
   API_RESOURCES_URL,
   API_COPY_URL,
-  API_MOVE_URL
+  API_MOVE_URL,
+  API_PUBLISH_URL,
+  API_UNPUBLISH_URL
 } = require('../lib/constants');
 
 const folderName = 'disk:/folderName';
@@ -104,6 +113,38 @@ test('move folder or file', () => {
         path: folder2Name,
         overwrite,
         fields
+      }
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
+});
+
+test('publish folder or file', () => {
+  publish(API_TOKEN, folderName, onSuccessCallback, onErrorCallback);
+
+  expect(request.put).toHaveBeenCalledWith(
+    {
+      url: API_PUBLISH_URL,
+      token: API_TOKEN,
+      query: {
+        path: folderName
+      }
+    },
+    onSuccessCallback,
+    onErrorCallback
+  );
+});
+
+test('unpublish folder or file', () => {
+  unpublish(API_TOKEN, folderName, onSuccessCallback, onErrorCallback);
+
+  expect(request.put).toHaveBeenCalledWith(
+    {
+      url: API_UNPUBLISH_URL,
+      token: API_TOKEN,
+      query: {
+        path: folderName
       }
     },
     onSuccessCallback,
