@@ -1,11 +1,20 @@
 const request = require('../lib/request');
-const { create, remove, copy, move } = require('../lib/resources');
+const {
+  create,
+  remove,
+  copy,
+  move,
+  publish,
+  unpublish
+} = require('../lib/resources');
 
 const { API_TOKEN } = require('./constants');
 const {
   API_RESOURCES_URL,
   API_COPY_URL,
-  API_MOVE_URL
+  API_MOVE_URL,
+  API_PUBLISH_URL,
+  API_UNPUBLISH_URL
 } = require('../lib/constants');
 
 const folderName = 'disk:/folderName';
@@ -176,5 +185,57 @@ describe('remove', () => {
       token: API_TOKEN,
       query: { path: folderName, permanently: false }
     });
+  });
+});
+
+describe('publish', () => {
+  it('should call request.put and resolve Promise with data', () => {
+    const responseMock = {
+      data: {
+        href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Ffoo%2Fbar',
+        method: 'GET',
+        templated: false
+      },
+      status: 200
+    };
+    const publishPromise = publish(API_TOKEN, folderName);
+
+    expect(request.put).toHaveBeenCalledWith({
+      url: API_PUBLISH_URL,
+      token: API_TOKEN,
+      query: {
+        path: folderName
+      }
+    });
+
+    request.put._resolve(responseMock);
+
+    expect(publishPromise).resolves.toBe(responseMock.data);
+  });
+});
+
+describe('unpublish', () => {
+  it('should call request.put and resolve Promise with data', () => {
+    const responseMock = {
+      data: {
+        href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Ffoo%2Fbar',
+        method: 'GET',
+        templated: false
+      },
+      status: 200
+    };
+    const unpublishPromise = unpublish(API_TOKEN, folderName);
+
+    expect(request.put).toHaveBeenCalledWith({
+      url: API_UNPUBLISH_URL,
+      token: API_TOKEN,
+      query: {
+        path: folderName
+      }
+    });
+
+    request.put._resolve(responseMock);
+
+    expect(unpublishPromise).resolves.toBe(responseMock.data);
   });
 });

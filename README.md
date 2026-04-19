@@ -361,6 +361,173 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false);
 ```
 
+#### publish(token, path)
+
+Publish file or folder and get public access link metadata. See [details](https://yandex.com/dev/disk-api/doc/en/reference/publish).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const link = await resources.publish(API_TOKEN, 'disk:/fileOrFolderName');
+    console.log(link.href);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### unpublish(token, path)
+
+Unpublish file or folder and revoke public access. See [details](https://yandex.com/dev/disk-api/doc/en/reference/publish#unpublish-q).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const link = await resources.unpublish(API_TOKEN, 'disk:/fileOrFolderName');
+    console.log(link.href);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+### Public Resources
+
+#### publicResources.get(token, public_key, [options={}])
+
+Get meta-information for a public resource by its key or URL. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public).
+
+```javascript
+import { publicResources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const resource = await publicResources.get(
+      API_TOKEN,
+      'https://disk.yandex.com/d/abc123'
+    );
+    console.log(resource.name);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### publicResources.download(token, public_key, [path])
+
+Get a download link for a public resource. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public).
+
+```javascript
+import { publicResources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const { href } = await publicResources.download(
+      API_TOKEN,
+      'https://disk.yandex.com/d/abc123'
+    );
+    console.log(href);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### publicResources.saveToDisk(token, public_key, [path], [name])
+
+Save a public resource to the user's Downloads folder. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public).
+
+```javascript
+import { publicResources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    await publicResources.saveToDisk(
+      API_TOKEN,
+      'https://disk.yandex.com/d/abc123',
+      null,
+      'my-copy.png'
+    );
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### publicResources.list(token, [options])
+
+Get a list of the user's published resources. See [details](https://yandex.com/dev/disk-api/doc/en/reference/recent-public).
+
+```javascript
+import { publicResources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const { items } = await publicResources.list(API_TOKEN, { type: 'file' });
+    items.forEach((item) => console.log(item.name));
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+### Trash Actions
+
+#### delete(token, [path])
+
+Empty Trash completely or remove a specific resource from Trash. See [details](https://yandex.com/dev/disk-api/doc/en/reference/trash-delete).
+
+```javascript
+import { trash } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+// Empty whole Trash
+trash.delete(API_TOKEN);
+
+// Remove specific resource from Trash
+trash.delete(API_TOKEN, '/foo/photo.png');
+```
+
+#### restore(token, path, [name], [overwrite=false])
+
+Restore a resource from Trash. See [details](https://yandex.com/dev/disk-api/doc/en/reference/trash-restore).
+
+```javascript
+import { trash } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    await trash.restore(
+      API_TOKEN,
+      '/foo/photo.png',
+      'photo-restored.png',
+      true
+    );
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
 ## Examples
 
 You may find examples of the real usage in the `examples` folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:
