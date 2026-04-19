@@ -361,6 +361,47 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 resources.remove(API_TOKEN, 'disk:/fileOrFolderName', false);
 ```
 
+#### publish(token, path)
+
+Publish file or folder and get public access link metadata. See [details](https://yandex.com/dev/disk-api/doc/en/reference/publish).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const link = await resources.publish(API_TOKEN, 'disk:/fileOrFolderName');
+    console.log(link.href);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### unpublish(token, path)
+
+Unpublish file or folder and revoke public access. See [details](https://yandex.com/dev/disk-api/doc/en/reference/publish#unpublish-q).
+
+```javascript
+import { resources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const link = await resources.unpublish(
+      API_TOKEN,
+      'disk:/fileOrFolderName'
+    );
+    console.log(link.href);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
 ## Examples
 
 You may find examples of the real usage in the `examples` folder. You should obtain the API key first. Now you can run any example with API key passed as env-variable:

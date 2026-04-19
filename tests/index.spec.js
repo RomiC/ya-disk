@@ -17,4 +17,6 @@ test('it should export all methods', () => {
   expect(typeof yaDisk.resources.remove).toBe('function');
   expect(typeof yaDisk.resources.copy).toBe('function');
   expect(typeof yaDisk.resources.move).toBe('function');
+  expect(typeof yaDisk.resources.publish).toBe('function');
+  expect(typeof yaDisk.resources.unpublish).toBe('function');
 });
