@@ -391,11 +391,96 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
 (async () => {
   try {
-    const link = await resources.unpublish(
-      API_TOKEN,
-      'disk:/fileOrFolderName'
-    );
+    const link = await resources.unpublish(API_TOKEN, 'disk:/fileOrFolderName');
     console.log(link.href);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+### Public Resources
+
+#### publicResources.get(token, public_key, [options={}])
+
+Get meta-information for a public resource by its key or URL. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public).
+
+```javascript
+import { publicResources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const resource = await publicResources.get(
+      API_TOKEN,
+      'https://disk.yandex.com/d/abc123'
+    );
+    console.log(resource.name);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### publicResources.download(token, public_key, [path])
+
+Get a download link for a public resource. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public).
+
+```javascript
+import { publicResources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const { href } = await publicResources.download(
+      API_TOKEN,
+      'https://disk.yandex.com/d/abc123'
+    );
+    console.log(href);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### publicResources.saveToDisk(token, public_key, [path], [name])
+
+Save a public resource to the user's Downloads folder. See [details](https://yandex.com/dev/disk-api/doc/en/reference/public).
+
+```javascript
+import { publicResources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    await publicResources.saveToDisk(
+      API_TOKEN,
+      'https://disk.yandex.com/d/abc123',
+      null,
+      'my-copy.png'
+    );
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+#### publicResources.list(token, [options])
+
+Get a list of the user's published resources. See [details](https://yandex.com/dev/disk-api/doc/en/reference/recent-public).
+
+```javascript
+import { publicResources } from 'ya-disk';
+
+const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
+
+(async () => {
+  try {
+    const { items } = await publicResources.list(API_TOKEN, { type: 'file' });
+    items.forEach((item) => console.log(item.name));
   } catch (error) {
     console.error(error);
   }

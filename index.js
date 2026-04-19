@@ -4,6 +4,7 @@ module.exports = {
   list: require('./lib/list'),
   meta: require('./lib/meta'),
   operations: require('./lib/operations'),
+  publicResources: require('./lib/publicResource'),
   recent: require('./lib/recent'),
   upload: require('./lib/upload'),
   resources: require('./lib/resources')

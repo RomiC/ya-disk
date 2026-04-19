@@ -9,6 +9,11 @@ test('it should export all methods', () => {
   expect(typeof yaDisk.meta.add).toBe('function');
   expect(typeof yaDisk.meta.get).toBe('function');
   expect(typeof yaDisk.operations).toBe('function');
+  expect(typeof yaDisk.publicResources).toBe('object');
+  expect(typeof yaDisk.publicResources.get).toBe('function');
+  expect(typeof yaDisk.publicResources.download).toBe('function');
+  expect(typeof yaDisk.publicResources.saveToDisk).toBe('function');
+  expect(typeof yaDisk.publicResources.list).toBe('function');
   expect(typeof yaDisk.recent).toBe('function');
   expect(typeof yaDisk.upload).toBe('object');
   expect(typeof yaDisk.upload.link).toBe('function');
