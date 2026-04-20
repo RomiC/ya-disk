@@ -412,4 +412,4 @@ You may find sample of the real usage in the example folder. You should obtain t
 API_TOKEN=[token] node examples/upload-remote-file.js
 ```
 
-Beware that examples work in nodejs >= 14.x.
+Beware that examples work in Node.js >= 22.x.
