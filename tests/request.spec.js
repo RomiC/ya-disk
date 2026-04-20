@@ -76,6 +76,56 @@ test('should call https.request with correct params', () => {
   );
 });
 
+test('should strip empty query params before calling https.request', () => {
+  request.request({
+    url,
+    token,
+    method,
+    query: {
+      foo: 'string',
+      bar: 3,
+      empty: '',
+      missing: undefined,
+      nil: null
+    }
+  });
+
+  expect(https.request).toHaveBeenCalledWith(
+    Object.assign({}, urlParsed, {
+      method,
+      path: `${urlParsed.path}?${queryString}`,
+      headers: {
+        Authorization: authHeader
+      }
+    }),
+    expect.any(Function)
+  );
+});
+
+test('should omit query string when all query params are empty', () => {
+  request.request({
+    url,
+    token,
+    method,
+    query: {
+      empty: '',
+      missing: undefined,
+      nil: null
+    }
+  });
+
+  expect(https.request).toHaveBeenCalledWith(
+    Object.assign({}, urlParsed, {
+      method,
+      path: urlParsed.path,
+      headers: {
+        Authorization: authHeader
+      }
+    }),
+    expect.any(Function)
+  );
+});
+
 test('should call onSuccess-callback with parsed result and status code', (done) => {
   const expectedResponse = {
     param1: 4631577437,
