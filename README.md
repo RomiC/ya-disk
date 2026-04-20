@@ -536,4 +536,4 @@ You may find examples of the real usage in the `examples` folder. You should obt
 API_TOKEN=[token] node examples/upload-remote-file.js
 ```
 
-Beware that examples work in nodejs >= 16.x.
+Beware that examples work in Node.js >= 22.x.
