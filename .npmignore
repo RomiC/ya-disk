@@ -1,9 +1,12 @@
 .babelrc
 .eslintrc
+eslint.config.mjs
 .gitattributes
 .github
 .nyc_output
 .prettierrc
+.nvmrc
+.husky
 .vscode
 *.tgz
 coverage
