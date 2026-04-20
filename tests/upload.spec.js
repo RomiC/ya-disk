@@ -1,3 +1,5 @@
+jest.mock('../lib/request');
+
 const request = require('../lib/request');
 const { link, remoteFile } = require('../lib/upload');
 
@@ -7,8 +9,6 @@ const { API_UPLOAD_LINK_URL } = require('../lib/constants');
 const path = 'disk:/file.txt';
 const overwrite = true;
 const url = 'https://example.com/file.txt';
-
-jest.mock('../lib/request');
 
 describe('link', () => {
   it('should call request.get with proper params and resolve Promise with data', () => {

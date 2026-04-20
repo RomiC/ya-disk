@@ -1,3 +1,5 @@
+jest.mock('../lib/request');
+
 const request = require('../lib/request');
 const operations = require('../lib/operations');
 
@@ -5,8 +7,6 @@ const { API_TOKEN } = require('./constants');
 const { API_OPERATIONS_URL } = require('../lib/constants');
 
 const id = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
-
-jest.mock('../lib/request');
 
 test('should call request.get with proper params and resolve Promise with data', () => {
   const responseMock = {

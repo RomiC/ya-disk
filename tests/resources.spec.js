@@ -1,3 +1,5 @@
+jest.mock('../lib/request');
+
 const request = require('../lib/request');
 const {
   create,
@@ -22,8 +24,6 @@ const folder2Name = 'disk:/folder2Name';
 const overwrite = true;
 const fields = 'field1,field2';
 const permanently = true;
-
-jest.mock('../lib/request');
 
 describe('copy', () => {
   it('should call request.post and resolve Promise with data and status', () => {

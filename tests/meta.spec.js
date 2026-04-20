@@ -1,3 +1,5 @@
+jest.mock('../lib/request');
+
 const request = require('../lib/request');
 const meta = require('../lib/meta');
 
@@ -19,8 +21,6 @@ const custom_properties = {
     cuatro: 'cuatro'
   }
 };
-
-jest.mock('../lib/request');
 
 describe('get', () => {
   it('should call request.get method with correct params and resolve Promise with data', () => {

@@ -1,3 +1,5 @@
+jest.mock('../lib/request');
+
 const request = require('../lib/request');
 const publicResources = require('../lib/publicResource');
 
@@ -19,8 +21,6 @@ const listOptions = {
   type: 'file',
   preview_size: '120x120'
 };
-
-jest.mock('../lib/request');
 
 describe('get', () => {
   it('should call request.get and resolve Promise with data', () => {

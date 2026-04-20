@@ -1,3 +1,5 @@
+jest.mock('../lib/request');
+
 const request = require('../lib/request');
 const trash = require('../lib/trash');
 
@@ -7,8 +9,6 @@ const { API_TRASH_URL, API_RESTORE_URL } = require('../lib/constants');
 const path = '/foo/photo.png';
 const name = 'photo-restored.png';
 const overwrite = true;
-
-jest.mock('../lib/request');
 
 describe('delete', () => {
   it('should call request.delete with path and resolve Promise with data and status', () => {
