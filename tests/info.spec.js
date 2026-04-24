@@ -1,10 +1,10 @@
+jest.mock('../lib/request');
+
 const info = require('../lib/info');
 const request = require('../lib/request');
 
 const { API_DISK_URL } = require('../lib/constants');
 const { API_TOKEN } = require('./constants');
-
-jest.mock('../lib/request');
 
 test('should call request.do with correct params and resolve Promise with data', () => {
   const responseMock = {

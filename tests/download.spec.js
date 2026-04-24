@@ -1,3 +1,5 @@
+jest.mock('../lib/request');
+
 const request = require('../lib/request');
 const { link } = require('../lib/download');
 
@@ -5,8 +7,6 @@ const { API_TOKEN } = require('./constants');
 const { API_DOWNLOAD_LINK_URL } = require('../lib/constants');
 
 const path = 'disk:/file.txt';
-
-jest.mock('../lib/request');
 
 describe('link', () => {
   it('should call request.get method with correct params and resolve Promise with data', () => {

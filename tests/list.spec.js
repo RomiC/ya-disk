@@ -1,3 +1,5 @@
+jest.mock('../lib/request');
+
 const request = require('../lib/request');
 const list = require('../lib/list');
 
@@ -11,8 +13,6 @@ const options = {
   preview_size: '130x',
   preview_crop: true
 };
-
-jest.mock('../lib/request');
 
 test('should call request.get with proper params and resolve Promise with data', () => {
   const responseMock = {

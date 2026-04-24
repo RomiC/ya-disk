@@ -1,3 +1,5 @@
+jest.mock('https');
+
 const https = require('https');
 const { Readable } = require('stream');
 const { stringify: queryStringify } = require('querystring');
@@ -34,8 +36,6 @@ class IncomingMessageStub extends Readable {
     this.push(null);
   }
 }
-
-jest.mock('https');
 
 afterEach(() => jest.clearAllMocks());
 
