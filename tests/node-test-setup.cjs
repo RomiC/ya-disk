@@ -67,34 +67,36 @@ Module._load = function patchedLoad(request, parent, isMain) {
   return originalLoad.apply(this, arguments);
 };
 
+const wrapDoneCallback = (fn) => async () =>
+  await new Promise((resolve, reject) => {
+    let doneCalled = false;
+    const done = (err) => {
+      if (doneCalled) {
+        return;
+      }
+      doneCalled = true;
+
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    };
+
+    try {
+      fn(done);
+    } catch (error) {
+      reject(error);
+    }
+  });
+
 const wrapHook = (fn) => {
   if (typeof fn !== 'function') {
     return fn;
   }
 
   if (fn.length > 0) {
-    return async () =>
-      await new Promise((resolve, reject) => {
-        let doneCalled = false;
-        const done = (err) => {
-          if (doneCalled) {
-            return;
-          }
-          doneCalled = true;
-
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        };
-
-        try {
-          fn(done);
-        } catch (error) {
-          reject(error);
-        }
-      });
+    return wrapDoneCallback(fn);
   }
 
   return fn;
@@ -106,28 +108,7 @@ const wrapTest = (fn) => {
   }
 
   if (fn.length > 0) {
-    return async () =>
-      await new Promise((resolve, reject) => {
-        let doneCalled = false;
-        const done = (err) => {
-          if (doneCalled) {
-            return;
-          }
-          doneCalled = true;
-
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        };
-
-        try {
-          fn(done);
-        } catch (error) {
-          reject(error);
-        }
-      });
+    return wrapDoneCallback(fn);
   }
 
   return fn;
@@ -179,3 +160,4 @@ global.jest = {
     delete require.cache[resolved];
   }
 };
+
