@@ -38,7 +38,7 @@ updates:
       default-days: 3
     versioning-strategy: increase
 
-# V3.X branch
+# V4.X branch
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     assignees:
@@ -49,7 +49,7 @@ updates:
     labels:
       - "dependencies"
       - "dx"
-      - "v3.x"
+      - "v4.x"
     open-pull-requests-limit: 10
     reviewers:
       - "RomiC"
@@ -57,7 +57,7 @@ updates:
       interval: "monthly"
     cooldown:
       default-days: 3
-    target-branch: "v3.x"
+    target-branch: "v4.x"
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
@@ -69,7 +69,7 @@ updates:
     labels:
       - "dependencies"
       - "dx"
-      - "v3.x"
+      - "v4.x"
     open-pull-requests-limit: 10
     reviewers:
       - "RomiC"
@@ -77,5 +77,5 @@ updates:
       interval: "monthly"
     cooldown:
       default-days: 3
-    target-branch: "v3.x"
+    target-branch: "v4.x"
     versioning-strategy: increase
