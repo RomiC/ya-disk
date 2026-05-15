@@ -16,6 +16,8 @@ updates:
       - "RomiC"
     schedule:
       interval: "monthly"
+    cooldown:
+      default-days: 3
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
@@ -32,6 +34,8 @@ updates:
       - "RomiC"
     schedule:
       interval: "monthly"
+    cooldown:
+      default-days: 3
     versioning-strategy: increase
 
 # V3.X branch
@@ -51,6 +55,8 @@ updates:
       - "RomiC"
     schedule:
       interval: "monthly"
+    cooldown:
+      default-days: 3
     target-branch: "v3.x"
 
   # Maintain dependencies for npm
@@ -69,5 +75,7 @@ updates:
       - "RomiC"
     schedule:
       interval: "monthly"
+    cooldown:
+      default-days: 3
     target-branch: "v3.x"
     versioning-strategy: increase
