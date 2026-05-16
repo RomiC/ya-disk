@@ -2,15 +2,17 @@ import js from '@eslint/js';
 import globals from 'globals';
 import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-plugin-prettier';
-import jest from 'eslint-plugin-jest';
 import markdown from '@eslint/markdown';
 
 export default defineConfig([
   {
+    ignores: ['dist/**', '.tmp-*/**']
+  },
+  {
     files: ['**/*.{js,mjs,cjs}'],
     plugins: { js, prettier },
     extends: ['js/recommended'],
-    languageOptions: { globals: globals.node },
+    languageOptions: { globals: globals.node, sourceType: 'module' },
     rules: {
       'arrow-parens': ['warn', 'always'],
       'comma-spacing': ['warn'],
@@ -78,13 +80,14 @@ export default defineConfig([
       ]
     }
   },
-  { files: ['lib/*.js'], languageOptions: { sourceType: 'commonjs' } },
   {
-    files: ['tests/**/*.js', 'lib/__mocks__/*.js'],
-    plugins: { js, prettier, jest },
+    files: ['tests/**/*.js'],
+    plugins: { js, prettier },
     languageOptions: {
-      globals: jest.environments.globals.globals,
-      sourceType: 'commonjs'
+      globals: {
+        ...globals.node
+      },
+      sourceType: 'module'
     }
   },
   {
