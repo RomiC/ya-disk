@@ -1,29 +1,34 @@
-const request = require('../lib/request');
-const operations = require('../lib/operations');
+import assert from 'node:assert/strict';
+import { afterEach, describe, mock, test } from 'node:test';
 
-const { API_TOKEN } = require('./constants');
-const { API_OPERATIONS_URL } = require('../lib/constants');
+import { requestApi as request } from '../lib/request.js';
+import operations from '../lib/operations.js';
 
-const id = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
+import { API_TOKEN } from './constants.js';
+import { API_OPERATIONS_URL } from '../lib/constants.js';
 
-jest.mock('../lib/request');
+describe('operations', () => {
+  afterEach(() => mock.restoreAll());
 
-test('should call request.get with proper params and resolve Promise with data', () => {
-  const responseMock = {
-    data: {
-      status: 'failed'
-    },
-    status: 200
-  };
+  const id = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
 
-  const operationPromise = operations(API_TOKEN, id);
+  test('should call request.get with proper params and resolve Promise with data', async () => {
+    const responseMock = {
+      data: {
+        status: 'failed'
+      },
+      status: 200
+    };
 
-  expect(request.get).toHaveBeenCalledWith({
-    url: `${API_OPERATIONS_URL}/${id}`,
-    token: API_TOKEN
+    const getMock = mock.method(request, 'request', async () => responseMock);
+    const result = await operations(API_TOKEN, id);
+
+    assert.deepStrictEqual(getMock.mock.calls[0].arguments[0], {
+      method: 'GET',
+      url: `${API_OPERATIONS_URL}/${id}`,
+      token: API_TOKEN
+    });
+
+    assert.deepStrictEqual(result, responseMock.data);
   });
-
-  request.get._resolve(responseMock);
-
-  expect(operationPromise).resolves.toBe(responseMock.data);
 });

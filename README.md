@@ -5,7 +5,7 @@
 This library provides methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
 ```javascript
-import info from 'ya-disk';
+import { info } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -30,6 +30,22 @@ Starting from v4.x _ya-disk_ moved from callback to Promise. If you still wish t
 ```sh
 npm install --save ya-disk
 ```
+
+## Module support
+
+`ya-disk` supports both ESM `import` and CommonJS `require` from the package root.
+
+```javascript
+import yaDisk, { info, resources } from 'ya-disk';
+
+const { upload } = yaDisk;
+```
+
+```javascript
+const { info, resources } = require('ya-disk');
+```
+
+Deep imports such as `ya-disk/lib/info` are not part of the public API.
 
 ## Authorization
 
@@ -196,7 +212,7 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 Getting operation status. See [details](https://tech.yandex.com/disk/api/reference/operations-docpage/). Example:
 
 ```javascript
-import operations from 'ya-disk';
+import { operations } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const operationId = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
@@ -534,6 +550,18 @@ You may find examples of the real usage in the `examples` folder. You should obt
 
 ```sh
 API_TOKEN=[token] node examples/upload-remote-file.js
+```
+
+Or, you may create a `.env` file with a `API_TOKEN`:
+
+```txt
+API_TOKEN=[token]
+```
+
+And then pass it via `--env-file` argument:
+
+```sh
+node --env-file=.env examples/list.mjs
 ```
 
 Beware that examples work in Node.js >= 22.x.
