@@ -2,7 +2,7 @@ name: Tests
 
 on:
   pull_request:
-    types: [opened, edited, synchronize]
+    types: [ opened, edited, synchronize ]
   push:
     branches:
       - master
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ["22", "24"]
+        node: [ "22", "24" ]
     name: Test with node ${{ matrix.node }}
     steps:
       - uses: actions/checkout@v6
@@ -21,7 +21,9 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm ci
       - run: npm run lint
-      - run: npm test
+      - run: npm run test:coverage
+      - run: npm run build
+      - run: npm run smoke
       - uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.github_token }}

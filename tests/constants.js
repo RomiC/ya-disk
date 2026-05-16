@@ -1,4 +1,2 @@
-module.exports = {
-  APP_NAME: 'ya-disk-api',
-  API_TOKEN: 's98h3kjh9fsdyfh4ui349_89yu2khkj'
-};
+export const APP_NAME = 'ya-disk-api';
+export const API_TOKEN = 'test-api-token';
