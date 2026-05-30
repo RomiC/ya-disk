@@ -72,7 +72,7 @@ import { createWriteStream } from 'fs';
 // using provided link
 import { https } from 'follow-redirects';
 import { parse } from 'url';
-import { download } from '../lib/download';
+import { download } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const file = 'disk:/Зима.jpg';
@@ -285,24 +285,20 @@ const remotePath = 'disk:/file.txt';
 Upload remote file to the disk by its url. See [details](https://tech.yandex.com/disk/api/reference/upload-ext-docpage/). Example:
 
 ```javascript
-import upload from '../lib/upload';
+import { upload } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const url = 'https://tech.yandex.com/disk/doc/dg/yandex-disk-dg.pdf';
 const path = 'disk:/Приложения/ya-disk-api/yandex-disk-dg.pdf';
 
-upload.remoteFile(
-  API_TOKEN,
-  url,
-  path,
-  ({ href }) => {
-    process.stdout.write(`File upload started!
-You can check the operation status by url below:
-${href}
-  \n`);
-  },
-  (err) => process.stderror.write(err.message)
-);
+(async () => {
+  try {
+    const { href } = await upload.remoteFile(API_TOKEN, url, path);
+    console.log(`File upload started! Operation status: ${href}`);
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
 ### File and Folder Actions
@@ -552,7 +548,7 @@ You may find examples of the real usage in the `examples` folder. You should obt
 API_TOKEN=[token] node examples/upload-remote-file.js
 ```
 
-Or, you may create a `.env` file with a `API_TOKEN`:
+Or, you may create a `.env` file with an `API_TOKEN`:
 
 ```txt
 API_TOKEN=[token]

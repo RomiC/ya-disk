@@ -261,24 +261,33 @@ describe('request', () => {
   });
 
   describe('wrappers', () => {
-    for (const [name, fn] of [
-      ['GET-wrapper', get],
-      ['POST-wrapper', post],
-      ['PUT-wrapper', put],
-      ['PATCH-wrapper', patch],
-      ['DELETE-wrapper', deleteRequest]
+    for (const [name, fn, hasBody] of [
+      ['GET-wrapper', get, false],
+      ['POST-wrapper', post, true],
+      ['PUT-wrapper', put, true],
+      ['PATCH-wrapper', patch, true],
+      ['DELETE-wrapper', deleteRequest, false]
     ]) {
       test(name, () => {
         const httpMethod = name.replace('-wrapper', '');
-        const httpsMock = mock.method(
-          https,
-          'request',
-          () => new ServerResponseStub()
-        );
+        let reqRef = null;
+        const httpsMock = mock.method(https, 'request', () => {
+          reqRef = new ServerResponseStub();
+          return reqRef;
+        });
 
-        fn({ url, token, query });
+        fn({ url, token, query, ...(hasBody ? { data } : {}) });
 
         assert.equal(httpsMock.mock.calls[0].arguments[0].method, httpMethod);
+        assert.equal(
+          httpsMock.mock.calls[0].arguments[0].path,
+          `${urlOptions.path}?${queryString}`
+        );
+        if (hasBody) {
+          assert.equal(reqRef._data, JSON.stringify(data));
+        } else {
+          assert.equal(reqRef._data, '');
+        }
       });
     }
   });
