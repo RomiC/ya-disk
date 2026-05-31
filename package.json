@@ -45,6 +45,9 @@
     "url": "https://github.com/RomiC/ya-disk/issues"
   },
   "homepage": "https://github.com/RomiC/ya-disk#readme",
+  "overrides": {
+    "yargs": "^18.0.0"
+  },
   "sideEffects": false,
   "files": [
     "dist",
