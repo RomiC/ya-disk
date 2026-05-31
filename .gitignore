@@ -44,3 +44,5 @@ settings.json
 
 *.tgz
 .DS_Store
+
+.env

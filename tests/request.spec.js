@@ -1,14 +1,27 @@
-const https = require('https');
-const { Readable } = require('stream');
-const { stringify: queryStringify } = require('querystring');
-const { parse: urlParse } = require('url');
+import assert from 'node:assert/strict';
+import https from 'node:https';
+import { stringify as queryStringify } from 'node:querystring';
+import { Readable, Writable } from 'node:stream';
+import { afterEach, describe, mock, test } from 'node:test';
 
-const request = require('../lib/request');
+import {
+  get,
+  post,
+  put,
+  patch,
+  delete as deleteRequest
+} from '../lib/request.js';
 
-const { API_TOKEN: token } = require('./constants');
+import { API_TOKEN as token } from './constants.js';
 
 const url = 'https://cloud-api.yandex.net/v1/disk';
-const urlParsed = urlParse(url);
+const parsedUrl = new URL(url);
+const urlOptions = {
+  protocol: parsedUrl.protocol,
+  hostname: parsedUrl.hostname,
+  port: parsedUrl.port || null,
+  path: parsedUrl.pathname
+};
 const method = 'POST';
 const query = {
   foo: 'string',
@@ -35,281 +48,247 @@ class IncomingMessageStub extends Readable {
   }
 }
 
-jest.mock('https');
+class ServerResponseStub extends Writable {
+  constructor() {
+    super();
+    this._data = '';
+  }
 
-afterEach(() => jest.clearAllMocks());
+  _write(chunk, _, done) {
+    this._data += chunk;
+    done();
+  }
+}
 
-test('should have proper default params and pass them to https.request', () => {
-  request.request({
-    url,
-    token
-  });
+afterEach(() => mock.restoreAll());
 
-  expect(https.request).toHaveBeenLastCalledWith(
-    Object.assign(urlParsed, {
+describe('request', () => {
+  test('should have proper default params and pass them to https.request', () => {
+    const requestMock = mock.method(
+      https,
+      'request',
+      () => new ServerResponseStub()
+    );
+
+    get({
+      url,
+      token
+    });
+
+    assert.deepStrictEqual(requestMock.mock.calls[0].arguments[0], {
+      ...urlOptions,
       method: 'GET',
       headers: { Authorization: authHeader }
-    }),
-    expect.any(Function)
-  );
-});
-
-test('should call https.request with correct params', () => {
-  request.request({
-    url,
-    token,
-    method,
-    query
+    });
+    assert.equal(typeof requestMock.mock.calls[0].arguments[1], 'function');
   });
 
-  expect(https.request).toHaveBeenCalledWith(
-    Object.assign({}, urlParsed, {
+  test('should call https.request with correct params', () => {
+    const requestMock = mock.method(
+      https,
+      'request',
+      () => new ServerResponseStub()
+    );
+
+    post({
+      url,
+      token,
       method,
-      path: `${urlParsed.path}?${queryString}`,
+      query
+    });
+
+    assert.deepStrictEqual(requestMock.mock.calls[0].arguments[0], {
+      ...urlOptions,
+      method,
+      path: `${urlOptions.path}?${queryString}`,
       headers: {
         Authorization: authHeader
       }
-    }),
-    expect.any(Function)
-  );
-});
-
-test('should strip empty query params before calling https.request', () => {
-  request.request({
-    url,
-    token,
-    method,
-    query: {
-      foo: 'string',
-      bar: 3,
-      empty: '',
-      missing: undefined,
-      nil: null
-    }
+    });
+    assert.equal(typeof requestMock.mock.calls[0].arguments[1], 'function');
   });
 
-  expect(https.request).toHaveBeenCalledWith(
-    Object.assign({}, urlParsed, {
+  test('should strip empty query params before calling https.request', () => {
+    const requestMock = mock.method(
+      https,
+      'request',
+      () => new ServerResponseStub()
+    );
+
+    post({
+      url,
+      token,
       method,
-      path: `${urlParsed.path}?${queryString}`,
+      query: {
+        foo: 'string',
+        bar: 3,
+        empty: '',
+        missing: undefined,
+        nil: null
+      }
+    });
+
+    assert.deepStrictEqual(requestMock.mock.calls[0].arguments[0], {
+      ...urlOptions,
+      method,
+      path: `${urlOptions.path}?${queryString}`,
       headers: {
         Authorization: authHeader
       }
-    }),
-    expect.any(Function)
-  );
-});
-
-test('should omit query string when all query params are empty', () => {
-  request.request({
-    url,
-    token,
-    method,
-    query: {
-      empty: '',
-      missing: undefined,
-      nil: null
-    }
+    });
+    assert.equal(typeof requestMock.mock.calls[0].arguments[1], 'function');
   });
 
-  expect(https.request).toHaveBeenCalledWith(
-    Object.assign({}, urlParsed, {
+  test('should omit query string when all query params are empty', () => {
+    const requestMock = mock.method(
+      https,
+      'request',
+      () => new ServerResponseStub()
+    );
+
+    post({
+      url,
+      token,
+      query: {
+        empty: '',
+        missing: undefined,
+        nil: null
+      }
+    });
+
+    assert.deepStrictEqual(requestMock.mock.calls[0].arguments[0], {
+      ...urlOptions,
       method,
-      path: urlParsed.path,
+      path: urlOptions.path,
       headers: {
         Authorization: authHeader
       }
-    }),
-    expect.any(Function)
-  );
-});
+    });
+    assert.equal(typeof requestMock.mock.calls[0].arguments[1], 'function');
+  });
 
-test('should resolve Promise with parsed result and status code', (done) => {
-  const expectedResponse = {
-    param1: 4631577437,
-    param2: 'disk:/Загрузки/',
-    param3: {
-      param4: 'disk:/Приложения'
+  test('should resolve Promise with parsed result and status code', async () => {
+    const expectedResponse = {
+      param1: 4631577437,
+      param2: 'disk:/Загрузки/',
+      param3: {
+        param4: 'disk:/Приложения'
+      }
+    };
+
+    mock.method(https, 'request', (_, callback) => {
+      const req = new ServerResponseStub();
+      callback(new IncomingMessageStub(JSON.stringify(expectedResponse), 200));
+      return req;
+    });
+
+    await assert.doesNotReject(async () => {
+      const result = await get({ url, token });
+      assert.deepStrictEqual(result, {
+        data: expectedResponse,
+        status: 200
+      });
+    });
+  });
+
+  test('should resolve with null data and status code when response is empty', async () => {
+    mock.method(https, 'request', (_, callback) => {
+      const req = new ServerResponseStub();
+      callback(new IncomingMessageStub('', 201));
+      return req;
+    });
+
+    const result = await get({ url, token });
+    assert.deepStrictEqual(result, { data: null, status: 201 });
+  });
+
+  test(`should reject with Error when response code isn't 2xx`, async () => {
+    const expectedResponse = {
+      description: 'resource already exists',
+      error: 'PlatformResourceAlreadyExists'
+    };
+
+    mock.method(https, 'request', (_, callback) => {
+      const req = new ServerResponseStub();
+      callback(new IncomingMessageStub(JSON.stringify(expectedResponse), 401));
+      return req;
+    });
+
+    await assert.rejects(
+      get({ url, token }),
+      (error) =>
+        error instanceof Error &&
+        error.message === expectedResponse.description &&
+        error.name === expectedResponse.error
+    );
+  });
+
+  test('should reject when https.request emits error', async () => {
+    const expectedError = new Error('sometimes it happens');
+    expectedError.name = 'StreamError';
+
+    let reqRef = null;
+    mock.method(https, 'request', () => {
+      reqRef = new ServerResponseStub();
+      return reqRef;
+    });
+
+    const requestPromise = get({
+      url,
+      token
+    });
+
+    reqRef.emit('error', expectedError);
+
+    await assert.rejects(requestPromise, (error) => error === expectedError);
+  });
+
+  test('should send data', () => {
+    let reqRef = null;
+    mock.method(https, 'request', () => {
+      reqRef = new ServerResponseStub();
+      return reqRef;
+    });
+
+    post({
+      url,
+      method,
+      token,
+      data
+    });
+
+    assert.equal(reqRef._data, JSON.stringify(data));
+  });
+
+  describe('wrappers', () => {
+    for (const [name, fn, hasBody] of [
+      ['GET-wrapper', get, false],
+      ['POST-wrapper', post, true],
+      ['PUT-wrapper', put, true],
+      ['PATCH-wrapper', patch, true],
+      ['DELETE-wrapper', deleteRequest, false]
+    ]) {
+      test(name, () => {
+        const httpMethod = name.replace('-wrapper', '');
+        let reqRef = null;
+        const httpsMock = mock.method(https, 'request', () => {
+          reqRef = new ServerResponseStub();
+          return reqRef;
+        });
+
+        fn({ url, token, query, ...(hasBody ? { data } : {}) });
+
+        assert.equal(httpsMock.mock.calls[0].arguments[0].method, httpMethod);
+        assert.equal(
+          httpsMock.mock.calls[0].arguments[0].path,
+          `${urlOptions.path}?${queryString}`
+        );
+        if (hasBody) {
+          assert.equal(reqRef._data, JSON.stringify(data));
+        } else {
+          assert.equal(reqRef._data, '');
+        }
+      });
     }
-  };
-
-  const requestPromise = request.request({
-    url,
-    token
-  });
-
-  const res = new IncomingMessageStub(JSON.stringify(expectedResponse), 200);
-
-  https.request._requestCallback(res);
-
-  res.on('end', () => {
-    expect(requestPromise).resolves.toEqual({
-      data: expectedResponse,
-      status: 200
-    });
-    done();
-  });
-});
-
-test('should call onSuccess-callback with null and status code when response is empty', (done) => {
-  const requestPromise = request.request({
-    url,
-    token
-  });
-
-  const res = new IncomingMessageStub('', 201);
-
-  https.request._requestCallback(res);
-
-  res.on('end', () => {
-    expect(requestPromise).resolves.toEqual({ data: null, status: 201 });
-    done();
-  });
-});
-
-test(`should call onError-callback with Error instance when response code isn't 2xx`, (done) => {
-  const expectedResponse = {
-    description: 'resource already exists',
-    error: 'PlatformResourceAlreadyExists'
-  };
-
-  const requestPromise = request.request({
-    url,
-    token
-  });
-
-  const res = new IncomingMessageStub(JSON.stringify(expectedResponse), 401);
-
-  https.request._requestCallback(res);
-
-  res.on('end', () => {
-    const expectedError = new Error(expectedResponse.description);
-    expectedError.name = expectedResponse.error;
-
-    expect(requestPromise).rejects.toEqual(expectedError);
-    done();
-  });
-});
-
-test('should call onError-callback when https.request failed', (done) => {
-  const expectedError = new Error('sometimes it happens');
-  expectedError.name = 'StreamError';
-
-  const requestPromise = request.request({
-    url,
-    token
-  });
-
-  https.request._serverResponse.on('error', () => {
-    expect(requestPromise).rejects.toEqual(expectedError);
-    done();
-  });
-
-  https.request._serverResponse.emit('error', expectedError);
-});
-
-test('should send data', () => {
-  request.request({
-    url,
-    method,
-    token,
-    data
-  });
-
-  expect(https.request._serverResponse._data).toBe(JSON.stringify(data));
-});
-
-describe('wrappers', () => {
-  let originalRequest = request.request;
-
-  beforeEach(() => {
-    request.request = jest.fn();
-  });
-
-  afterEach(() => {
-    request.request = originalRequest;
-  });
-
-  test('GET-wrapper', () => {
-    request.get({
-      url: url,
-      token,
-      query
-    });
-
-    expect(request.request).toHaveBeenCalledWith({
-      url: url,
-      token,
-      method: 'GET',
-      query
-    });
-  });
-
-  test('POST-wrapper', () => {
-    request.post({
-      url: url,
-      token,
-      query,
-      data
-    });
-
-    expect(request.request).toHaveBeenCalledWith({
-      url: url,
-      token,
-      method: 'POST',
-      query,
-      data
-    });
-  });
-
-  test('PUT-wrapper', () => {
-    request.put({
-      url,
-      token,
-      query,
-      data
-    });
-
-    expect(request.request).toHaveBeenCalledWith({
-      url,
-      token,
-      method: 'PUT',
-      query,
-      data
-    });
-  });
-
-  test('PATCH-wrapper', () => {
-    request.patch({
-      url,
-      token,
-      query,
-      data
-    });
-
-    expect(request.request).toHaveBeenCalledWith({
-      url,
-      token,
-      method: 'PATCH',
-      data,
-      query
-    });
-  });
-
-  test('DELETE-wrapper', () => {
-    request.delete({
-      url,
-      token,
-      query,
-      data
-    });
-
-    expect(request.request).toHaveBeenCalledWith({
-      url,
-      token,
-      method: 'DELETE',
-      data,
-      query
-    });
   });
 });

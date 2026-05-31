@@ -1,0 +1,1 @@
+- Run `lint`, `build`, `test` and `smoke` NPM scripts after making changes to the codebase.

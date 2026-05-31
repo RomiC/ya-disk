@@ -5,7 +5,7 @@
 This library provides methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
 ```javascript
-import info from 'ya-disk';
+import { info } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 
@@ -30,6 +30,22 @@ Starting from v4.x _ya-disk_ moved from callback to Promise. If you still wish t
 ```sh
 npm install --save ya-disk
 ```
+
+## Module support
+
+`ya-disk` supports both ESM `import` and CommonJS `require` from the package root.
+
+```javascript
+import yaDisk, { info, resources } from 'ya-disk';
+
+const { upload } = yaDisk;
+```
+
+```javascript
+const { info, resources } = require('ya-disk');
+```
+
+Only the package root entry point is exported. Deep imports into internal paths (e.g. `ya-disk/dist/lib/info`) are **not supported** — the `dist/` layout is an internal implementation detail and may change between releases without notice.
 
 ## Authorization
 
@@ -56,7 +72,7 @@ import { createWriteStream } from 'fs';
 // using provided link
 import { https } from 'follow-redirects';
 import { parse } from 'url';
-import { download } from '../lib/download';
+import { download } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const file = 'disk:/Зима.jpg';
@@ -196,7 +212,7 @@ const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 Getting operation status. See [details](https://tech.yandex.com/disk/api/reference/operations-docpage/). Example:
 
 ```javascript
-import operations from 'ya-disk';
+import { operations } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const operationId = 'MqeRNE6wJFJuKAo7nGAYatqjbUcYo3Hj';
@@ -269,24 +285,20 @@ const remotePath = 'disk:/file.txt';
 Upload remote file to the disk by its url. See [details](https://tech.yandex.com/disk/api/reference/upload-ext-docpage/). Example:
 
 ```javascript
-import upload from '../lib/upload';
+import { upload } from 'ya-disk';
 
 const API_TOKEN = '1982jhk12h31iad7a(*&kjas';
 const url = 'https://tech.yandex.com/disk/doc/dg/yandex-disk-dg.pdf';
 const path = 'disk:/Приложения/ya-disk-api/yandex-disk-dg.pdf';
 
-upload.remoteFile(
-  API_TOKEN,
-  url,
-  path,
-  ({ href }) => {
-    process.stdout.write(`File upload started!
-You can check the operation status by url below:
-${href}
-  \n`);
-  },
-  (err) => process.stderror.write(err.message)
-);
+(async () => {
+  try {
+    const { href } = await upload.remoteFile(API_TOKEN, url, path);
+    console.log(`File upload started! Operation status: ${href}`);
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
 ### File and Folder Actions
@@ -534,6 +546,18 @@ You may find examples of the real usage in the `examples` folder. You should obt
 
 ```sh
 API_TOKEN=[token] node examples/upload-remote-file.js
+```
+
+Or, you may create a `.env` file with an `API_TOKEN`:
+
+```txt
+API_TOKEN=[token]
+```
+
+And then pass it via `--env-file` argument:
+
+```sh
+node --env-file=.env examples/list.mjs
 ```
 
 Beware that examples work in Node.js >= 22.x.

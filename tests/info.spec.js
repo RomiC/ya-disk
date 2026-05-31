@@ -1,29 +1,34 @@
-const info = require('../lib/info');
-const request = require('../lib/request');
+import assert from 'node:assert/strict';
+import { afterEach, describe, mock, test } from 'node:test';
 
-const { API_DISK_URL } = require('../lib/constants');
-const { API_TOKEN } = require('./constants');
+import info from '../lib/info.js';
+import { requestApi as request } from '../lib/request.js';
 
-jest.mock('../lib/request');
+import { API_DISK_URL } from '../lib/constants.js';
+import { API_TOKEN } from './constants.js';
 
-test('should call request.do with correct params and resolve Promise with data', () => {
-  const responseMock = {
-    data: {
-      total_space: 10 * 1024 * 1024 * 1024,
-      trash_size: 2 * 1024 * 1024,
-      used_space: 3 * 1024 * 1024 * 1024
-    },
-    status: 200
-  };
+describe('info', () => {
+  afterEach(() => mock.restoreAll());
 
-  const infoPromise = info(API_TOKEN);
+  test('should call request.get with correct params and resolve Promise with data', async () => {
+    const responseMock = {
+      data: {
+        total_space: 10 * 1024 * 1024 * 1024,
+        trash_size: 2 * 1024 * 1024,
+        used_space: 3 * 1024 * 1024 * 1024
+      },
+      status: 200
+    };
 
-  expect(request.get).toHaveBeenCalledWith({
-    url: API_DISK_URL,
-    token: API_TOKEN
+    const getMock = mock.method(request, 'request', async () => responseMock);
+    const result = await info(API_TOKEN);
+
+    assert.deepStrictEqual(getMock.mock.calls[0].arguments[0], {
+      method: 'GET',
+      url: API_DISK_URL,
+      token: API_TOKEN
+    });
+
+    assert.deepStrictEqual(result, responseMock.data);
   });
-
-  request.get._resolve(responseMock);
-
-  expect(infoPromise).resolves.toBe(responseMock.data);
 });
