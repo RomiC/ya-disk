@@ -1,7 +1,4 @@
 import assert from 'node:assert/strict';
-import https from 'node:https';
-import { stringify as queryStringify } from 'node:querystring';
-import { Readable, Writable } from 'node:stream';
 import { afterEach, describe, mock, test } from 'node:test';
 
 import {
@@ -15,14 +12,6 @@ import {
 import { API_TOKEN as token } from './constants.js';
 
 const url = 'https://cloud-api.yandex.net/v1/disk';
-const parsedUrl = new URL(url);
-const urlOptions = {
-  protocol: parsedUrl.protocol,
-  hostname: parsedUrl.hostname,
-  port: parsedUrl.port || null,
-  path: parsedUrl.pathname
-};
-const method = 'POST';
 const query = {
   foo: 'string',
   bar: 3
@@ -31,94 +20,52 @@ const data = {
   baz: 4,
   zoom: 'zoom'
 };
-const queryString = queryStringify(query);
+const queryString = new URLSearchParams(query).toString();
 const authHeader = `OAuth ${token}`;
 
-class IncomingMessageStub extends Readable {
-  constructor(message, statusCode) {
-    super();
-
-    this._message = message;
-    this.statusCode = statusCode;
-  }
-
-  _read() {
-    this.push(this._message);
-    this.push(null);
-  }
-}
-
-class ServerResponseStub extends Writable {
-  constructor() {
-    super();
-    this._data = '';
-  }
-
-  _write(chunk, _, done) {
-    this._data += chunk;
-    done();
-  }
-}
+const mockFetch = (body, status = 200) =>
+  mock.method(
+    globalThis,
+    'fetch',
+    async () =>
+      new Response(body === null ? '' : JSON.stringify(body), { status })
+  );
 
 afterEach(() => mock.restoreAll());
 
 describe('request', () => {
-  test('should have proper default params and pass them to https.request', () => {
-    const requestMock = mock.method(
-      https,
-      'request',
-      () => new ServerResponseStub()
-    );
+  test('should have proper default params and pass them to fetch', async () => {
+    const fetchMock = mockFetch(null, 200);
 
-    get({
-      url,
-      token
-    });
+    await get({ url, token });
 
-    assert.deepStrictEqual(requestMock.mock.calls[0].arguments[0], {
-      ...urlOptions,
+    const [calledUrl, calledOptions] = fetchMock.mock.calls[0].arguments;
+    assert.equal(calledUrl.href, url);
+    assert.deepStrictEqual(calledOptions, {
       method: 'GET',
       headers: { Authorization: authHeader }
     });
-    assert.equal(typeof requestMock.mock.calls[0].arguments[1], 'function');
   });
 
-  test('should call https.request with correct params', () => {
-    const requestMock = mock.method(
-      https,
-      'request',
-      () => new ServerResponseStub()
-    );
+  test('should call fetch with correct params', async () => {
+    const fetchMock = mockFetch(null, 200);
 
-    post({
-      url,
-      token,
-      method,
-      query
-    });
+    await post({ url, token, query });
 
-    assert.deepStrictEqual(requestMock.mock.calls[0].arguments[0], {
-      ...urlOptions,
-      method,
-      path: `${urlOptions.path}?${queryString}`,
-      headers: {
-        Authorization: authHeader
-      }
+    const [calledUrl, calledOptions] = fetchMock.mock.calls[0].arguments;
+    assert.equal(calledUrl.href, `${url}?${queryString}`);
+    assert.deepStrictEqual(calledOptions, {
+      method: 'POST',
+      headers: { Authorization: authHeader }
     });
-    assert.equal(typeof requestMock.mock.calls[0].arguments[1], 'function');
   });
 
-  test('should strip empty query params before calling https.request', () => {
-    const requestMock = mock.method(
-      https,
-      'request',
-      () => new ServerResponseStub()
-    );
+  test('should strip empty query params before calling fetch', async () => {
+    const fetchMock = mockFetch(null, 200);
 
-    post({
+    await post({
       url,
       token,
-      method,
       query: {
         foo: 'string',
         bar: 3,
@@ -128,25 +75,14 @@ describe('request', () => {
       }
     });
 
-    assert.deepStrictEqual(requestMock.mock.calls[0].arguments[0], {
-      ...urlOptions,
-      method,
-      path: `${urlOptions.path}?${queryString}`,
-      headers: {
-        Authorization: authHeader
-      }
-    });
-    assert.equal(typeof requestMock.mock.calls[0].arguments[1], 'function');
+    const [calledUrl] = fetchMock.mock.calls[0].arguments;
+    assert.equal(calledUrl.href, `${url}?${queryString}`);
   });
 
-  test('should omit query string when all query params are empty', () => {
-    const requestMock = mock.method(
-      https,
-      'request',
-      () => new ServerResponseStub()
-    );
+  test('should omit query string when all query params are empty', async () => {
+    const fetchMock = mockFetch(null, 200);
 
-    post({
+    await post({
       url,
       token,
       query: {
@@ -156,15 +92,8 @@ describe('request', () => {
       }
     });
 
-    assert.deepStrictEqual(requestMock.mock.calls[0].arguments[0], {
-      ...urlOptions,
-      method,
-      path: urlOptions.path,
-      headers: {
-        Authorization: authHeader
-      }
-    });
-    assert.equal(typeof requestMock.mock.calls[0].arguments[1], 'function');
+    const [calledUrl] = fetchMock.mock.calls[0].arguments;
+    assert.equal(calledUrl.href, url);
   });
 
   test('should resolve Promise with parsed result and status code', async () => {
@@ -176,27 +105,17 @@ describe('request', () => {
       }
     };
 
-    mock.method(https, 'request', (_, callback) => {
-      const req = new ServerResponseStub();
-      callback(new IncomingMessageStub(JSON.stringify(expectedResponse), 200));
-      return req;
-    });
+    mockFetch(expectedResponse, 200);
 
-    await assert.doesNotReject(async () => {
-      const result = await get({ url, token });
-      assert.deepStrictEqual(result, {
-        data: expectedResponse,
-        status: 200
-      });
+    const result = await get({ url, token });
+    assert.deepStrictEqual(result, {
+      data: expectedResponse,
+      status: 200
     });
   });
 
   test('should resolve with null data and status code when response is empty', async () => {
-    mock.method(https, 'request', (_, callback) => {
-      const req = new ServerResponseStub();
-      callback(new IncomingMessageStub('', 201));
-      return req;
-    });
+    mockFetch(null, 201);
 
     const result = await get({ url, token });
     assert.deepStrictEqual(result, { data: null, status: 201 });
@@ -208,11 +127,7 @@ describe('request', () => {
       error: 'PlatformResourceAlreadyExists'
     };
 
-    mock.method(https, 'request', (_, callback) => {
-      const req = new ServerResponseStub();
-      callback(new IncomingMessageStub(JSON.stringify(expectedResponse), 401));
-      return req;
-    });
+    mockFetch(expectedResponse, 401);
 
     await assert.rejects(
       get({ url, token }),
@@ -223,41 +138,74 @@ describe('request', () => {
     );
   });
 
-  test('should reject when https.request emits error', async () => {
-    const expectedError = new Error('sometimes it happens');
-    expectedError.name = 'StreamError';
+  test('should reject with Error when response body is not valid JSON', async () => {
+    mock.method(
+      globalThis,
+      'fetch',
+      async () => new Response('<html>Bad Gateway</html>', { status: 200 })
+    );
 
-    let reqRef = null;
-    mock.method(https, 'request', () => {
-      reqRef = new ServerResponseStub();
-      return reqRef;
-    });
-
-    const requestPromise = get({
-      url,
-      token
-    });
-
-    reqRef.emit('error', expectedError);
-
-    await assert.rejects(requestPromise, (error) => error === expectedError);
+    await assert.rejects(
+      get({ url, token }),
+      (error) =>
+        error instanceof Error &&
+        error.message.includes('502') === false &&
+        error.message.includes('<html>Bad Gateway</html>')
+    );
   });
 
-  test('should send data', () => {
-    let reqRef = null;
-    mock.method(https, 'request', () => {
-      reqRef = new ServerResponseStub();
-      return reqRef;
+  test('should reject with fallback Error when non-2xx response body is not valid JSON', async () => {
+    mock.method(
+      globalThis,
+      'fetch',
+      async () =>
+        new Response('<html>Service Unavailable</html>', { status: 503 })
+    );
+
+    await assert.rejects(
+      get({ url, token }),
+      (error) =>
+        error instanceof Error &&
+        error.message.includes('503') &&
+        error.message.includes('<html>Service Unavailable</html>')
+    );
+  });
+
+  test('should reject with fallback Error when non-2xx response body is empty', async () => {
+    mock.method(
+      globalThis,
+      'fetch',
+      async () => new Response('', { status: 503 })
+    );
+
+    await assert.rejects(
+      get({ url, token }),
+      (error) =>
+        error instanceof Error &&
+        error.message === 'Request failed with status 503' &&
+        error.name === 'ApiError'
+    );
+  });
+
+  test('should reject when fetch fails with a network error', async () => {
+    const expectedError = new TypeError('network error');
+    mock.method(globalThis, 'fetch', async () => {
+      throw expectedError;
     });
 
-    post({
-      url,
-      method,
-      token,
-      data
-    });
+    await assert.rejects(
+      get({ url, token }),
+      (error) => error === expectedError
+    );
+  });
 
-    assert.equal(reqRef._data, JSON.stringify(data));
+  test('should send data', async () => {
+    const fetchMock = mockFetch(null, 200);
+
+    await post({ url, token, data });
+
+    const [, calledOptions] = fetchMock.mock.calls[0].arguments;
+    assert.equal(calledOptions.body, JSON.stringify(data));
   });
 
   describe('wrappers', () => {
@@ -268,25 +216,19 @@ describe('request', () => {
       ['PATCH-wrapper', patch, true],
       ['DELETE-wrapper', deleteRequest, false]
     ]) {
-      test(name, () => {
+      test(name, async () => {
         const httpMethod = name.replace('-wrapper', '');
-        let reqRef = null;
-        const httpsMock = mock.method(https, 'request', () => {
-          reqRef = new ServerResponseStub();
-          return reqRef;
-        });
+        const fetchMock = mockFetch(null, 200);
 
-        fn({ url, token, query, ...(hasBody ? { data } : {}) });
+        await fn({ url, token, query, ...(hasBody ? { data } : {}) });
 
-        assert.equal(httpsMock.mock.calls[0].arguments[0].method, httpMethod);
-        assert.equal(
-          httpsMock.mock.calls[0].arguments[0].path,
-          `${urlOptions.path}?${queryString}`
-        );
+        const [calledUrl, calledOptions] = fetchMock.mock.calls[0].arguments;
+        assert.equal(calledOptions.method, httpMethod);
+        assert.equal(calledUrl.href, `${url}?${queryString}`);
         if (hasBody) {
-          assert.equal(reqRef._data, JSON.stringify(data));
+          assert.equal(calledOptions.body, JSON.stringify(data));
         } else {
-          assert.equal(reqRef._data, '');
+          assert.equal(calledOptions.body, undefined);
         }
       });
     }
