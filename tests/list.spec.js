@@ -1,8 +1,13 @@
+const assert = require('node:assert/strict');
+const { afterEach, mock, test } = require('node:test');
+
 const request = require('../lib/request');
 const list = require('../lib/list');
 
 const { API_TOKEN } = require('./constants');
 const { API_FILES_URL } = require('../lib/constants');
+
+const { createRequestMock } = require('./test-helper');
 
 const options = {
   limit: 13,
@@ -12,9 +17,12 @@ const options = {
   preview_crop: true
 };
 
-jest.mock('../lib/request');
+afterEach(() => mock.restoreAll());
 
-test('should call request.get with proper params and resolve Promise with data', () => {
+test('should call request.get with proper params and resolve Promise with data', async () => {
+  const requestGetMock = createRequestMock();
+  mock.method(request, 'get', requestGetMock);
+
   const responseMock = {
     data: {
       items: [
@@ -36,13 +44,14 @@ test('should call request.get with proper params and resolve Promise with data',
   };
   const listPromise = list(API_TOKEN, options);
 
-  expect(request.get).toHaveBeenCalledWith({
+  assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
     url: API_FILES_URL,
     token: API_TOKEN,
     query: options
   });
 
-  request.get._resolve(responseMock);
+  requestGetMock._resolve(responseMock);
 
-  expect(listPromise).resolves.toBe(responseMock.data);
+  const result = await listPromise;
+  assert.equal(result, responseMock.data);
 });

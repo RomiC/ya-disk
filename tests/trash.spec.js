@@ -1,17 +1,25 @@
+const assert = require('node:assert/strict');
+const { afterEach, describe, mock, test } = require('node:test');
+
 const request = require('../lib/request');
 const trash = require('../lib/trash');
 
 const { API_TOKEN } = require('./constants');
 const { API_TRASH_URL, API_RESTORE_URL } = require('../lib/constants');
 
+const { createRequestMock } = require('./test-helper');
+
 const path = '/foo/photo.png';
 const name = 'photo-restored.png';
 const overwrite = true;
 
-jest.mock('../lib/request');
+afterEach(() => mock.restoreAll());
 
 describe('delete', () => {
-  it('should call request.delete with path and resolve Promise with data and status', () => {
+  test('should call request.delete with path and resolve Promise with data and status', async () => {
+    const requestDeleteMock = createRequestMock();
+    mock.method(request, 'delete', requestDeleteMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/operations?id=33ca7d03ab21ct41b4a40182e78d828a3f8b72cdb5f4c0e94cc4b1449a63a2fe',
@@ -22,21 +30,25 @@ describe('delete', () => {
     };
     const deletePromise = trash.delete(API_TOKEN, path);
 
-    expect(request.delete).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.delete.mock.calls[0].arguments[0], {
       url: API_TRASH_URL,
       token: API_TOKEN,
       query: { path }
     });
 
-    request.delete._resolve(responseMock);
+    requestDeleteMock._resolve(responseMock);
 
-    expect(deletePromise).resolves.toBe(responseMock);
+    const result = await deletePromise;
+    assert.equal(result, responseMock);
   });
 
-  it('should call request.delete without path to clear whole trash', () => {
+  test('should call request.delete without path to clear whole trash', () => {
+    const requestDeleteMock = createRequestMock();
+    mock.method(request, 'delete', requestDeleteMock);
+
     trash.delete(API_TOKEN);
 
-    expect(request.delete).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.delete.mock.calls[0].arguments[0], {
       url: API_TRASH_URL,
       token: API_TOKEN,
       query: { path: undefined }
@@ -45,7 +57,10 @@ describe('delete', () => {
 });
 
 describe('restore', () => {
-  it('should call request.put and resolve Promise with data and status', () => {
+  test('should call request.put and resolve Promise with data and status', async () => {
+    const requestPutMock = createRequestMock();
+    mock.method(request, 'put', requestPutMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Ffoo%2Fphoto-restored.png',
@@ -56,21 +71,25 @@ describe('restore', () => {
     };
     const restorePromise = trash.restore(API_TOKEN, path, name, overwrite);
 
-    expect(request.put).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.put.mock.calls[0].arguments[0], {
       url: API_RESTORE_URL,
       token: API_TOKEN,
       query: { path, name, overwrite }
     });
 
-    request.put._resolve(responseMock);
+    requestPutMock._resolve(responseMock);
 
-    expect(restorePromise).resolves.toBe(responseMock);
+    const result = await restorePromise;
+    assert.equal(result, responseMock);
   });
 
-  it('should keep overwrite disabled by default', () => {
+  test('should keep overwrite disabled by default', () => {
+    const requestPutMock = createRequestMock();
+    mock.method(request, 'put', requestPutMock);
+
     trash.restore(API_TOKEN, path);
 
-    expect(request.put).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.put.mock.calls[0].arguments[0], {
       url: API_RESTORE_URL,
       token: API_TOKEN,
       query: { path, name: undefined, overwrite: false }

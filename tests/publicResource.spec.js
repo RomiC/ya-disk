@@ -1,3 +1,6 @@
+const assert = require('node:assert/strict');
+const { afterEach, describe, mock, test } = require('node:test');
+
 const request = require('../lib/request');
 const publicResources = require('../lib/publicResource');
 
@@ -8,6 +11,8 @@ const {
   API_PUBLIC_DOWNLOAD_URL,
   API_SAVE_TO_DISK_URL
 } = require('../lib/constants');
+
+const { createRequestMock } = require('./test-helper');
 
 const public_key = 'https://yadi.sk/d/AaaBbb1122Ccc';
 const path = '/foo/photo.png';
@@ -20,10 +25,13 @@ const listOptions = {
   preview_size: '120x120'
 };
 
-jest.mock('../lib/request');
+afterEach(() => mock.restoreAll());
 
 describe('get', () => {
-  it('should call request.get and resolve Promise with data', () => {
+  test('should call request.get and resolve Promise with data', async () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     const responseMock = {
       data: {
         public_key,
@@ -35,21 +43,25 @@ describe('get', () => {
     };
     const getPromise = publicResources.get(API_TOKEN, public_key, { path });
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_PUBLIC_RESOURCES_URL,
       token: API_TOKEN,
       query: { public_key, path }
     });
 
-    request.get._resolve(responseMock);
+    requestGetMock._resolve(responseMock);
 
-    expect(getPromise).resolves.toBe(responseMock.data);
+    const result = await getPromise;
+    assert.equal(result, responseMock.data);
   });
 
-  it('should call request.get with default empty options', () => {
+  test('should call request.get with default empty options', () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     publicResources.get(API_TOKEN, public_key);
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_PUBLIC_RESOURCES_URL,
       token: API_TOKEN,
       query: { public_key }
@@ -58,7 +70,10 @@ describe('get', () => {
 });
 
 describe('download', () => {
-  it('should call request.get and resolve Promise with data', () => {
+  test('should call request.get and resolve Promise with data', async () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     const responseMock = {
       data: {
         href: 'https://downloader.dst.yandex.ru/disk/...',
@@ -73,21 +88,25 @@ describe('download', () => {
       path
     );
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_PUBLIC_DOWNLOAD_URL,
       token: API_TOKEN,
       query: { public_key, path }
     });
 
-    request.get._resolve(responseMock);
+    requestGetMock._resolve(responseMock);
 
-    expect(downloadPromise).resolves.toBe(responseMock.data);
+    const result = await downloadPromise;
+    assert.equal(result, responseMock.data);
   });
 
-  it('should omit path when not specified', () => {
+  test('should omit path when not specified', () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     publicResources.download(API_TOKEN, public_key);
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_PUBLIC_DOWNLOAD_URL,
       token: API_TOKEN,
       query: { public_key, path: undefined }
@@ -96,7 +115,10 @@ describe('download', () => {
 });
 
 describe('saveToDisk', () => {
-  it('should call request.post and resolve Promise with data', () => {
+  test('should call request.post and resolve Promise with data', async () => {
+    const requestPostMock = createRequestMock();
+    mock.method(request, 'post', requestPostMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2FDownloads%2Fphoto.png',
@@ -112,21 +134,25 @@ describe('saveToDisk', () => {
       name
     );
 
-    expect(request.post).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.post.mock.calls[0].arguments[0], {
       url: API_SAVE_TO_DISK_URL,
       token: API_TOKEN,
       query: { public_key, path, name }
     });
 
-    request.post._resolve(responseMock);
+    requestPostMock._resolve(responseMock);
 
-    expect(savePromise).resolves.toBe(responseMock.data);
+    const result = await savePromise;
+    assert.equal(result, responseMock.data);
   });
 
-  it('should omit optional params when not specified', () => {
+  test('should omit optional params when not specified', () => {
+    const requestPostMock = createRequestMock();
+    mock.method(request, 'post', requestPostMock);
+
     publicResources.saveToDisk(API_TOKEN, public_key);
 
-    expect(request.post).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.post.mock.calls[0].arguments[0], {
       url: API_SAVE_TO_DISK_URL,
       token: API_TOKEN,
       query: { public_key, path: undefined, name: undefined }
@@ -135,7 +161,10 @@ describe('saveToDisk', () => {
 });
 
 describe('list', () => {
-  it('should call request.get and resolve Promise with data', () => {
+  test('should call request.get and resolve Promise with data', async () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     const responseMock = {
       data: {
         items: [
@@ -154,14 +183,15 @@ describe('list', () => {
     };
     const listPromise = publicResources.list(API_TOKEN, listOptions);
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_PUBLIC_URL,
       token: API_TOKEN,
       query: listOptions
     });
 
-    request.get._resolve(responseMock);
+    requestGetMock._resolve(responseMock);
 
-    expect(listPromise).resolves.toBe(responseMock.data);
+    const result = await listPromise;
+    assert.equal(result, responseMock.data);
   });
 });
