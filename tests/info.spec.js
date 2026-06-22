@@ -1,12 +1,20 @@
+const assert = require('node:assert/strict');
+const { afterEach, mock, test } = require('node:test');
+
 const info = require('../lib/info');
 const request = require('../lib/request');
 
 const { API_DISK_URL } = require('../lib/constants');
 const { API_TOKEN } = require('./constants');
 
-jest.mock('../lib/request');
+const { createRequestMock } = require('./test-helper');
 
-test('should call request.do with correct params and resolve Promise with data', () => {
+afterEach(() => mock.restoreAll());
+
+test('should call request.get with correct params and resolve Promise with data', async () => {
+  const requestGetMock = createRequestMock();
+  mock.method(request, 'get', requestGetMock);
+
   const responseMock = {
     data: {
       total_space: 10 * 1024 * 1024 * 1024,
@@ -18,12 +26,13 @@ test('should call request.do with correct params and resolve Promise with data',
 
   const infoPromise = info(API_TOKEN);
 
-  expect(request.get).toHaveBeenCalledWith({
+  assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
     url: API_DISK_URL,
     token: API_TOKEN
   });
 
-  request.get._resolve(responseMock);
+  requestGetMock._resolve(responseMock);
 
-  expect(infoPromise).resolves.toBe(responseMock.data);
+  const result = await infoPromise;
+  assert.equal(result, responseMock.data);
 });

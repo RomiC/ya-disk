@@ -1,3 +1,6 @@
+const assert = require('node:assert/strict');
+const { afterEach, describe, mock, test } = require('node:test');
+
 const request = require('../lib/request');
 const {
   create,
@@ -17,16 +20,21 @@ const {
   API_UNPUBLISH_URL
 } = require('../lib/constants');
 
+const { createRequestMock } = require('./test-helper');
+
 const folderName = 'disk:/folderName';
 const folder2Name = 'disk:/folder2Name';
 const overwrite = true;
 const fields = 'field1,field2';
 const permanently = true;
 
-jest.mock('../lib/request');
+afterEach(() => mock.restoreAll());
 
 describe('copy', () => {
-  it('should call request.post and resolve Promise with data and status', () => {
+  test('should call request.post and resolve Promise with data and status', async () => {
+    const requestPostMock = createRequestMock();
+    mock.method(request, 'post', requestPostMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Ffoo%2Fbar',
@@ -43,7 +51,7 @@ describe('copy', () => {
       fields
     );
 
-    expect(request.post).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.post.mock.calls[0].arguments[0], {
       url: API_COPY_URL,
       token: API_TOKEN,
       query: {
@@ -54,15 +62,19 @@ describe('copy', () => {
       }
     });
 
-    request.post._resolve(responseMock);
+    requestPostMock._resolve(responseMock);
 
-    expect(copyPromise).resolves.toBe(responseMock);
+    const result = await copyPromise;
+    assert.equal(result, responseMock);
   });
 
-  it("shouldn't overwrite uploaded file and should returns all fields by default", () => {
+  test("shouldn't overwrite uploaded file and should returns all fields by default", () => {
+    const requestPostMock = createRequestMock();
+    mock.method(request, 'post', requestPostMock);
+
     copy(API_TOKEN, folderName, folder2Name);
 
-    expect(request.post).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.post.mock.calls[0].arguments[0], {
       url: API_COPY_URL,
       token: API_TOKEN,
       query: {
@@ -76,7 +88,10 @@ describe('copy', () => {
 });
 
 describe('create', () => {
-  it('should call request.put-method and resolve Promise with data', () => {
+  test('should call request.put-method and resolve Promise with data', async () => {
+    const requestPutMock = createRequestMock();
+    mock.method(request, 'put', requestPutMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2FMusic',
@@ -87,7 +102,7 @@ describe('create', () => {
     };
     const createPromise = create(API_TOKEN, folderName);
 
-    expect(request.put).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.put.mock.calls[0].arguments[0], {
       url: API_RESOURCES_URL,
       token: API_TOKEN,
       query: {
@@ -95,14 +110,18 @@ describe('create', () => {
       }
     });
 
-    request.put._resolve(responseMock);
+    requestPutMock._resolve(responseMock);
 
-    expect(createPromise).resolves.toBe(responseMock.data);
+    const result = await createPromise;
+    assert.equal(result, responseMock.data);
   });
 });
 
 describe('move', () => {
-  it('should call request.post and resolve Promise with data and status', () => {
+  test('should call request.post and resolve Promise with data and status', async () => {
+    const requestPostMock = createRequestMock();
+    mock.method(request, 'post', requestPostMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Fbar%2Fphoto.png',
@@ -119,7 +138,7 @@ describe('move', () => {
       fields
     );
 
-    expect(request.post).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.post.mock.calls[0].arguments[0], {
       url: API_MOVE_URL,
       token: API_TOKEN,
       query: {
@@ -130,15 +149,19 @@ describe('move', () => {
       }
     });
 
-    request.post._resolve(responseMock);
+    requestPostMock._resolve(responseMock);
 
-    expect(movePromise).resolves.toBe(responseMock);
+    const result = await movePromise;
+    assert.equal(result, responseMock);
   });
 
-  it("shouldn't overwrite the target file and should return all fields in response by default", () => {
+  test("shouldn't overwrite the target file and should return all fields in response by default", () => {
+    const requestPostMock = createRequestMock();
+    mock.method(request, 'post', requestPostMock);
+
     move(API_TOKEN, folderName, folder2Name);
 
-    expect(request.post).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.post.mock.calls[0].arguments[0], {
       url: API_MOVE_URL,
       token: API_TOKEN,
       query: {
@@ -152,7 +175,10 @@ describe('move', () => {
 });
 
 describe('remove', () => {
-  it('should call request.deleted-method and resolve promise with data and status', () => {
+  test('should call request.delete-method and resolve promise with data and status', async () => {
+    const requestDeleteMock = createRequestMock();
+    mock.method(request, 'delete', requestDeleteMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/operations?id=d80c269ce4eb16c0207f0a15t4a31415313452f9e950cd9576f36b1146ee0e42',
@@ -163,7 +189,7 @@ describe('remove', () => {
     };
     const removePromise = remove(API_TOKEN, folderName, permanently);
 
-    expect(request.delete).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.delete.mock.calls[0].arguments[0], {
       url: API_RESOURCES_URL,
       token: API_TOKEN,
       query: {
@@ -172,15 +198,19 @@ describe('remove', () => {
       }
     });
 
-    request.delete._resolve(responseMock);
+    requestDeleteMock._resolve(responseMock);
 
-    expect(removePromise).resolves.toBe(responseMock);
+    const result = await removePromise;
+    assert.equal(result, responseMock);
   });
 
-  it("shouldn't remove permanently by default", () => {
+  test("shouldn't remove permanently by default", () => {
+    const requestDeleteMock = createRequestMock();
+    mock.method(request, 'delete', requestDeleteMock);
+
     remove(API_TOKEN, folderName);
 
-    expect(request.delete).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.delete.mock.calls[0].arguments[0], {
       url: API_RESOURCES_URL,
       token: API_TOKEN,
       query: { path: folderName, permanently: false }
@@ -189,7 +219,10 @@ describe('remove', () => {
 });
 
 describe('publish', () => {
-  it('should call request.put and resolve Promise with data', () => {
+  test('should call request.put and resolve Promise with data', async () => {
+    const requestPutMock = createRequestMock();
+    mock.method(request, 'put', requestPutMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Ffoo%2Fbar',
@@ -200,7 +233,7 @@ describe('publish', () => {
     };
     const publishPromise = publish(API_TOKEN, folderName);
 
-    expect(request.put).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.put.mock.calls[0].arguments[0], {
       url: API_PUBLISH_URL,
       token: API_TOKEN,
       query: {
@@ -208,14 +241,18 @@ describe('publish', () => {
       }
     });
 
-    request.put._resolve(responseMock);
+    requestPutMock._resolve(responseMock);
 
-    expect(publishPromise).resolves.toBe(responseMock.data);
+    const result = await publishPromise;
+    assert.equal(result, responseMock.data);
   });
 });
 
 describe('unpublish', () => {
-  it('should call request.put and resolve Promise with data', () => {
+  test('should call request.put and resolve Promise with data', async () => {
+    const requestPutMock = createRequestMock();
+    mock.method(request, 'put', requestPutMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2Ffoo%2Fbar',
@@ -226,7 +263,7 @@ describe('unpublish', () => {
     };
     const unpublishPromise = unpublish(API_TOKEN, folderName);
 
-    expect(request.put).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.put.mock.calls[0].arguments[0], {
       url: API_UNPUBLISH_URL,
       token: API_TOKEN,
       query: {
@@ -234,8 +271,9 @@ describe('unpublish', () => {
       }
     });
 
-    request.put._resolve(responseMock);
+    requestPutMock._resolve(responseMock);
 
-    expect(unpublishPromise).resolves.toBe(responseMock.data);
+    const result = await unpublishPromise;
+    assert.equal(result, responseMock.data);
   });
 });

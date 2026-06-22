@@ -1,10 +1,15 @@
+const assert = require('node:assert/strict');
+const { afterEach, describe, mock, test } = require('node:test');
+
 const request = require('../lib/request');
 const meta = require('../lib/meta');
 
 const { API_TOKEN } = require('./constants');
 const { API_RESOURCES_URL } = require('../lib/constants');
 
-const path = `disk:/file1.txt`;
+const { createRequestMock } = require('./test-helper');
+
+const path = 'disk:/file1.txt';
 const options = {
   sort: 'created',
   limit: 13,
@@ -20,10 +25,13 @@ const custom_properties = {
   }
 };
 
-jest.mock('../lib/request');
+afterEach(() => mock.restoreAll());
 
 describe('get', () => {
-  it('should call request.get method with correct params and resolve Promise with data', () => {
+  test('should call request.get method with correct params and resolve Promise with data', async () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     const responseMock = {
       data: {
         name: 'photo2.png',
@@ -40,21 +48,25 @@ describe('get', () => {
     };
     const metaGetPromise = meta.get(API_TOKEN, path, options);
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_RESOURCES_URL,
       token: API_TOKEN,
       query: { path, ...options }
     });
 
-    request.get._resolve(responseMock);
+    requestGetMock._resolve(responseMock);
 
-    expect(metaGetPromise).resolves.toBe(responseMock.data);
+    const result = await metaGetPromise;
+    assert.equal(result, responseMock.data);
   });
 
-  it('should append empty object when options is mised', () => {
+  test('should append empty object when options is mised', () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     meta.get(API_TOKEN, path);
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_RESOURCES_URL,
       token: API_TOKEN,
       query: { path }
@@ -63,7 +75,10 @@ describe('get', () => {
 });
 
 describe('add', () => {
-  it('should call request.patch with proper params and resolve Promise with data', () => {
+  test('should call request.patch with proper params and resolve Promise with data', async () => {
+    const requestPatchMock = createRequestMock();
+    mock.method(request, 'patch', requestPatchMock);
+
     const responseMock = {
       data: {
         name: 'photo2.png',
@@ -81,15 +96,16 @@ describe('add', () => {
 
     const metaAddPromise = meta.add(API_TOKEN, path, custom_properties);
 
-    expect(request.patch).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.patch.mock.calls[0].arguments[0], {
       url: API_RESOURCES_URL,
       token: API_TOKEN,
       query: { path },
       data: { custom_properties }
     });
 
-    request.patch._resolve(responseMock);
+    requestPatchMock._resolve(responseMock);
 
-    expect(metaAddPromise).resolves.toBe(responseMock.data);
+    const result = await metaAddPromise;
+    assert.equal(result, responseMock.data);
   });
 });

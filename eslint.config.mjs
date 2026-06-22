@@ -2,7 +2,6 @@ import js from '@eslint/js';
 import globals from 'globals';
 import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-plugin-prettier';
-import jest from 'eslint-plugin-jest';
 import markdown from '@eslint/markdown';
 
 export default defineConfig([
@@ -80,12 +79,9 @@ export default defineConfig([
   },
   { files: ['lib/*.js'], languageOptions: { sourceType: 'commonjs' } },
   {
-    files: ['tests/**/*.js', 'lib/__mocks__/*.js'],
-    plugins: { js, prettier, jest },
-    languageOptions: {
-      globals: jest.environments.globals.globals,
-      sourceType: 'commonjs'
-    }
+    files: ['tests/**/*.js'],
+    plugins: { js, prettier },
+    languageOptions: { sourceType: 'commonjs' }
   },
   {
     files: ['README.md'],

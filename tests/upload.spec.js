@@ -1,17 +1,25 @@
+const assert = require('node:assert/strict');
+const { afterEach, describe, mock, test } = require('node:test');
+
 const request = require('../lib/request');
 const { link, remoteFile } = require('../lib/upload');
 
 const { API_TOKEN } = require('./constants');
 const { API_UPLOAD_LINK_URL } = require('../lib/constants');
 
+const { createRequestMock } = require('./test-helper');
+
 const path = 'disk:/file.txt';
 const overwrite = true;
 const url = 'https://example.com/file.txt';
 
-jest.mock('../lib/request');
+afterEach(() => mock.restoreAll());
 
 describe('link', () => {
-  it('should call request.get with proper params and resolve Promise with data', () => {
+  test('should call request.get with proper params and resolve Promise with data', async () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     const responseMock = {
       data: {
         href: 'https://uploader1d.dst.yandex.net:443/upload-target/',
@@ -22,7 +30,7 @@ describe('link', () => {
     };
     const linkPromise = link(API_TOKEN, path, overwrite);
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_UPLOAD_LINK_URL,
       token: API_TOKEN,
       query: {
@@ -31,15 +39,19 @@ describe('link', () => {
       }
     });
 
-    request.get._resolve(responseMock);
+    requestGetMock._resolve(responseMock);
 
-    expect(linkPromise).resolves.toBe(responseMock.data);
+    const result = await linkPromise;
+    assert.equal(result, responseMock.data);
   });
 
-  it("shouldn't overwrite currently existed resource by default", () => {
+  test("shouldn't overwrite currently existed resource by default", () => {
+    const requestGetMock = createRequestMock();
+    mock.method(request, 'get', requestGetMock);
+
     link(API_TOKEN, path);
 
-    expect(request.get).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.get.mock.calls[0].arguments[0], {
       url: API_UPLOAD_LINK_URL,
       token: API_TOKEN,
       query: { path, overwrite: false }
@@ -48,7 +60,10 @@ describe('link', () => {
 });
 
 describe('remoteFile', () => {
-  it('should call request.post with proper params and resolve Promise with data', () => {
+  test('should call request.post with proper params and resolve Promise with data', async () => {
+    const requestPostMock = createRequestMock();
+    mock.method(request, 'post', requestPostMock);
+
     const responseMock = {
       data: {
         href: 'https://cloud-api.yandex.net/v1/disk/operations?id=33ca7d03ab21ct41b4a40182e78d828a3f8b72cdb5f4c0e94cc4b1449a63a2fe',
@@ -59,7 +74,7 @@ describe('remoteFile', () => {
     };
     const remoteFilePromise = remoteFile(API_TOKEN, url, path);
 
-    expect(request.post).toHaveBeenCalledWith({
+    assert.deepStrictEqual(request.post.mock.calls[0].arguments[0], {
       url: API_UPLOAD_LINK_URL,
       token: API_TOKEN,
       query: {
@@ -68,8 +83,9 @@ describe('remoteFile', () => {
       }
     });
 
-    request.post._resolve(responseMock);
+    requestPostMock._resolve(responseMock);
 
-    expect(remoteFilePromise).resolves.toBe(responseMock.data);
+    const result = await remoteFilePromise;
+    assert.equal(result, responseMock.data);
   });
 });
