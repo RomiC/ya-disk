@@ -28,7 +28,7 @@
     "husky": "9.1.7",
     "c8": "11.0.0",
     "lint-staged": "17.0.6",
-    "prettier": "3.8.3"
+    "prettier": "3.9.1"
   },
   "overrides": {
     "yargs": "^18.0.0"
