@@ -1,6 +1,6 @@
 # ya-disk
 
-[![NPM version](https://img.shields.io/npm/v/ya-disk.svg?style=flat-square)](https://www.npmjs.com/package/ya-disk) ![Tests](https://github.com/RomiC/ya-disk/workflows/Tests/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/RomiC/ya-disk/badge.svg)](https://coveralls.io/github/RomiC/ya-disk)
+[![NPM version](https://img.shields.io/npm/v/ya-disk.svg?style=flat-square)](https://www.npmjs.com/package/ya-disk) ![Tests](https://github.com/RomiC/ya-disk/workflows/Tests/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/RomiC/ya-disk/badge.svg?branch=main)](https://coveralls.io/github/RomiC/ya-disk?branch=main)
 
 This library provides methods for working with Yandex.Disk service API. Each method present with each own independent function. Example:
 
