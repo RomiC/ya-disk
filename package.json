@@ -30,9 +30,6 @@
     "lint-staged": "17.0.8",
     "prettier": "3.9.1"
   },
-  "overrides": {
-    "yargs": "^18.0.0"
-  },
   "bugs": {
     "url": "https://github.com/RomiC/ya-disk/issues"
   },
