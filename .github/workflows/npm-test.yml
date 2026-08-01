@@ -2,7 +2,7 @@ name: Tests
 
 on:
   pull_request:
-    types: [ opened, edited, synchronize ]
+    types: [opened, edited, synchronize]
   push:
     branches:
       - main
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [ "22", "24", "26" ]
+        node: ["22", "24", "26"]
     name: Test with node ${{ matrix.node }}
     steps:
       - uses: actions/checkout@v7.0.0
@@ -25,6 +25,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm ci
       - run: npm run lint
+      - run: npm run format:check
       - run: npm run test:coverage
       - run: npm run build
       - run: npm run smoke

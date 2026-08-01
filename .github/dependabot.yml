@@ -1,6 +1,6 @@
 version: 2
 updates:
-# MASTER branch
+  # MASTER branch
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     assignees:
@@ -38,7 +38,7 @@ updates:
       default-days: 3
     versioning-strategy: increase
 
-# V4.X branch
+  # V4.X branch
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     assignees:
