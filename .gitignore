@@ -44,3 +44,7 @@ settings.json
 
 *.tgz
 .DS_Store
+
+.env
+# pi agent
+.pi/

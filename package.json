@@ -18,16 +18,11 @@
     "node": ">= 22.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "10.0.1",
-    "@eslint/markdown": "8.0.2",
-    "eslint": "10.6.0",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.6",
-    "follow-redirects": "1.16.0",
-    "globals": "17.7.0",
-    "husky": "9.1.7",
     "c8": "11.0.0",
+    "follow-redirects": "1.16.0",
+    "husky": "9.1.7",
     "lint-staged": "17.0.8",
+    "oxlint": "1.76.0",
     "prettier": "3.9.1"
   },
   "bugs": {
@@ -41,8 +36,8 @@
     "test": "./tests"
   },
   "scripts": {
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "lint": "oxlint -c oxlint.config.mjs",
+    "lint:fix": "oxlint -c oxlint.config.mjs --fix",
     "test": "node --test tests/*.spec.js",
     "test:watch": "node --watch --test tests/*.spec.js",
     "test:coverage": "c8 --all --include='lib/*.js' --include='index.js' --exclude='lib/constants.js' --reporter=text --reporter=lcov --reporter=clover node --test tests/*.spec.js",
