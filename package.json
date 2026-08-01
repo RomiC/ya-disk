@@ -22,8 +22,8 @@
     "follow-redirects": "1.16.0",
     "husky": "9.1.7",
     "lint-staged": "17.0.8",
-    "oxlint": "1.76.0",
-    "prettier": "3.9.1"
+    "oxfmt": "0.61.0",
+    "oxlint": "1.76.0"
   },
   "bugs": {
     "url": "https://github.com/RomiC/ya-disk/issues"
@@ -38,6 +38,8 @@
   "scripts": {
     "lint": "oxlint -c oxlint.config.mjs",
     "lint:fix": "oxlint -c oxlint.config.mjs --fix",
+    "format": "oxfmt -c oxfmt.config.mjs",
+    "format:check": "oxfmt -c oxfmt.config.mjs --check",
     "test": "node --test tests/*.spec.js",
     "test:watch": "node --watch --test tests/*.spec.js",
     "test:coverage": "c8 --all --include='lib/*.js' --include='index.js' --exclude='lib/constants.js' --reporter=text --reporter=lcov --reporter=clover node --test tests/*.spec.js",
@@ -49,7 +51,13 @@
     "api"
   ],
   "lint-staged": {
-    "+(examples|lib|tests)/*.js": "npm run lint:fix",
-    "+index.js": "npm run lint:fix"
+    "+(examples|lib|tests)/*.js": [
+      "npm run lint:fix",
+      "npm run format"
+    ],
+    "+index.js": [
+      "npm run lint:fix",
+      "npm run format"
+    ]
   }
 }
