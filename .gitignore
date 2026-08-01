@@ -46,3 +46,5 @@ settings.json
 .DS_Store
 
 .env
+# pi agent
+.pi/
