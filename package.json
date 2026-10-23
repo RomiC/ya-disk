@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "c8": "12.0.0",
-    "follow-redirects": "1.16.0",
+    "follow-redirects": "1.16.1",
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
     "oxfmt": "0.71.0",
