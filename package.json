@@ -22,7 +22,7 @@
     "follow-redirects": "1.16.2",
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
-    "oxfmt": "0.71.0",
+    "oxfmt": "0.75.0",
     "oxlint": "1.90.0"
   },
   "bugs": {
